@@ -6,8 +6,8 @@ import { makeCategoryColor } from "./vizUtils";
 /** Temporal coverage: a Gantt-like span per dataset (year_min..year_max) plus a per-year histogram of how many
  * datasets cover that year. Filter by scope / since via variant params. Colour by theme. */
 export default function TimelineView({
-  payload, scope = "all", since,
-}: { payload: TimelinePayload; scope?: string; since?: number }) {
+  payload, scope = "all", since, sort = "start",
+}: { payload: TimelinePayload; scope?: string; since?: number; sort?: string }) {
   const lang = useLang();
   const [hover, setHover] = useState<TimelineRow | null>(null);
 
@@ -15,8 +15,12 @@ export default function TimelineView({
     let r = payload.rows;
     if (scope && scope !== "all") r = r.filter((x) => x.keys.includes(scope));
     if (since) r = r.filter((x) => x.y1 >= since);
-    return [...r].sort((a, b) => a.y0 - b.y0 || b.span - a.span).slice(0, 60);
-  }, [payload.rows, scope, since]);
+    // "By span length" orders the Gantt by coverage duration (longest first); the default orders by start year.
+    const cmp = sort === "span"
+      ? (a: TimelineRow, b: TimelineRow) => b.span - a.span || a.y0 - b.y0
+      : (a: TimelineRow, b: TimelineRow) => a.y0 - b.y0 || b.span - a.span;
+    return [...r].sort(cmp).slice(0, 60);
+  }, [payload.rows, scope, since, sort]);
 
   const hist = Object.entries(payload.histogram).map(([y, c]) => ({ y: +y, c }))
     .filter((d) => !since || d.y >= since).sort((a, b) => a.y - b.y);

@@ -24,7 +24,7 @@ harvest -> preprocess -> feature_extraction -> train -> infer(relate) -> evaluat
 | harvest | `stages/harvest.py` | enumerate the OpenSearch catalog, classify every resource into a download tier, size-gated mirror of the tier-A subset |
 | preprocess | `stages/preprocess.py` | read each raw table, apply CONTRACT 1, normalize the accepted ones to parquet |
 | feature_extraction | `stages/feature_extraction.py` | per-column fingerprint (dtype, nulls, entity-key role, MinHash) plus a per-dataset MiniLM embedding |
-| train | `stages/train.py` | fit the model ladder (PCA, KMeans, TF-IDF, the affinity null models) and export the ONNX encoder |
+| train | `stages/train.py` | fit the model ladder (PCA, KMeans, the affinity null models) and export the ONNX encoder |
 | infer (relate) | `stages/infer.py` | mine the five edge kinds plus the fused affinity into the knowledge graph |
 | evaluate | `stages/evaluate.py` | negative control, semantic coherence, joinability sanity (leakage-safe, adversarial) |
 | export | `stages/export.py` | write the compact per-case artifacts, manifests, catalog, graph, metrics (CONTRACT 2) |
