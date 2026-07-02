@@ -1,0 +1,11 @@
+{
+  "schema": "atalaya.harvest_report/1",
+  "measured": "2026-07-02",
+  "source": "catalogo.dataobservatory.net",
+  "tier": "A (Chilean-gov direct files, mirrored in full)",
+  "datasets_mirrored": 303,
+  "files": 1382,
+  "mirror_bytes": 26604576347,
+  "mirror_gb": 24.8,
+  "note": "Measured from the local Tier-A mirror (out-of-git). Tiers B/C/D (foreign DOI archives, geoservices) are referenced by link, not mirrored. This receipt makes the size claim on the Implementation page auditable."
+}
