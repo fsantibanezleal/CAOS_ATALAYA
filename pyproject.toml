@@ -1,0 +1,31 @@
+# Atalaya — offline engine package (instantiated from the CAOS product-repo template).
+# Research-chosen SOTA engines are pinned in requirements-precompute.txt and documented in docs/frameworks/.
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "atalayalab"
+# PEP 440 form of the display version X.XX.XXX (see CHANGELOG.md + atalayalab.__version__).
+version = "0.1.0"
+description = "Atalaya — harvest, profile and cross-link Chile's Data Observatory open catalog into an explorable knowledge graph."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Felipe Santibáñez-Leal" }]
+dependencies = ["numpy>=1.26"]
+
+[tool.setuptools.packages.find]
+where = ["data-pipeline"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+# S/I/R are the standard SIR compartment names; single-letter here is intentional domain notation, not ambiguous.
+ignore = ["E741"]
