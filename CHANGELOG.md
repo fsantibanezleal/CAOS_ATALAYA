@@ -3,6 +3,16 @@
 All notable changes to this product. Format: `X.XX.XXX` (display) · see `atalayalab.__version__`. Keep `0.x`
 while the corpus + web app are still being brought to the product-quality bar. Tag every release.
 
+## [0.07.000] · 2026-07-02
+
+### Added
+- Classical lexical foil completes the model ladder, honestly: `evaluate.lexical_baseline` fits a real TF-IDF
+  similarity over the same semantic text the SOTA encoder embeds and scores it with the identical top-5
+  neighbour-theme coherence, so the embedding is measured against a classical baseline (leakage-safe,
+  apples-to-apples). Result (in `metrics.json`, surfaced on the Benchmark "Classical vs SOTA" tab): SOTA MiniLM
+  94.4% vs TF-IDF lexical 93.0% vs chance 47.8% (both far above chance; the embedding wins by a modest, reported
+  +1.4 pts). This makes the "classical + SOTA + novel" ladder claim true in code, not just documented.
+
 ## [0.06.001] · 2026-07-02
 
 ### Changed

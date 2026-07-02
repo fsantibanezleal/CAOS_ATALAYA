@@ -150,6 +150,11 @@ export interface Metrics {
   isolated_node_frac: number;
   negative_control: { candidates: number; survivors: number; empirical_fdr: number };
   semantic_coherence: { neighbor_theme_match: number; n_scored: number };
+  lexical_baseline?: {
+    k: number; n_scored: number; vocab_terms?: number;
+    lexical_neighbor_theme_match: number; embedding_neighbor_theme_match: number;
+    theme_base_rate: number; sota_gain_over_lexical: number;
+  };
   joinability_sanity: { joinable_edges: number; share_declared_key_frac: number };
   theme_distribution: Record<string, number>;
 }

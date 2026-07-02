@@ -76,6 +76,26 @@ export default function Benchmark() {
               </div>
             ),
           },
+          ...(m.lexical_baseline ? [{
+            id: "ladder", label: es ? "Clásico vs SOTA" : "Classical vs SOTA",
+            content: (
+              <div className="prose measure">
+                <p>{es
+                  ? "El foil clásico del ladder: una similitud léxica TF-IDF sobre el mismo texto, evaluada con la MISMA coherencia de tema en los top-5 vecinos que el embedding SOTA. Comparación honesta y a prueba de fugas: ¿el embedding le gana a un baseline clásico? Ambos muy sobre el azar; el embedding gana por un margen modesto y reportado."
+                  : "The ladder's classical foil: a TF-IDF lexical similarity over the same text, scored with the SAME top-5 neighbour-theme coherence as the SOTA embedding. An honest, leakage-safe test of whether the embedding beats a classical baseline. Both far above chance; the embedding wins by a modest, reported margin."}</p>
+                <table className="viz-table"><tbody>
+                  <tr className="hl"><td><strong>{es ? "SOTA · MiniLM (embedding)" : "SOTA · MiniLM (embedding)"}</strong></td><td className="num"><strong>{(m.lexical_baseline.embedding_neighbor_theme_match * 100).toFixed(1)}%</strong></td></tr>
+                  <tr><td>{es ? "Clásico · TF-IDF (léxico)" : "Classical · TF-IDF (lexical)"}</td><td className="num">{(m.lexical_baseline.lexical_neighbor_theme_match * 100).toFixed(1)}%</td></tr>
+                  <tr><td className="faint">{es ? "Azar (tasa base de temas)" : "Chance (theme base rate)"}</td><td className="num faint">{(m.lexical_baseline.theme_base_rate * 100).toFixed(1)}%</td></tr>
+                  <tr><td>{es ? "Ganancia SOTA sobre léxico" : "SOTA gain over lexical"}</td><td className="num">+{(m.lexical_baseline.sota_gain_over_lexical * 100).toFixed(1)} pts</td></tr>
+                  <tr><td className="faint">{es ? "Datasets evaluados · k · vocab TF-IDF" : "Datasets scored · k · TF-IDF vocab"}</td><td className="num faint">{m.lexical_baseline.n_scored} · {m.lexical_baseline.k} · {m.lexical_baseline.vocab_terms ?? "-"}</td></tr>
+                </tbody></table>
+                <p className="faint">{es
+                  ? "Coherencia = fracción de los top-5 vecinos por similitud que comparten el tema del dataset (mayor es mejor). El texto es descriptivo del tema, así que el léxico es un baseline fuerte; el embedding aún así lo supera."
+                  : "Coherence = fraction of the top-5 nearest neighbours by similarity that share the dataset's theme (higher is better). The text is theme-descriptive, so lexical is a strong baseline; the embedding still beats it."}</p>
+              </div>
+            ),
+          }] : []),
           {
             id: "themes", label: es ? "Temas" : "Themes",
             content: (
