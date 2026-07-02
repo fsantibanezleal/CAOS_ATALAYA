@@ -36,7 +36,9 @@ for speed and determinism.
 
 Fit the model ladder and export the browser encoder:
 
-- **Classical:** PCA to 2-D catalog coordinates and KMeans clustering of the embedding space (both scikit-learn).
+- **Classical:** PCA to 2-D catalog coordinates and KMeans clustering of the embedding space (both scikit-learn),
+  here in `train`; the third classical rung, a TF-IDF lexical baseline, is fitted in the `evaluate` stage
+  (`lexical_baseline`) so it can be scored head-to-head against the SOTA embedding on the same metric.
 - **SOTA:** the multilingual MiniLM embeddings (computed upstream) and their ONNX-exported encoder for the live
   browser lane.
 - **Novel:** the affinity **null models**, fit here from random background pairs, so the affinity score means
@@ -54,8 +56,10 @@ fused affinity summary edge. Detailed in [06_model-evaluation.md](06_model-evalu
 
 ## evaluate, `stages/evaluate.py`
 
-The TEST stage: negative control (shuffled-key correlations, an empirical FDR), semantic neighbor coherence,
-joinability sanity, and graph coverage. See [06_model-evaluation.md](06_model-evaluation.md).
+The TEST stage: negative control (shuffled-key correlations, an empirical FDR), semantic neighbor coherence, the
+TF-IDF lexical baseline (`lexical_baseline`, the classical foil scored on the same neighbour-theme coherence as the
+SOTA embedding: 93.0% vs 94.4%, chance 47.8%), joinability sanity, and graph coverage. See
+[06_model-evaluation.md](06_model-evaluation.md).
 
 ## export, `stages/export.py`
 

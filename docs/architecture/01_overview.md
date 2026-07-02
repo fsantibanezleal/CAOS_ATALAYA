@@ -26,7 +26,7 @@ harvest -> preprocess -> feature_extraction -> train -> infer(relate) -> evaluat
 | feature_extraction | `stages/feature_extraction.py` | per-column fingerprint (dtype, nulls, entity-key role, MinHash) plus a per-dataset MiniLM embedding |
 | train | `stages/train.py` | fit the model ladder (PCA, KMeans, the affinity null models) and export the ONNX encoder |
 | infer (relate) | `stages/infer.py` | mine the five edge kinds plus the fused affinity into the knowledge graph |
-| evaluate | `stages/evaluate.py` | negative control, semantic coherence, joinability sanity (leakage-safe, adversarial) |
+| evaluate | `stages/evaluate.py` | negative control, semantic coherence, the TF-IDF lexical baseline (`lexical_baseline`), joinability sanity (leakage-safe, adversarial) |
 | export | `stages/export.py` | write the compact per-case artifacts, manifests, catalog, graph, metrics (CONTRACT 2) |
 
 Run it with `python -m atalayalab.pipeline` (full run over an already-mirrored corpus) or
