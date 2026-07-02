@@ -1,2 +1,2 @@
 // Human version (scheme X.XX.XXX — see CHANGELOG). The footer shows this.
-export const APP_VERSION = "0.05.001";
+export const APP_VERSION = "0.06.000";

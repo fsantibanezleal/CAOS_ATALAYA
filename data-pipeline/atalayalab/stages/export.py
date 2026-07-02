@@ -26,7 +26,7 @@ ENGINES_BY_KIND = {
     "map": ["sentence-transformers", "scikit-learn.PCA", "scikit-learn.KMeans"],
     "overview": ["polars"],
     "graph": ["sentence-transformers", "datasketch.MinHashLSHEnsemble", "rustworkx"],
-    "findings": ["scipy", "atalayalab.stats(permutation+BH-FDR)"],
+    "findings": ["numpy", "atalayalab.stats(Spearman+permutation+BH-FDR)"],
     "coverage": ["polars", "pyproj"],
     "timeline": ["polars"],
     "quality": ["polars", "atalayalab.io.contract"],

@@ -9,8 +9,9 @@ English DataCite records), so the encoder must be multilingual. **Sentence-Trans
 no API, deterministic in eval mode, and small enough to export to ONNX for a browser live lane. **PyTorch** is the
 CPU backend (embedding precompute only, no training).
 
-Chosen over a TF-IDF / bag-of-words foil (which the ladder keeps as the *lexical* baseline in `train.py`) because
-cross-lingual paraphrase similarity is exactly what off-the-shelf lexical search misses.
+Chosen over a TF-IDF / bag-of-words approach because cross-lingual paraphrase similarity is exactly what
+off-the-shelf lexical search misses (education by comuna vs school enrolment by comuna share meaning but little
+surface text). No lexical foil is fitted in `train.py`; semantic matching is carried by these embeddings.
 
 ## Install (exact, verified)
 

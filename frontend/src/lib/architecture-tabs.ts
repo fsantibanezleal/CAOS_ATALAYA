@@ -39,12 +39,12 @@ export const ARCH_TABS: ArchTab[] = [
     body: {
       en: [
         "Three lanes, cleanly separated. LIVE (web): the multilingual MiniLM encoder runs in the browser via onnxruntime-web / transformers.js (WASM) for free-text semantic search, and the novel affinity score recomputes in pure JS when you move the evidence weights — both sub-millisecond, no server.",
-        "OFFLINE / COMPUTE (.venv): the heavy SOTA engines that have no place in a browser — polars + DuckDB (tabular), sentence-transformers + torch (embeddings), datasketch (MinHash joinability), phik + SciPy (correlation), LightGBM, rustworkx (graph) — run the staged pipeline and export the ONNX encoder. This lane is local-only; the venv never ships.",
+        "OFFLINE / COMPUTE (.venv): the engines that have no place in a browser — polars (tabular), sentence-transformers + torch (embeddings), datasketch (MinHash joinability), hand-rolled numpy (Spearman + permutation null + BH-FDR correlation), scikit-learn (PCA / KMeans), rustworkx (graph) — run the staged pipeline and export the ONNX encoder. This lane is local-only; the venv never ships.",
         "REPLAY is the shared fallback: the web loads the committed compact artifacts (catalog, graph, per-case payloads, embeddings) and never recomputes the mine. The measured lane gate records, per case, whether a computation is live-eligible, so the app never mislabels what it is doing.",
       ],
       es: [
         "Tres carriles, limpiamente separados. LIVE (web): el codificador MiniLM multilingüe corre en el navegador vía onnxruntime-web / transformers.js (WASM) para búsqueda semántica de texto libre, y el score de afinidad novel se recomputa en JS puro al mover los pesos de evidencia — ambos sub-milisegundo, sin servidor.",
-        "OFFLINE / COMPUTE (.venv): los motores SOTA pesados sin lugar en un navegador — polars + DuckDB (tabular), sentence-transformers + torch (embeddings), datasketch (unibilidad MinHash), phik + SciPy (correlación), LightGBM, rustworkx (grafo) — corren el pipeline por etapas y exportan el codificador ONNX. Este carril es solo local; el venv nunca se despliega.",
+        "OFFLINE / COMPUTE (.venv): los motores sin lugar en un navegador — polars (tabular), sentence-transformers + torch (embeddings), datasketch (unibilidad MinHash), numpy propio (Spearman + null de permutación + BH-FDR de correlación), scikit-learn (PCA / KMeans), rustworkx (grafo) — corren el pipeline por etapas y exportan el codificador ONNX. Este carril es solo local; el venv nunca se despliega.",
         "REPLAY es el respaldo común: la web carga los artefactos compactos commiteados (catálogo, grafo, payloads por caso, embeddings) y nunca recomputa la mina. La compuerta de carril medida registra, por caso, si un cómputo es elegible en vivo, así la app nunca etiqueta mal lo que hace.",
       ],
     },

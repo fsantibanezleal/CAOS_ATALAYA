@@ -36,8 +36,7 @@ for speed and determinism.
 
 Fit the model ladder and export the browser encoder:
 
-- **Classical:** PCA to 2-D catalog coordinates, KMeans clustering of the embedding space, a TF-IDF vectorizer
-  over the semantic texts (a lexical-similarity foil).
+- **Classical:** PCA to 2-D catalog coordinates and KMeans clustering of the embedding space (both scikit-learn).
 - **SOTA:** the multilingual MiniLM embeddings (computed upstream) and their ONNX-exported encoder for the live
   browser lane.
 - **Novel:** the affinity **null models**, fit here from random background pairs, so the affinity score means

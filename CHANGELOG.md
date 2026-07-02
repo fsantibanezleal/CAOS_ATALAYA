@@ -3,6 +3,33 @@
 All notable changes to this product. Format: `X.XX.XXX` (display) · see `atalayalab.__version__`. Keep `0.x`
 while the corpus + web app are still being brought to the product-quality bar. Tag every release.
 
+## [0.06.000] · 2026-07-02
+
+### Added
+- Two genuinely different graph representations beyond the force-directed node-link (Clean/Glow/3D were all the same
+  layout): a cluster-reordered **adjacency matrix** (occlusion-free; communities read as bright diagonal blocks; the
+  standard fix for a dense hairball) and an **arc diagram** (nodes on a cluster-ordered baseline, relations as arcs;
+  high arcs are cross-community bridges; signed green +ρ / red −ρ for correlations).
+- **Colour by** toggle on every network lens: colour nodes by theme or by the mined KMeans cluster (so the graph's
+  own community structure is finally visible as colour, not only in the catalog map).
+
+### Fixed
+- Reactive controls that were inert are now real: Affinity weight presets (bal/sem/join/stat) sync from the variant
+  bar; Correlation-network comuna-keyed / region-keyed chips filter by join key; Joinability "Region-joinable" is no
+  longer a mislabeled duplicate of "Comuna-joinable" (12 comuna edges vs 105 region edges, filtered by `ev.key`);
+  Geographic "Theme mix" stacks the coverage bars by theme; Temporal "By span length" reorders the Gantt; the
+  "Highlight dataset" search now works in Clean 2D; an empty-state banner replaces a blank canvas at zero edges.
+- Compute-bomb guard: the WebGL/3D force graphs pause the render loop when the browser tab is hidden
+  (`visibilitychange`), so a graph left on a background tab never burns CPU unattended.
+
+### Changed
+- Honesty pass on the stack/ladder description (UI + docs): the offline engines are stated as what the code actually
+  imports (polars, sentence-transformers, datasketch, rustworkx, scikit-learn; correlation is hand-rolled numpy),
+  not DuckDB / phik / LightGBM (present in the venv but never fitted); the live encoder is named as the community
+  ONNX build of MiniLM loaded via transformers.js; the model ladder is PCA/KMeans (classical) + MiniLM (SOTA) +
+  calibrated affinity (novel), with the previously-claimed TF-IDF / LightGBM rungs removed. The "<1 MB artifacts"
+  line clarified (per-lens artifact <1 MB; the ~3 MB embedding table is lazy-loaded only for live search).
+
 ## [0.04.001] · 2026-07-02
 
 ### Fixed

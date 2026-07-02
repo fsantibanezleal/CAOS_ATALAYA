@@ -1,7 +1,6 @@
 import { Suspense, lazy, useEffect, useMemo, useRef, useState, type ComponentType } from "react";
 import type { GraphPayload, MapNode } from "@/lib/types";
 import { useLang } from "@/lib/useLang";
-import { makeCategoryColor } from "./vizUtils";
 
 // react-force-graph default exports are permissively typed; cast to accept our prop bag.
 const ForceGraph2D = lazy(() => import("react-force-graph-2d")) as unknown as ComponentType<Record<string, unknown>>;
@@ -14,13 +13,17 @@ interface GLink { source: string; target: string; w: number }
  * with Unreal bloom. Live force simulation (drag nodes, they spring); zoom/pan/orbit. Heavy, so lazy-loaded and
  * only mounted when the user picks a WebGL mode. Dark viz surface (additive glow needs a dark background). */
 export default function GraphGL({
-  payload, minWeight, mode, showLabels, query, colorForTheme,
+  payload, minWeight, mode, showLabels, query, colorFor,
 }: {
   payload: GraphPayload; minWeight: number; mode: "glow" | "3d"; showLabels: boolean; query: string;
-  colorForTheme: (t: string) => string;
+  colorFor: (n: MapNode) => string;
 }) {
   const lang = useLang();
-  const fgRef = useRef<{ postProcessingComposer?: () => { addPass: (p: unknown) => void }; zoomToFit?: (ms?: number, px?: number) => void } | null>(null);
+  const fgRef = useRef<{
+    postProcessingComposer?: () => { addPass: (p: unknown) => void };
+    zoomToFit?: (ms?: number, px?: number) => void;
+    pauseAnimation?: () => void; resumeAnimation?: () => void;
+  } | null>(null);
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const [size, setSize] = useState({ w: 800, h: 560 });
 
@@ -28,6 +31,17 @@ export default function GraphGL({
     const el = wrapRef.current; if (!el) return;
     const ro = new ResizeObserver(() => setSize({ w: el.clientWidth, h: 560 }));
     ro.observe(el); return () => ro.disconnect();
+  }, []);
+
+  // Compute-bomb guard: react-force-graph keeps a render rAF alive for interaction. Pause it whenever the browser
+  // tab is hidden so a graph left on-screen in a background tab never burns CPU unattended (no-autoplay rule).
+  useEffect(() => {
+    const onVis = () => {
+      const fg = fgRef.current; if (!fg) return;
+      if (document.hidden) fg.pauseAnimation?.(); else fg.resumeAnimation?.();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
   const data = useMemo(() => {
@@ -38,11 +52,11 @@ export default function GraphGL({
     const q = query.trim().toLowerCase();
     const nodes: GNode[] = payload.nodes.filter((n) => used.has(n.id)).map((n) => ({
       id: n.id, name: n.title, theme: n.theme, deg: deg.get(n.id) ?? 0,
-      color: colorForTheme(n.theme), dim: q.length > 0 && !n.title.toLowerCase().includes(q),
+      color: colorFor(n), dim: q.length > 0 && !n.title.toLowerCase().includes(q),
     }));
     const links: GLink[] = edges.map((e) => ({ source: e.s, target: e.t, w: e.w }));
     return { nodes, links };
-  }, [payload, minWeight, query, colorForTheme]);
+  }, [payload, minWeight, query, colorFor]);
 
   // 3D bloom pass
   useEffect(() => {
@@ -75,6 +89,14 @@ export default function GraphGL({
     cooldownTicks: 120,
     onEngineStop: () => fgRef.current?.zoomToFit?.(500, 40),
   };
+
+  if (data.nodes.length === 0) {
+    return (
+      <div ref={wrapRef} className="graphgl-wrap graphgl-empty">
+        <p className="viz-empty">{lang === "es" ? "Sin relaciones en este umbral — baja el umbral." : "No relations at this threshold — lower the threshold."}</p>
+      </div>
+    );
+  }
 
   return (
     <div ref={wrapRef} className="graphgl-wrap">
@@ -130,8 +152,4 @@ export default function GraphGL({
       </Suspense>
     </div>
   );
-}
-
-export function themeColorer(nodes: MapNode[]): (t: string) => string {
-  return makeCategoryColor(nodes.map((n) => n.theme));
 }

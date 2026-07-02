@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { AffinityPayload, AffRow } from "@/lib/types";
 import { useLang } from "@/lib/useLang";
 import { fmt } from "./vizUtils";
@@ -33,6 +33,11 @@ export default function AffinityView({
   const lang = useLang();
   const [w, setW] = useState<[number, number, number]>(weights);
   const [hover, setHover] = useState<AffRow | null>(null);
+
+  // Re-seed the sliders when the variant preset (bal/sem/join/stat) changes the `weights` prop. Depend on the
+  // three values (not the array identity) so a user's live slider drag is not reset by an unrelated re-render.
+  const [pw0, pw1, pw2] = weights;
+  useEffect(() => { setW([pw0, pw1, pw2]); }, [pw0, pw1, pw2]);
 
   const ranked = useMemo(() => {
     return payload.rows
