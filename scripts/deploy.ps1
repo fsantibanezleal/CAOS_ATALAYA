@@ -4,8 +4,10 @@
 $ErrorActionPreference = "Stop"
 Set-Location (Join-Path $PSScriptRoot "..")
 
-$HostSpec = if ($env:ATALAYA_HOST) { $env:ATALAYA_HOST } else { "root@91.99.199.70" }
+if (-not $env:ATALAYA_HOST) { throw "set ATALAYA_HOST to the deploy target, e.g. root@your.host" }
 if (-not $env:ATALAYA_SSH_KEY) { throw "set ATALAYA_SSH_KEY to the vault SSH key path" }
+if (-not $env:ATALAYA_CERTBOT_EMAIL) { throw "set ATALAYA_CERTBOT_EMAIL for the TLS certificate" }
+$HostSpec = $env:ATALAYA_HOST
 $Key = $env:ATALAYA_SSH_KEY
 $Domain = "atalaya.fasl-work.com"
 $Root = "/var/www/$Domain"
@@ -22,6 +24,6 @@ Write-Host "[deploy] install nginx site + reload"
 & ssh -i $Key $HostSpec "ln -sf /etc/nginx/sites-available/$Domain /etc/nginx/sites-enabled/$Domain && nginx -t && systemctl reload nginx"
 
 Write-Host "[deploy] ensure TLS cert"
-& ssh -i $Key $HostSpec "certbot --nginx -d $Domain --non-interactive --agree-tos -m fsantibanez@gmail.com --redirect || true; systemctl reload nginx"
+& ssh -i $Key $HostSpec "certbot --nginx -d $Domain --non-interactive --agree-tos -m $env:ATALAYA_CERTBOT_EMAIL --redirect || true; systemctl reload nginx"
 
 Write-Host "[deploy] done -> https://$Domain"
