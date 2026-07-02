@@ -3,6 +3,15 @@
 All notable changes to this product. Format: `X.XX.XXX` (display) · see `atalayalab.__version__`. Keep `0.x`
 while the corpus + web app are still being brought to the product-quality bar. Tag every release.
 
+## [0.04.001] · 2026-07-02
+
+### Fixed
+- Pan interaction crash in the map/graph views (`Cannot read properties of null`): the drag delta is now snapshotted
+  before the state update, so a pointer-up mid-flush no longer dereferences a null drag ref. Caught by the new
+  error boundary (shown as a message, never a black screen); now fixed at the source.
+- Wheel-zoom no longer triggers the passive-listener warning: a non-passive native wheel listener is bound via a
+  ref, so zoom can prevent the page scroll cleanly.
+
 ## [0.04.000] · 2026-07-02
 
 ### Added

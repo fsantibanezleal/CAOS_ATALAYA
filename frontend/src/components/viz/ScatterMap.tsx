@@ -14,7 +14,7 @@ type ColorBy = "theme" | "origin" | "cluster" | "keys" | "year" | "quality";
  * facet. Zoom (wheel), pan (drag), hover for a value read-out. Reacts to the variant colour knob. */
 export default function ScatterMap({ payload, colorBy = "theme" }: { payload: MapPayload; colorBy?: ColorBy }) {
   const lang = useLang();
-  const { t, reset, handlers } = usePanZoom();
+  const { t, reset, zoomRef, handlers } = usePanZoom();
   const [hover, setHover] = useState<MapNode | null>(null);
 
   const nodes = payload.nodes;
@@ -36,7 +36,7 @@ export default function ScatterMap({ payload, colorBy = "theme" }: { payload: Ma
         <span className="viz-hint">{nodes.length} {lang === "es" ? "datasets" : "datasets"} · {lang === "es" ? "rueda = zoom, arrastra = mover" : "wheel = zoom, drag = pan"}</span>
         <button type="button" className="btn" onClick={reset}>{lang === "es" ? "Reiniciar vista" : "Reset view"}</button>
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="viz-svg" role="img"
+      <svg ref={zoomRef} viewBox={`0 0 ${W} ${H}`} className="viz-svg" role="img"
            tabIndex={0} {...handlers} onPointerLeave={() => setHover(null)}
            aria-label={lang === "es" ? "Mapa del catálogo por embedding" : "Catalog embedding map"}>
         <g transform={`translate(${t.x},${t.y}) scale(${t.k})`}>
