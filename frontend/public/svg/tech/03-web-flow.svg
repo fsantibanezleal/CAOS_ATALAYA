@@ -34,14 +34,14 @@
   <text class="mu" x="28" y="110">• case selector (built-in)</text>
   <text class="mu" x="28" y="126">• drop your own data</text>
   <text class="mu" x="28" y="142">• sliders / toggles</text>
-  <text class="cd mono" x="28" y="166">Tool.tsx · cases.ts</text>
+  <text class="cd mono" x="28" y="166">CaseWorkbench.tsx · registry</text>
   <text class="mu" x="28" y="182">every page reacts to the case</text>
 
   <!-- engine -->
   <rect class="bx bx-hi" x="244" y="70" width="200" height="120" rx="10"/>
   <text class="it" x="258" y="92">Live engine (TS)</text>
   <text class="mu" x="258" y="110">re-run, no server call</text>
-  <text class="cd mono" x="258" y="130">src/&lt;domain&gt;/*.ts</text>
+  <text class="cd mono" x="258" y="130">src/components/viz/*.tsx</text>
   <text class="mu" x="258" y="150">+ onnxruntime-web inference</text>
   <text class="cd mono" x="258" y="170">src/lib/ort.ts</text>
   <text class="mu" x="258" y="186">classical baseline ⇄ learned toggle</text>
@@ -75,7 +75,7 @@
   <rect class="bx bx-hi" x="28" y="246" width="132" height="72" rx="7"/>
   <text class="it" x="40" y="266">App / Tool</text>
   <text class="mu" x="40" y="282">live engine + controls</text>
-  <text class="cd mono" x="40" y="300">pages/Tool.tsx</text>
+  <text class="cd mono" x="40" y="300">pages/App.tsx</text>
   <rect class="bx" x="172" y="246" width="132" height="72" rx="7"/>
   <text class="it" x="184" y="266">Introduction</text>
   <text class="mu" x="184" y="282">problem + context</text>
@@ -111,7 +111,7 @@
   <text class="cd mono" x="480" y="422">frontend/dist</text>
   <rect class="bx bx-hi" x="688" y="384" width="186" height="54" rx="7"/>
   <text class="it" x="700" y="404">GitHub Pages</text>
-  <text class="cd mono" x="700" y="422">&lt;slug&gt;.fasl-work.com</text>
+  <text class="cd mono" x="700" y="422">atalaya.fasl-work.com</text>
   <path class="flow" d="M228,411 H246" marker-end="url(#wf-arrow)"/>
   <path class="flow" d="M448,411 H466" marker-end="url(#wf-arrow)"/>
   <path class="flow" d="M668,411 H686" marker-end="url(#wf-arrow)"/>

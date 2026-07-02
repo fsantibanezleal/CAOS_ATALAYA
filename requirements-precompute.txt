@@ -1,0 +1,43 @@
+# PRECOMPUTE lane — the heavy, research-chosen SOTA engines (in .venv-pipeline; local-only, never deployed).
+# THIS is where the deep research becomes binding: every engine pinned here is documented in docs/frameworks/<tool>/
+# and actually used by data-pipeline/atalayalab/stages/. Verified install on Python 3.12 (Windows), 2026-07-01.
+# Dossier: (CAOS_MANAGE) wip/atalaya/memory-mcp-research-2026-07-01.md + catalog-research-2026-07-01.md.
+
+# --- harvest: catalog enumeration + resilient bulk download ---
+httpx[http2]==0.28.1          # HTTP/2 client for the OpenSearch catalog + file mirroring (retry, resume, streaming)
+h2==4.1.0                     # HTTP/2 backend for httpx
+tenacity==9.0.0               # backoff/retry policy for flaky gov file hosts
+
+# --- tabular I/O + engine (fast, out-of-core) ---
+polars==1.17.1                # columnar dataframe engine (profiling, joins, aggregation)
+pyarrow==18.1.0               # parquet read/write (the derived standard format)
+duckdb==1.1.3                 # SQL over parquet/CSV for cross-dataset queries without loading to RAM
+openpyxl==3.1.5               # .xlsx reader
+xlrd==2.0.1                   # legacy .xls reader
+charset-normalizer==3.4.0     # robust encoding detection for messy gov CSVs
+python-calamine==0.3.1        # fast fallback spreadsheet reader
+
+# --- profiling + joinability (deterministic relation mining) ---
+datasketch==1.6.5             # MinHash + MinHashLSHEnsemble: containment-based joinability (Auctus/Lazo pattern)
+phik==0.12.4                  # phi_k correlation for mixed-type (categorical/numeric) columns
+scipy==1.14.1                 # Spearman/Pearson, permutation machinery, stats
+statsmodels==0.14.4           # partial correlation (population-partialling), FDR helpers
+
+# --- model ladder: classical + SOTA ---
+scikit-learn==1.6.0           # PCA, KMeans, TF-IDF, StandardScaler (classical foils)
+lightgbm==4.5.0               # gradient-boosted trees (SOTA tabular link/label model)
+
+# --- semantic column/dataset matching (FULLY LOCAL, no API) ---
+sentence-transformers==3.3.1  # multilingual MiniLM embeddings (paraphrase-multilingual-MiniLM-L12-v2)
+torch==2.5.1                  # CPU backend for sentence-transformers (embedding precompute only)
+onnx==1.17.0                  # export the embedder to ONNX for the browser live lane
+onnxruntime==1.20.1           # local ONNX parity check before shipping the .onnx
+optimum[exporters]==1.23.3    # HF -> ONNX exporter for the MiniLM encoder
+
+# --- knowledge graph analytics + portable store ---
+rustworkx==0.15.1             # fast graph: communities (Louvain-style), centrality, shortest join paths
+zstandard==0.23.0             # zstd snapshot of the SQLite-WAL graph (codebase-memory-mcp pattern)
+
+# --- geospatial (Chilean comuna/region joins, spatial overlap) ---
+shapely==2.0.6                # geometry ops for SPATIALLY_OVERLAPS edges
+pyproj==3.7.0                 # CRS handling for lat/lon <-> UTM 19S

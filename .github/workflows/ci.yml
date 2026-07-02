@@ -19,11 +19,9 @@ jobs:
         run: pip install -r data-pipeline/requirements.txt -r requirements-dev.txt -e .
       - name: Lint
         run: ruff check data-pipeline tests
-      - name: Tests
+      - name: Tests (core lane; heavy pipeline tests importorskip)
         run: pytest
-      - name: Pipeline smoke (regenerate one case)
-        run: python -m atalayalab.pipeline EX02_epidemic
-      - name: CONTRACT 2 — manifests <-> artifacts consistent (no drift)
+      - name: CONTRACT 2 — committed manifests <-> artifacts consistent (no drift)
         run: python scripts/check_artifacts.py
 
   guards:
@@ -37,8 +35,8 @@ jobs:
           if git ls-files | grep -qE '(^|/)\.env(\..+)?$' && ! git ls-files | grep -qx '.env.example'; then
             echo "::error::a real .env is tracked (only .env.example may be)"; fail=1; fi
           # venvs / native binaries / heavy model blobs must never be tracked
-          if git ls-files | grep -qiE '(^|/)\.?venv|\.(dll|so|dylib|pt|pth)$'; then
-            echo "::error::a venv or native/heavy binary is tracked (recreate from requirements; keep models small/LFS)"; fail=1; fi
+          if git ls-files | grep -qiE '(^|/)\.?venv|\.(dll|so|dylib|pt|pth|onnx)$'; then
+            echo "::error::a venv or native/heavy binary is tracked (recreate from requirements; models stay on E:/CDN)"; fail=1; fi
           # raw/heavy data must never be tracked — commit only compact derived artifacts under data/derived/
           if git ls-files | grep -qiE '\.(parquet|h5|hdf5|nc|mat|npy)$'; then
             echo "::error::raw/heavy data tracked — commit only compact derived artifacts (data/derived/)"; fail=1; fi

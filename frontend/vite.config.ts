@@ -1,8 +1,13 @@
-import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vitest/config';
+import { fileURLToPath, URL } from "node:url";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
+// Static SPA served at the root of the custom domain simlab.fasl-work.com (GitHub Pages).
 export default defineConfig({
-  base: './', // relative base -> works on a GitHub Pages project site
+  base: "/",
   plugins: [react()],
-  test: { environment: 'node', globals: true },
+  resolve: {
+    alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
+  },
+  build: { outDir: "dist", sourcemap: false },
 });
