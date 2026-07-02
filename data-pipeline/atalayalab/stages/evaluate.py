@@ -7,6 +7,9 @@ Metrics:
     discovery rate). If the control leaks, the correlation edges are not to be believed.
   - Semantic neighbor coherence: fraction of each dataset's top-k semantic neighbors sharing its theme (a proxy
     for embedding quality; higher is better, chance = theme base-rate).
+  - Lexical baseline (the classical foil): the SAME top-k neighbor-theme coherence computed over a TF-IDF lexical
+    similarity of the same text, so the SOTA embedding is honestly measured against a classical baseline (both far
+    above chance; the embedding wins by a modest, reported margin).
   - Joinability sanity: fraction of JOINABLE_ON edges whose two datasets share a declared entity key (should be 1.0
     by construction; a drop signals a bug).
   - Graph coverage: node/edge counts by kind, isolated-node fraction.
@@ -80,6 +83,53 @@ def _semantic_coherence(db: GraphDB, by_theme, k: int = 5) -> dict:
     return {"neighbor_theme_match": round(hits / tot, 4) if tot else 0.0, "n_scored": tot}
 
 
+def lexical_baseline(profiles: list[DatasetProfile], by_theme, k: int = 5) -> dict:
+    """CLASSICAL lexical foil of the model ladder: a TF-IDF vectorizer over the same semantic text the SOTA
+    encoder embeds, scored with the SAME top-k neighbor-theme-coherence as the embedding. An honest, leakage-free
+    "does the SOTA embedding beat a classical lexical baseline at finding thematically related datasets?" number.
+    Both similarities run over the identical set of datasets, so the gap is apples-to-apples; chance = sum(share^2)."""
+    from collections import Counter
+    from sklearn.feature_extraction.text import TfidfVectorizer
+
+    rows = [p for p in profiles if p.embedding and p.semantic_text and by_theme.get(p.dataset_id)]
+    if len(rows) < k + 2:
+        return {"k": k, "n_scored": len(rows), "note": "too few datasets to score"}
+    themes = [by_theme[p.dataset_id] for p in rows]
+
+    def topk_theme_match(sim: np.ndarray) -> float:
+        np.fill_diagonal(sim, -1.0)
+        hits = tot = 0
+        for i in range(len(themes)):
+            if not themes[i]:
+                continue
+            for j in np.argsort(-sim[i])[:k]:
+                tot += 1
+                if themes[j] == themes[i]:
+                    hits += 1
+        return round(hits / tot, 4) if tot else 0.0
+
+    # SOTA: MiniLM embedding cosine
+    V = np.asarray([p.embedding for p in rows], dtype=np.float64)
+    Vn = V / (np.linalg.norm(V, axis=1, keepdims=True) + 1e-9)
+    emb_match = topk_theme_match(Vn @ Vn.T)
+
+    # CLASSICAL: TF-IDF lexical cosine over the same text
+    tfidf = TfidfVectorizer(lowercase=True, strip_accents="unicode", min_df=2, max_df=0.6,
+                            ngram_range=(1, 2), sublinear_tf=True)
+    X = tfidf.fit_transform([p.semantic_text for p in rows])   # rows are L2-normalized
+    lex_match = topk_theme_match((X @ X.T).toarray())
+
+    n = len(rows)
+    base_rate = round(sum((v / n) ** 2 for v in Counter(themes).values()), 4)
+    return {
+        "k": k, "n_scored": n, "vocab_terms": int(len(tfidf.vocabulary_)),
+        "lexical_neighbor_theme_match": lex_match,
+        "embedding_neighbor_theme_match": emb_match,
+        "theme_base_rate": base_rate,
+        "sota_gain_over_lexical": round(emb_match - lex_match, 4),
+    }
+
+
 def _joinability_sanity(db: GraphDB, keys_by_node) -> dict:
     edges = db.edges(kind="JOINABLE_ON")
     ok = sum(1 for e in edges if set(keys_by_node.get(e["src"], [])) & set(keys_by_node.get(e["dst"], [])))
@@ -102,6 +152,7 @@ def run(db: GraphDB, profiles: list[DatasetProfile], normalized: list, datasets:
         "isolated_node_frac": round(1 - len(connected) / n_nodes, 4) if n_nodes else 0.0,
         "negative_control": _negative_control(profiles, normalized, seed=seed, log=log),
         "semantic_coherence": _semantic_coherence(db, by_theme),
+        "lexical_baseline": lexical_baseline(profiles, by_theme),
         "joinability_sanity": _joinability_sanity(db, keys_by_node),
         "theme_distribution": dict(Counter(by_theme.values()).most_common(8)),
     }

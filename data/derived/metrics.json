@@ -1,1 +1,47 @@
-{"graph":{"nodes":1017,"edges":14413,"by_edge_kind":{"AFFINITY":4053,"CORRELATES":24,"JOINABLE_ON":117,"SAME_SOURCE":6002,"SEMANTICALLY_SIMILAR":3948,"SPATIALLY_OVERLAPS":269},"by_node_kind":{"dataset":1017}},"isolated_node_frac":0.0049,"negative_control":{"candidates":343,"survivors":0,"empirical_fdr":0.0},"semantic_coherence":{"neighbor_theme_match":0.9398,"n_scored":4753},"joinability_sanity":{"joinable_edges":117,"share_declared_key_frac":1.0},"theme_distribution":{"Ciencias Naturales y Exactas":663,"Ciencias Sociales":216,"Ciencias Agrícolas":76,"Ingeniería y Tecnología":43,"Ciencias Médicas y de la Salud":19}}
+{
+  "graph": {
+    "nodes": 1017,
+    "edges": 14413,
+    "by_edge_kind": {
+      "AFFINITY": 4053,
+      "CORRELATES": 24,
+      "JOINABLE_ON": 117,
+      "SAME_SOURCE": 6002,
+      "SEMANTICALLY_SIMILAR": 3948,
+      "SPATIALLY_OVERLAPS": 269
+    },
+    "by_node_kind": {
+      "dataset": 1017
+    }
+  },
+  "isolated_node_frac": 0.0049,
+  "negative_control": {
+    "candidates": 343,
+    "survivors": 0,
+    "empirical_fdr": 0.0
+  },
+  "semantic_coherence": {
+    "neighbor_theme_match": 0.9398,
+    "n_scored": 4753
+  },
+  "joinability_sanity": {
+    "joinable_edges": 117,
+    "share_declared_key_frac": 1.0
+  },
+  "theme_distribution": {
+    "Ciencias Naturales y Exactas": 663,
+    "Ciencias Sociales": 216,
+    "Ciencias Agrícolas": 76,
+    "Ingeniería y Tecnología": 43,
+    "Ciencias Médicas y de la Salud": 19
+  },
+  "lexical_baseline": {
+    "k": 5,
+    "n_scored": 1017,
+    "vocab_terms": 8432,
+    "lexical_neighbor_theme_match": 0.9296,
+    "embedding_neighbor_theme_match": 0.9436,
+    "theme_base_rate": 0.4778,
+    "sota_gain_over_lexical": 0.014
+  }
+}
