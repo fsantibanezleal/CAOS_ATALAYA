@@ -1,6 +1,6 @@
 import type { CaseArtifact, RenderKind, Variant } from "@/lib/types";
 import ScatterMap from "./ScatterMap";
-import GraphView from "./GraphView";
+import GraphPanel from "./GraphPanel";
 import FindingsTable from "./FindingsTable";
 import AffinityView from "./AffinityView";
 import CoverageView from "./CoverageView";
@@ -20,7 +20,7 @@ export default function RenderSwitch({ kind, artifact, variant }:
     case "map":
       return <ScatterMap payload={payload} colorBy={(p.color as never) ?? "theme"} />;
     case "graph":
-      return <GraphView payload={payload}
+      return <GraphPanel payload={payload}
         minWeight={(p.min_cos as number) ?? (p.min_c as number) ?? (p.min_rho as number) ?? 0}
         edgeLabel={p.min_cos !== undefined ? "cos" : p.min_c !== undefined ? "containment" : "ρ"} />;
     case "findings":

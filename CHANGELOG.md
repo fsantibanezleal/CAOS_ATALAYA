@@ -12,6 +12,25 @@ while the corpus + web app are still being brought to the product-quality bar. T
 - Wheel-zoom no longer triggers the passive-listener warning: a non-passive native wheel listener is bound via a
   ref, so zoom can prevent the page scroll cleanly.
 
+## [0.05.000] · 2026-07-02
+
+### Added
+- **Multiple graph render modes** (semantic / joinability / correlation / affinity networks): **Clean 2D** (the
+  precise, accessible SVG, baked force layout), **Glow (WebGL)** (a canvas force graph with additive blending and
+  live physics, the nebula look), and **3D** (a three.js orbitable graph with tasteful Unreal bloom). A mode
+  selector plus a labels toggle and a node-highlight search. Heavy modes are lazy-loaded (code-split).
+
+### Fixed
+- Content/detail pages now use the full page width (headings, tables, figures span the full 1200px; only flowing
+  paragraphs are capped for readability) instead of a narrow centred column (#21).
+- Glow mode no longer crashes on the first frame (guard the canvas draw until the force layout assigns finite node
+  positions).
+
+### Changed
+- Scrubbed local scratch paths, the maintainer email and the deploy host from the tracked project source (they live
+  in the private management vault; `deploy.*` now requires ATALAYA_HOST / ATALAYA_SSH_KEY / ATALAYA_CERTBOT_EMAIL).
+  Added CI guards that reject leaked local paths / personal email.
+
 ## [0.04.000] · 2026-07-02
 
 ### Added
