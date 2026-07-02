@@ -100,9 +100,12 @@ def _embed_texts(texts: list[str], log=print):
     return [[round(float(x), 5) for x in row] for row in vecs]
 
 
-def run(datasets: list[DatasetRef], normalized: list, *, log=print) -> list[DatasetProfile]:
-    """Build a DatasetProfile per dataset that has at least one normalized resource. Embeddings computed in one
-    batch at the end."""
+def run(datasets: list[DatasetRef], normalized: list, *, embed_all: bool = True, log=print) -> list[DatasetProfile]:
+    """Build a DatasetProfile per dataset. Datasets with a downloaded table get a FULL profile (columns, entity
+    keys, MinHash, numeric indicators). When `embed_all` is set, EVERY other catalog dataset also gets a
+    METADATA-ONLY profile (embedding from its title/description/theme, geo from the catalog) so the cartography
+    map and the semantic graph cover the whole catalog, not only the mirrorable subset. Joinability/correlation
+    remain on the profiled subset (they need the data). Embeddings computed in one batched pass at the end."""
     by_id = {d.id: d for d in datasets}
     by_dataset: dict[str, list] = {}
     for nr in normalized:
@@ -110,6 +113,7 @@ def run(datasets: list[DatasetRef], normalized: list, *, log=print) -> list[Data
 
     profiles: list[DatasetProfile] = []
     texts: list[str] = []
+    # 1. full profiles for the downloaded (profiled) subset
     for i, (ds_id, nrs) in enumerate(sorted(by_dataset.items())):
         all_cols: list[ColumnProfile] = []
         n_rows_total = 0
@@ -120,18 +124,30 @@ def run(datasets: list[DatasetRef], normalized: list, *, log=print) -> list[Data
         d = by_id.get(ds_id)
         entity_keys = sorted({c.entity_role for c in all_cols if c.entity_role})
         years = _year_span(all_cols)
-        semantic = _semantic_text(d, all_cols)
         profiles.append(DatasetProfile(
             dataset_id=ds_id, n_rows=n_rows_total, n_cols=len(all_cols), columns=all_cols,
-            entity_keys=entity_keys, year_min=years[0], year_max=years[1], semantic_text=semantic))
-        texts.append(semantic)
-        if (i + 1) % 10 == 0 or (i + 1) == len(by_dataset):
-            log(f"[profile] profiled {i+1}/{len(by_dataset)} datasets")
+            entity_keys=entity_keys, year_min=years[0], year_max=years[1],
+            semantic_text=_semantic_text(d, all_cols)))
+        texts.append(profiles[-1].semantic_text)
+        if (i + 1) % 20 == 0 or (i + 1) == len(by_dataset):
+            log(f"[profile] profiled {i+1}/{len(by_dataset)} datasets (with data)")
+
+    # 2. metadata-only profiles for every other catalog dataset (embedding + geo only)
+    if embed_all:
+        profiled_ids = set(by_dataset)
+        for d in datasets:
+            if d.id in profiled_ids:
+                continue
+            profiles.append(DatasetProfile(
+                dataset_id=d.id, n_rows=0, n_cols=0, columns=[], entity_keys=[],
+                year_min=None, year_max=None, semantic_text=_semantic_text(d, [])))
+            texts.append(profiles[-1].semantic_text)
+        log(f"[profile] + {len(profiles) - len(by_dataset)} metadata-only datasets = {len(profiles)} total nodes")
 
     log(f"[profile] embedding {len(texts)} dataset texts ...")
     vecs = _embed_texts(texts, log=log) if texts else []
     profiles = [_with_embedding(p, v) for p, v in zip(profiles, vecs)]
-    log(f"[profile] done: {len(profiles)} dataset profiles")
+    log(f"[profile] done: {len(profiles)} dataset profiles ({len(by_dataset)} with data)")
     return profiles
 
 
