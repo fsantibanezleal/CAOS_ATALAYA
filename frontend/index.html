@@ -2,8 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Product — deterministic replay</title>
+    <meta
+      name="description"
+      content="CAOS_SIMLAB — a public, didactic lab for Discrete-Event Simulation (DES) and Agent-Based Modeling (ABM): explore pre-simulated regimes, compare parameters, and learn how simulation models are built."
+    />
+    <title>CAOS_SIMLAB — Simulation Lab</title>
+    <script>
+      // Apply the persisted theme before first paint to avoid a flash of the wrong palette.
+      (function () {
+        try {
+          var saved = localStorage.getItem("caos.atalaya.theme");
+          var prefersDark =
+            window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+          var theme = saved || (prefersDark ? "dark" : "light");
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (_) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

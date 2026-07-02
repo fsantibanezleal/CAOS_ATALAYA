@@ -1,84 +1,93 @@
-"""CONTRACT 1 — ingestion (raw -> pipeline). The *bring-your-own-data* gate.
+"""CONTRACT 1 — ingestion (raw -> pipeline). The *bring-your-own-data* gate for Atalaya.
 
-Declares the required schema (columns, units, ranges) of an input parameter table and an EXPLICIT outlier policy.
-A dataset is ACCEPTED iff it passes; bad rows are REJECTED with a reason (never silently coerced); plausible-but-
-suspicious rows are FLAGGED (accepted, but the manifest records the flag). This is what lets the product be applied
-to NEW data instead of only replaying baked cases. Documented in data/README.md.
+A raw resource is ACCEPTED as a profilable table iff it reads into a rectangular table that satisfies minimum
+quality bounds; it is REJECTED (with a reason) when it cannot be read or is structurally unusable; it is FLAGGED
+(accepted, but the flag is recorded in the manifest) when it is readable but suspicious (very wide, mostly-null,
+single-row). This is what lets Atalaya be pointed at ANY new tabular dataset, not only the DO catalog.
 
-EXAMPLE schema = an SIR parameterization. Replace the columns/ranges/policy with your product's real data contract
-(e.g. a vibration record: fs, channel, load, window length, dropouts; or a PSD CSV: sieve apertures, %-passing).
+The outlier / missing policy is EXPLICIT (never silent coercion):
+  - encoding/format failure                -> REJECT
+  - 0 rows or 0 columns                     -> REJECT
+  - > MAX_COLS columns                      -> REJECT (not a tidy table; likely a matrix dump)
+  - all-null column                         -> DROP the column, FLAG
+  - > MAX_NULL_FRAC null cells overall      -> FLAG (accepted, quality-flagged)
+  - duplicated headers                      -> de-duplicate (suffix), FLAG
+Documented in data/README.md + docs/data-contract.md.
 """
 from __future__ import annotations
 
-import math
-from dataclasses import dataclass
-from typing import Any
+from dataclasses import dataclass, field
+from pathlib import Path
 
-from .schema import SIRParams
+from .formats import UnreadableResource, read_table
 
-REQUIRED_COLUMNS: tuple[str, ...] = ("case_id", "beta", "gamma", "N", "I0")
-
-# name -> (min, max, unit). Physically/operationally plausible ranges; outside => REJECT.
-RANGES: dict[str, tuple[float, float, str]] = {
-    "beta": (1e-6, 5.0, "1/day (effective contact rate)"),
-    "gamma": (1e-6, 2.0, "1/day (recovery rate)"),
-    "N": (1.0, 1e9, "individuals (population)"),
-    "I0": (0.0, 1e9, "individuals (initial infected)"),
-}
-R0_FLAG_MAX = 20.0  # R0 above this is implausible for the example domain => FLAG (not reject)
-DEFAULT_DAYS = 160
+MAX_COLS = 512
+MIN_ROWS = 1
+MAX_NULL_FRAC = 0.6
+FLAG_WIDE_COLS = 120
 
 
 @dataclass
-class ContractReport:
-    accepted: list[SIRParams]
-    rejected: list[dict[str, Any]]
-    flagged: list[dict[str, Any]]
-
-    @property
-    def ok(self) -> bool:
-        return len(self.accepted) > 0
+class TableReport:
+    """Outcome of applying CONTRACT 1 to one raw resource."""
+    resource_path: str
+    accepted: bool
+    n_rows: int = 0
+    n_cols: int = 0
+    reason: str = ""
+    flags: list[str] = field(default_factory=list)
+    df: object = None                 # the cleaned polars DataFrame when accepted, else None
 
     def summary(self) -> str:
-        return f"{len(self.accepted)} accepted, {len(self.rejected)} rejected, {len(self.flagged)} flagged"
+        s = "ACCEPT" if self.accepted else "REJECT"
+        return f"{s} {self.resource_path} rows={self.n_rows} cols={self.n_cols} flags={self.flags} {self.reason}".strip()
 
 
-def validate_rows(raw_rows: list[dict[str, Any]]) -> ContractReport:
-    """Apply CONTRACT 1 to raw rows (e.g. from a CSV). Pure; deterministic; no I/O."""
-    accepted: list[SIRParams] = []
-    rejected: list[dict[str, Any]] = []
-    flagged: list[dict[str, Any]] = []
+def validate_table(resource_path: str | Path, *, max_rows: int | None = None) -> TableReport:
+    """Apply CONTRACT 1 to a raw file. Pure w.r.t. the file (reads, does not mutate the source)."""
+    path = str(resource_path)
+    try:
+        df = read_table(path, max_rows=max_rows)
+    except UnreadableResource as e:
+        return TableReport(path, accepted=False, reason=f"unreadable: {e}")
 
-    for i, row in enumerate(raw_rows):
-        cid = str(row.get("case_id", f"row{i}"))
-        missing = [c for c in REQUIRED_COLUMNS if c not in row or row[c] in (None, "")]
-        if missing:
-            rejected.append({"row": i, "case_id": cid, "reason": f"missing/empty columns: {missing}"})
-            continue
-        try:
-            vals = {k: float(row[k]) for k in ("beta", "gamma", "N", "I0")}
-        except (TypeError, ValueError):
-            rejected.append({"row": i, "case_id": cid, "reason": "non-numeric value in beta/gamma/N/I0"})
-            continue
-        if any(math.isnan(v) or math.isinf(v) for v in vals.values()):
-            rejected.append({"row": i, "case_id": cid, "reason": "NaN/Inf value"})
-            continue
-        bad: list[str] = []
-        for name, (lo, hi, _unit) in RANGES.items():
-            if not (lo <= vals[name] <= hi):
-                bad.append(f"{name}={vals[name]:g} out of [{lo:g},{hi:g}]")
-        if vals["I0"] > vals["N"]:
-            bad.append(f"I0={vals['I0']:g} > N={vals['N']:g}")
-        if bad:
-            rejected.append({"row": i, "case_id": cid, "reason": "; ".join(bad)})
-            continue
-        r0 = vals["beta"] / vals["gamma"] if vals["gamma"] > 0 else math.inf
-        if r0 > R0_FLAG_MAX:
-            flagged.append({"case_id": cid, "flag": f"R0={r0:.1f} > {R0_FLAG_MAX:g} (implausibly high)"})
-        try:
-            days = int(float(row.get("days") or DEFAULT_DAYS))
-        except (TypeError, ValueError):
-            days = DEFAULT_DAYS
-        accepted.append(SIRParams(case_id=cid, beta=vals["beta"], gamma=vals["gamma"],
-                                  N=vals["N"], I0=vals["I0"], days=max(1, days)))
-    return ContractReport(accepted=accepted, rejected=rejected, flagged=flagged)
+    flags: list[str] = []
+    n_rows, n_cols = df.height, df.width
+    if n_cols == 0 or n_rows < MIN_ROWS:
+        return TableReport(path, accepted=False, n_rows=n_rows, n_cols=n_cols, reason="empty table")
+    if n_cols > MAX_COLS:
+        return TableReport(path, accepted=False, n_rows=n_rows, n_cols=n_cols,
+                           reason=f"too wide ({n_cols} > {MAX_COLS} cols); not a tidy table")
+
+    # de-duplicate headers (gov exports often repeat a header) -> suffix + flag
+    seen: dict[str, int] = {}
+    new_cols = []
+    dup = False
+    for c in df.columns:
+        name = c if c not in seen else f"{c}__{seen[c]}"
+        if c in seen:
+            dup = True
+        seen[c] = seen.get(c, 0) + 1
+        new_cols.append(name)
+    if dup:
+        df.columns = new_cols
+        flags.append("duplicate_headers")
+
+    # drop all-null columns -> flag
+    null_counts = df.null_count().row(0)
+    keep = [c for c, nc in zip(df.columns, null_counts) if nc < n_rows]
+    if len(keep) < n_cols:
+        df = df.select(keep)
+        flags.append(f"dropped_{n_cols - len(keep)}_null_cols")
+        n_cols = df.width
+
+    total_cells = max(1, n_rows * n_cols)
+    null_frac = sum(df.null_count().row(0)) / total_cells
+    if null_frac > MAX_NULL_FRAC:
+        flags.append(f"high_null_frac_{null_frac:.2f}")
+    if n_cols > FLAG_WIDE_COLS:
+        flags.append(f"wide_{n_cols}_cols")
+    if n_rows == 1:
+        flags.append("single_row")
+
+    return TableReport(path, accepted=True, n_rows=n_rows, n_cols=n_cols, flags=flags, df=df)
