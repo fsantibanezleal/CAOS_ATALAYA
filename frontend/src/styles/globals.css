@@ -305,8 +305,8 @@ code, kbd { font-family: var(--font-mono); }
 .live-native h3 { margin: 0 0 0.4rem; }
 .live-native p { margin: 0 0 0.6rem; color: var(--color-fg-subtle); font-size: 0.9rem; }
 .live-reasons { margin: 0; padding-left: 1.1rem; color: var(--color-fg-faint); font-size: 0.82rem; font-family: var(--font-mono); }
-.spin { animation: simlab-spin 0.8s linear infinite; }
-@keyframes simlab-spin { to { transform: rotate(360deg); } }
+.spin { animation: atalaya-spin 0.8s linear infinite; }
+@keyframes atalaya-spin { to { transform: rotate(360deg); } }
 
 /* Timeline */
 .timeline { display: flex; flex-direction: column; gap: 0.7rem; }
