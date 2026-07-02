@@ -1,0 +1,41 @@
+# Static nginx site for Atalaya (vps-static deploy class). Serves the built SPA (frontend/dist) at
+# atalaya.fasl-work.com. No backend — the app is a static replay of committed artifacts + client-side live lanes.
+# The wildcard *.fasl-work.com A record already resolves to the VPS; this adds the vhost + SPA fallback.
+#
+# Install on the VPS:
+#   cp deploy/atalaya.fasl-work.com.nginx /etc/nginx/sites-available/atalaya.fasl-work.com
+#   ln -s /etc/nginx/sites-available/atalaya.fasl-work.com /etc/nginx/sites-enabled/
+#   nginx -t && systemctl reload nginx
+#   certbot --nginx -d atalaya.fasl-work.com
+
+server {
+    listen 80;
+    server_name atalaya.fasl-work.com;
+
+    root /var/www/atalaya.fasl-work.com;
+    index index.html;
+
+    # SPA deep-link fallback: unknown paths serve index.html (client-side routing).
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # long-cache the hashed assets; never cache index.html
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+    location = /index.html {
+        add_header Cache-Control "no-cache";
+    }
+
+    # the committed data artifacts (JSON) — modest cache
+    location /data/ {
+        expires 1h;
+        add_header Cache-Control "public";
+    }
+
+    gzip on;
+    gzip_types text/css application/javascript application/json image/svg+xml application/wasm;
+    gzip_min_length 1024;
+}

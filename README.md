@@ -1,62 +1,152 @@
-# CAOS product template — a REAL product repo (not a demo)
+# Atalaya
 
-This is the **canonical template** every Faena/CAOS data-product repo is instantiated from. It exists because
-ad-hoc products (bespoke scripts, baked cases, no reproducible env, no data contract) kept shipping — they
-*look* done but **cannot be applied to new data**, so they are demos, not tools. This template makes the standard
-**executable**: clone it, run two scripts, and you have a reproducible offline pipeline that ingests data in a
-**standard format**, processes it through **typed, seeded, tested stages**, emits **committed standard-format
-artifacts + a manifest**, and feeds a web app that **replays** them — and that any third party can point at
-**their own data**.
+**A watchtower over Chile's open data.** Atalaya harvests the [Data Observatory](https://catalogo.dataobservatory.net)
+open catalog, profiles every downloadable table, and mines five kinds of cross-dataset relation into an explorable
+knowledge graph, so you can see not just *what* datasets exist but *how they connect*: which can be joined, which
+describe the same thing, and which actually correlate when aligned by comuna or region.
 
-It is modelled on the validated exemplar **CAOS_SIMLAB** (`simlab/pipeline.py`, `requirements-*.txt`,
-`scripts/setup+precompute`, `docs/frameworks`, `data/artifacts`, `manifests/`).
+> An observatory of the observatory: a catalog of a thousand datasets has no map; Atalaya builds one.
 
-## The two data contracts (the thing that was missing everywhere)
+Live: `atalaya.fasl-work.com` (planned) · Source: github.com/fsantibanezleal/CAOS_ATALAYA
 
-A product is only real if data flows through **two enforced contracts**:
+---
 
-1. **Ingestion contract — `raw → processing`.** `productlab/io/contract.py` defines the required schema (columns,
-   units, ranges) of an input dataset and an explicit **outlier policy** (reject / clip / flag). This is the
-   *"bring your own data"* gate: a user's dataset is accepted iff it satisfies the contract. Documented in
-   [docs/data-contract.md](docs/data-contract.md).
-2. **Artifact contract — `processing → web`.** Every pipeline run writes a compact, standard-format artifact and a
-   `manifests/<case>.json` (params, seed, run_ms, bytes, gate verdict, format/version). The web app loads **only**
-   these — it never recomputes — and a TS type mirrors the manifest schema so a contract drift fails the build.
+## Why it exists (the problem)
 
-If either contract is missing, the product is a demo. CI enforces both.
+Chile's Data Observatory publishes 1000+ open datasets following FAIR principles. But a large flat catalog hides
+the relational knowledge that makes the data useful: joinability, semantic overlap, and real statistical
+relationships stay implicit, and finding them by hand across a thousand datasets is infeasible. Atalaya makes that
+relational structure explicit, honest and explorable.
 
-## Quickstart (proves the template runs end-to-end)
+## What you can do with it
 
-```bash
-# 1. create the reproducible environment (.venv + pinned per-need requirements)
-./scripts/setup.sh                      # or scripts/setup.ps1 on Windows PowerShell
+- **Map** the whole catalog by meaning (a PCA projection of multilingual embeddings), recoloured by theme, origin,
+  cluster, join key, recency or data quality.
+- **Find joinable datasets** (shared entity keys with high value containment) and the exact columns to join on.
+- **Discover correlations** across datasets that survive a permutation null + false-discovery-rate control.
+- **Search by meaning** live in your browser (an ONNX encoder runs client-side, no server).
+- **Rank relatedness** with a novel calibrated multi-evidence affinity you can reweight live.
+- Inspect **geographic** and **temporal** coverage and a **data-quality** census; query the graph from any agent
+  via the included **MCP server**.
 
-# 2. run the offline pipeline over every case → data/artifacts/ + manifests/
-./scripts/precompute.sh                 # or scripts/precompute.ps1
+## Impact / status
 
-# 3. the tests (determinism, both data contracts, the gate, parity)
-.venv/bin/python -m pytest              # .venv/Scripts/python.exe on Windows
+- **1017** datasets catalogued; the gov direct-file subset (**~21 GB**) downloaded + processed offline.
+- **8** analytical categories, **11** cases, each a genuine interactive domain view.
+- Honesty gate: on real data the correlation miner finds relationships that survive FDR; on the **same shuffled**
+  alignments it finds **~0** (an empirical false-discovery rate near 0).
+- `0.x` while the corpus + app are brought fully to the product-quality bar.
 
-# 4. the web app consumes the artifacts (copy-data enforces the artifact contract)
-cd web && npm install && node copy-data.mjs && npm run dev
+---
+
+## Problem, formalized
+
+Two datasets are *joinable* on an entity key when the smaller key set is contained in the larger; containment is
+estimated from MinHash signatures. Two indicators *correlate* when their Spearman ρ, aligned on a shared key,
+survives a seeded permutation null and Benjamini-Hochberg FDR. The **novel affinity** fuses semantic, joinability
+and correlation evidence, each calibrated against a null model:
+
+```
+S(A,B) = Σ_e w_e · r_e · f_e / Σ_e w_e · r_e ,   f_e = null-CDF percentile of evidence e
 ```
 
-## How to instantiate this template for a NEW product
+Full derivations, assumptions and references are in the app's **Methodology** page and in [docs/](docs/).
 
-See [docs/guides/00_instantiate.md](docs/guides/00_instantiate.md). In short: copy this tree, rename the
-`productlab` package to `<slug>lab`, **replace the EXAMPLE engine** (`productlab/stages/process.py`) with your
-product's research-chosen SOTA engine (the one documented in `docs/frameworks/`, pinned in
-`requirements-precompute.txt` — e.g. Yade/Chrono for DEM, OR-Tools for dispatch, MintPy for InSAR), write your
-ingestion contract + cases, and fill the `docs/` wiki **as you build, not at the end** (ADR-0056).
+## Architecture
 
-## Hard rules this template bakes in
+```
+Data Observatory (OpenSearch)  →  harvest (tier-gated mirror, out-of-git)
+  →  preprocess (ingestion contract → parquet)  →  profile (fingerprints, entity keys, MinHash, embeddings)
+  →  train (PCA/KMeans + MiniLM/ONNX + affinity nulls)  →  relate (5 edge kinds → SQLite-WAL graph)
+  →  evaluate (negative control)  →  export (compact web artifacts + manifests)  →  static SPA (replay + live)
+```
 
-- **The deep research is binding, not decoration.** Every engine/solver/library the research selected lives in
-  `docs/frameworks/<tool>/` *and* `requirements-precompute.txt`, and the pipeline actually uses it. No hand-rolled
-  substitute for a SOTA engine the research prescribed.
-- **Standard formats end-to-end** (`productlab/io/formats.py`): domain-standard in, compact-standard out.
-- **Reproducible**: pinned requirements per need; `scripts/setup`; CI installs them and runs a pipeline smoke.
-- **Applicable to new data**: the ingestion contract is the bring-your-own-data door.
-- **Versioned** (X.XX.XXX, CHANGELOG + tags from day 1) with **license/attribution hygiene**.
+Three lanes: **offline** (heavy SOTA engines, local `.venv`), **live** (ONNX search + affinity reweight in the
+browser), **replay** (the committed artifacts). Diagram + depth: the in-app ⓘ *Architecture* modal and
+[docs/architecture/](docs/architecture/).
 
-See [docs/architecture/01_overview.md](docs/architecture/01_overview.md) for the full rationale.
+## The offline pipeline
+
+Named, seeded, deterministic stages (`data-pipeline/atalayalab/`): `harvest → preprocess → feature_extraction →
+train → infer → evaluate → export`. Run it with `python -m atalayalab.pipeline`. The real SOTA engines are pinned
+in `requirements-precompute.txt` and documented in [docs/frameworks/](docs/frameworks/): polars, DuckDB,
+sentence-transformers, datasketch (MinHash), phik, SciPy, LightGBM, rustworkx, ONNX.
+
+## Features
+
+- Full-catalog enumeration via the discovered OpenSearch backend + resilient, size-gated, resumable download.
+- Bring-your-own-data ingestion contract with an explicit outlier policy.
+- Chilean entity-key detection (comuna CUT, region, year, lat/lon, RUT).
+- Cross-dataset knowledge graph with per-edge evidence, persisted portably (SQLite-WAL + zstd snapshot).
+- Calibrated multi-evidence affinity (the novel proposal) with live reweighting.
+- Bilingual (EN/ES) React SPA, light/dark, KaTeX, interactive viz with cursor read-outs, ⓘ architecture modal.
+- In-repo read-only MCP server over the graph.
+
+## Metrics / honesty
+
+Every external number is sourced (DOIs in the app + `frontend/src/data/citations.ts`); synthetic content is
+labelled; the negative-control FDR and semantic-coherence numbers on the **Benchmark** page are read directly from
+the committed `data/derived/metrics.json`. Atalaya does not claim causation, does not mirror the heavy DOI
+scientific archives (it references them), and states its limitations per view.
+
+---
+
+## Quick start
+
+```bash
+# 1. environments (two venvs) + .env, no global installs
+./scripts/setup.ps1            # or scripts/setup.sh
+
+# 2. run the offline pipeline (harvest already-mirrored data + mine the graph)
+./scripts/precompute.ps1       # python -m atalayalab.pipeline ; add --harvest to re-crawl
+
+# 3. tests + CONTRACT-2 check
+.venv-pipeline/Scripts/python -m pytest ; python scripts/check_artifacts.py
+
+# 4. the web app
+cd frontend && npm install && npm run dev
+```
+
+Secrets (the read-only catalog credential) live only in the private CAOS management vault and are materialized
+into `.env` by `setup.*`; the repo commits only `.env.example`. Heavy data and models stay out-of-git on the
+`E:\_Datos\atalaya` / `E:\_Models\atalaya` scratch; only compact derived artifacts are committed.
+
+## Repository structure
+
+```
+data-pipeline/atalayalab/   engine: catalog/ · io/ · core/ · model/ · stages/ · cases/ · pipeline.py · live.py
+data/derived/               committed compact web artifacts + manifests (CONTRACT 2)
+frontend/                   React 19 + Vite SPA (6 pages, viz, i18n, theming, ⓘ modal)
+mcp/                        read-only MCP server over the knowledge graph
+docs/                       the wiki (architecture · frameworks · cases · guides · data-contract)
+scripts/                    setup · precompute · dev (.ps1 + .sh) · check_artifacts.py
+tests/                      determinism, contracts, stats, gate, graph, pipeline smoke
+```
+
+## Ports / deploy
+
+Static-first: GitHub Pages (or `vps-static`) at `atalaya.fasl-work.com`. No backend, no database, no runtime data
+server. See [docs/architecture/07_deploy.md](docs/architecture/07_deploy.md).
+
+## MCP server
+
+```bash
+python mcp/atalaya_mcp.py         # stdio JSON-RPC; tools: find_related, join_path, correlations_for, search_columns
+python mcp/atalaya_mcp.py --selftest
+```
+
+See [mcp/README.md](mcp/README.md).
+
+## References
+
+- Reimers & Gurevych (2020), *Multilingual sentence embeddings by knowledge distillation* · DOI 10.18653/v1/2020.emnlp-main.365
+- Zhu et al. (2016), *LSH Ensemble: internet-scale domain search* · DOI 10.14778/2994509.2994534
+- Benjamini & Hochberg (1995), *Controlling the false discovery rate* · DOI 10.1111/j.2517-6161.1995.tb02031.x
+- Baak et al. (2020), *phi_k correlation* · DOI 10.1016/j.csda.2020.107043
+- Wilkinson et al. (2016), *FAIR Guiding Principles* · DOI 10.1038/sdata.2016.18
+
+## License
+
+MIT · see [LICENSE](LICENSE). Dataset content belongs to the Data Observatory and the original Chilean sources
+under their respective licenses (mostly CC-BY family); Atalaya stores only derived metadata + compact artifacts.
+Built by Felipe Santibáñez-Leal · a CAOS research project.

@@ -1,4 +1,4 @@
-# Framework card — Data Observatory catalog backend (AWS OpenSearch)
+# Framework card · Data Observatory catalog backend (AWS OpenSearch)
 
 ## What & why
 
@@ -60,4 +60,4 @@ This is the head of the ingestion path; the size/tier policy it feeds is documen
 The catalog is a **metadata catalog**, not a data host: `media_files[].file_uri` points at external sites. About
 half the datasets are Chilean-gov direct files (mirrorable); the other half are DOI records whose `file_uri` is an
 HTML landing page for large foreign scientific archives (not directly downloadable). Atalaya mirrors only the
-former and references the latter — see the download-tier policy in the data contract.
+former and references the latter · see the download-tier policy in the data contract.

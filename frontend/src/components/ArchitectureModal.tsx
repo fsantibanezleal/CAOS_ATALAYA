@@ -10,7 +10,7 @@ import { useLang } from "@/lib/useLang";
  * role="dialog") with a tab strip; each tab pairs ONE hand-authored theme-aware SVG with a bilingual
  * explanation at complete depth. CAOS_SIMLAB is a non-shell app, so this implements the pattern directly.
  *
- * The SVG is FETCHED + INLINED (dangerouslySetInnerHTML) — an <img> would not inherit the app's CSS
+ * The SVG is FETCHED + INLINED (dangerouslySetInnerHTML); an <img> would not inherit the app's CSS
  * variables, so the diagram would not follow the light/dark theme. Fetched via import.meta.env.BASE_URL so it
  * resolves under a GitHub-Pages subpath.
  */

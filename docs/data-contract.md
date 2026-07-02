@@ -3,7 +3,7 @@
 Atalaya enforces the two contracts every product of this archetype must have: an **ingestion** contract (raw →
 pipeline) and an **artifact** contract (pipeline → web). Both are code, both are tested, and drift fails CI.
 
-## Contract 1 — ingestion (raw → pipeline)
+## Contract 1 · ingestion (raw → pipeline)
 
 `data-pipeline/atalayalab/io/contract.py :: validate_table()` is the *bring-your-own-data* gate. Point it at any
 tabular file and it either accepts it as a profilable table, rejects it with a reason, or accepts-and-flags it.
@@ -43,7 +43,7 @@ Encoding is sniffed (`charset-normalizer`, BOM detection, latin-1/cp1252 fallbac
 (`;`, `,`, tab, `|`) because Chilean gov CSVs are inconsistent. Accepted tables are normalized to **parquet**
 (zstd) in the out-of-git derived tree. Flags travel with the dataset into the profile and the manifest.
 
-## Contract 2 — artifact (pipeline → web)
+## Contract 2 · artifact (pipeline → web)
 
 `core/manifest.py` + `core/trace.py` define the compact, versioned artifact the web replays. The web loads **only**
 manifests + artifacts; it never recomputes the science. `frontend/src/lib/contract.types.ts` mirrors the manifest

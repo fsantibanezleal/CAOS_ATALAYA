@@ -1,189 +1,154 @@
-// Mirrors the simlab trace + manifest v2 schemas (simlab/core/*.py, simlab/pipeline.py).
+// TypeScript mirror of the Python CONTRACT-2 schemas (core/manifest.py, core/trace.py, stages/export.py).
+// A drift here vs the pipeline output fails the build. Keep in lockstep with the manifest/artifact schemas.
 
-export interface SimEvent {
-  t: number;
-  kind: string; // "arrival" | "start" | "depart"
-  id?: number;
-}
-
-export interface Analytic {
-  rho: number;
-  p_wait: number | null;
-  Wq: number | null;
-  Lq: number | null;
-  stable: boolean;
-}
-
-export interface Trace {
-  schema: string;
-  scenario: string;
-  title: string;
-  method: string;
-  seed: number;
-  params: Record<string, number>;
-  kpis: Record<string, number>;
-  analytic: Analytic;
-  timeline: { t_end: number; events: SimEvent[] };
-}
+export type RenderKind =
+  | "map" | "graph" | "findings" | "coverage" | "timeline" | "quality" | "affinity" | "overview";
 
 export interface GateInfo {
+  lane: "live" | "precompute";
   pure_python: boolean;
-  run_ms: number;
+  wheels: string[];
   trace_bytes: number;
+  run_ms_budget: number;
+  trace_bytes_budget: number;
   reasons: string[];
 }
 
-export interface VariantEntry {
-  id: string;
-  label_en: string;
-  label_es: string;
-  note_en: string;
-  note_es: string;
-  params: Record<string, number>;
-  lane: "live" | "precomputed";
+export interface CaseManifest {
+  schema: string;
+  case_id: string;
+  category: string;
+  title_en: string;
+  title_es: string;
+  render_kind: RenderKind;
+  real_or_synthetic: string;
+  engine: { package: string; version: string; engines: string[] };
+  seed: number;
+  artifact: { path: string; format: string; trace_schema: string; bytes: number };
+  lane: "live" | "precompute";
   gate: GateInfo;
-  kpis: Record<string, number>;
-  analytic: Analytic;
-  trace: string; // repo-relative path, forward slashes
+  flags: string[];
+  stats: Record<string, number | string>;
 }
 
-// ── Grid ABM (Schelling, SIR) frame trace (simlab.gridtrace/v1) ──
-export interface GridFrame {
-  t: number;
-  cells: number[]; // row-major state codes
-}
-export interface LegendItem {
-  code: number;
-  label_en: string;
-  label_es: string;
-  color: string; // a CSS var() expression
-}
-export interface GridTrace {
+export interface CaseArtifact<P = unknown> {
   schema: string;
-  scenario: string;
-  title: string;
-  method: string;
-  seed: number;
-  params: Record<string, number>;
-  grid: { w: number; h: number };
-  legend: LegendItem[];
-  kpis: Record<string, number>;
-  analytic: Record<string, unknown>;
-  series: Record<string, number[]>; // includes "x"
-  frames: GridFrame[];
+  case_id: string;
+  kind: RenderKind;
+  payload: P;
 }
 
-// ── Chart/series trace (Monte-Carlo CI, Beer Game bullwhip) (simlab.charttrace/v1) ──
-export interface ChartLine {
-  key: string;
-  color: string;
-  label_en: string;
-  label_es: string;
-  dashed?: boolean;
-}
-export interface ChartTrace {
-  schema: string;
-  scenario: string;
-  title: string;
-  method: string;
-  seed: number;
-  params: Record<string, number>;
-  x_label_en: string;
-  x_label_es: string;
-  y_label_en: string;
-  y_label_es: string;
-  series: Record<string, number[]>; // includes "x"
-  lines: ChartLine[];
-  band: { lo: string; hi: string; color: string; label_en: string; label_es: string } | null;
-  bars: { edges: number[]; counts: number[]; color: string; label_en: string; label_es: string } | null;
-  ref_lines: { y: number; color: string; label_en: string; label_es: string }[];
-  kpis: Record<string, number>;
-  analytic: Record<string, unknown>;
-}
-
-// ── Multi-stage flow DES (S04 ED) (simlab.flowtrace/v1) ──
-export interface FlowStation { id: string; label_en: string; label_es: string; c: number }
-export interface FlowEvent { t: number; kind: string; id: number; prio: number }
-export interface FlowTrace {
-  schema: string;
-  scenario: string;
-  title: string;
-  method: string;
-  seed: number;
-  params: Record<string, number>;
-  stations: FlowStation[];
-  legend: LegendItem[];
-  kpis: Record<string, number>;
-  analytic: Record<string, unknown>;
-  timeline: { t_end: number; events: FlowEvent[] };
-}
-
-// ── Gantt schedule (S06 job-shop) (simlab.gantt/v1) ──
-export interface GanttOp { job: number; machine: number; start: number; dur: number }
-export interface GanttTrace {
-  schema: string;
-  scenario: string;
-  title: string;
-  method: string;
-  seed: number;
-  params: Record<string, number>;
-  machines: { id: number; label: string }[];
-  jobs: number;
-  ops: GanttOp[];
-  makespan: number;
-  kpis: Record<string, number>;
-  analytic: Record<string, unknown>;
-}
-
-// ── Route/network trace (S07 haul, S08 VRP, S09 ambulance) (simlab.routetrace/v1) ──
-export interface RouteNode { id: number; x: number; y: number; kind: string; label?: string; elev?: number }
-export interface RouteLeg { a: number; b: number; t0: number; t1: number }
-export interface RouteAgent { id: number; kind: string; color: string; legs: RouteLeg[]; home?: number }
-export interface RouteMarker { x: number; y: number; t0: number; t1: number; kind: string }
-export interface RoutePlan { agent: number; path: number[]; color: string }
-export interface RouteGauge { x: number; y: number; capacity: number; label_en: string; label_es: string; color: string; frames: [number, number][] }
-export interface RouteTrace {
-  schema: string;
-  scenario: string;
-  title: string;
-  method: string;
-  seed: number;
-  params: Record<string, number>;
-  bounds: { minx: number; miny: number; maxx: number; maxy: number };
-  nodes: RouteNode[];
-  edges: number[][];
-  routes: RoutePlan[];
-  agents: RouteAgent[];
-  markers: RouteMarker[];
-  barriers?: { x: number; y: number }[];
-  gauges?: RouteGauge[];
-  legend: { code: string; label_en: string; label_es: string; color: string }[];
-  t_end: number;
-  kpis: Record<string, number>;
-  analytic: Record<string, unknown>;
-}
-
-export interface ParamSpec {
-  key: string;
-  label: string;
-  default: number;
-  min: number;
-  max: number;
-  step: number;
-  kind: "float" | "int";
-}
-
-export interface ScenarioManifest {
-  schema: string;
+export interface Variant {
   id: string;
+  label_en: string;
+  label_es: string;
+  params: Record<string, unknown>;
+}
+
+export interface CaseDef {
+  id: string;
+  category: string;
+  render_kind: RenderKind;
+  title_en: string;
+  title_es: string;
+  variants: Variant[];
+}
+
+export interface Categories {
+  schema: string;
+  categories: Record<string, string[]>;
+  cases: CaseDef[];
+}
+
+// --- catalog ---
+export interface CatalogDataset {
+  id: string;
+  slug: string;
   title: string;
-  method: string;
-  tier: number;
-  engine: string;
-  seed: number;
-  viz: { renderer: string; dimensionality: string };
-  wheel_closure: string[];
-  param_specs: ParamSpec[];
-  lane: "live" | "precomputed";
-  variants: VariantEntry[];
+  theme: string;
+  sub: string;
+  origin: string;
+  org: string;
+  license: string;
+  n_resources: number;
+  formats: string[];
+  tiers: string[];
+  profiled: boolean;
+  lat: number | null;
+  lon: number | null;
+  desc: string;
+}
+export interface Catalog { schema: string; n: number; datasets: CatalogDataset[] }
+
+// --- global graph ---
+export interface GraphNode {
+  id: string;
+  label: string;
+  theme?: string;
+  origin?: string;
+  cluster?: number;
+  coord?: [number, number];
+  n_cols?: number;
+  entity_keys?: string[];
+}
+export interface GraphEdge { s: string; t: string; k: string; w: number }
+export interface GraphData {
+  schema: string;
+  counts: { nodes: number; edges: number; by_edge_kind: Record<string, number>; by_node_kind: Record<string, number> };
+  nodes: GraphNode[];
+  edges: GraphEdge[];
+}
+
+// --- per-render-kind payloads ---
+export interface MapNode {
+  id: string; title: string; theme: string; origin: string; org: string; license: string;
+  keys: string[]; n_cols: number; n_rows: number; year_min: number | null; year_max: number | null;
+  coord: [number, number]; cluster: number; null_frac: number; lat: number | null; lon: number | null;
+}
+export interface MapPayload { nodes: MapNode[]; pca_var: number[]; themes: string[]; clusters: number[] }
+
+export interface GraphEdgeRow { s: string; t: string; w: number; ev: Record<string, unknown> }
+export interface GraphPayload { nodes: MapNode[]; edges: GraphEdgeRow[] }
+
+export interface CorrRow {
+  a: string; b: string; a_id: string; b_id: string; rho: number; p_adj: number; n: number;
+  key: string; cols: string[]; weight: number;
+}
+export interface FindingsPayload { rows: CorrRow[] }
+
+export interface AffRow {
+  a: string; b: string; a_id: string; b_id: string; score: number;
+  f_sem: number; f_join: number; f_stat: number; weight: number;
+}
+export interface AffinityPayload { rows: AffRow[]; nulls: Record<string, number> }
+
+export interface CoverageRow {
+  id: string; title: string; theme: string; level: string; lat: number | null; lon: number | null; keys: string[];
+}
+export interface CoveragePayload { rows: CoverageRow[]; counts: Record<string, number> }
+
+export interface TimelineRow { id: string; title: string; theme: string; y0: number; y1: number; keys: string[]; span: number }
+export interface TimelinePayload { rows: TimelineRow[]; histogram: Record<string, number> }
+
+export interface QualityRow {
+  id: string; title: string; theme: string; n_cols: number; n_rows: number; null_frac: number;
+  keys: number; max_card: number;
+}
+export interface QualityPayload { rows: QualityRow[]; flags: Record<string, number>; dtypes: Record<string, number> }
+
+export interface OverviewPayload {
+  theme: Record<string, number>; origin: Record<string, number>; license: Record<string, number>;
+  format: Record<string, number>; tier: Record<string, number>;
+  size_report: Record<string, { resources: number; known_bytes: number; unsized: number }>;
+  totals: { datasets: number; resources: number; profiled: number };
+}
+
+// --- validation metrics (Experiments / Benchmark) ---
+export interface Metrics {
+  graph: GraphData["counts"];
+  isolated_node_frac: number;
+  negative_control: { candidates: number; survivors: number; empirical_fdr: number };
+  semantic_coherence: { neighbor_theme_match: number; n_scored: number };
+  joinability_sanity: { joinable_edges: number; share_declared_key_frac: number };
+  theme_distribution: Record<string, number>;
 }

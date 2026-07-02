@@ -38,7 +38,7 @@ const en = {
   common: { loading: "Loading…", error: "Could not load", none: "No data", of: "of", showing: "Showing" },
   arch: {
     title: "Architecture · how it works",
-    subtitle: "What runs where, the engines, and the data contracts — the whole system at a glance.",
+    subtitle: "What runs where, the engines, and the data contracts · the whole system at a glance.",
     open: "Architecture / how it works",
     close: "Close",
     footer: "The offline pipeline mines the graph; the web replays committed artifacts and runs semantic search live.",
@@ -69,7 +69,7 @@ const en = {
     howto: "How to read & use this view",
   },
   live: {
-    intro: "Type a query and search all datasets by meaning — the multilingual encoder runs in your browser (ONNX Runtime Web), no server. Or reweight the affinity evidences and watch the ranking recompute live.",
+    intro: "Type a query and search all datasets by meaning · the multilingual encoder runs in your browser (ONNX Runtime Web), no server. Or reweight the affinity evidences and watch the ranking recompute live.",
     badge: "computed live in your browser",
     query: "Semantic query",
     run: "Search",
@@ -82,7 +82,7 @@ const en = {
     running: "Encoding…",
     error: "Live run failed",
     firstRunNote: "The first search downloads the ONNX encoder once; later searches are instant.",
-    fallbackTitle: "Encoder not loaded — dataset-similarity mode",
+    fallbackTitle: "Encoder not loaded · dataset-similarity mode",
     fallbackBody: "Free-text search needs the ONNX encoder. Until it loads you can still explore 'datasets similar to this one' using the baked embeddings.",
   },
   viz: {
@@ -136,7 +136,7 @@ const es: typeof en = {
   common: { loading: "Cargando…", error: "No se pudo cargar", none: "Sin datos", of: "de", showing: "Mostrando" },
   arch: {
     title: "Arquitectura · cómo funciona",
-    subtitle: "Qué corre dónde, los motores y los contratos de datos — todo el sistema de un vistazo.",
+    subtitle: "Qué corre dónde, los motores y los contratos de datos · todo el sistema de un vistazo.",
     open: "Arquitectura / cómo funciona",
     close: "Cerrar",
     footer: "El pipeline offline mina el grafo; la web reproduce artefactos commiteados y corre búsqueda semántica en vivo.",
@@ -167,7 +167,7 @@ const es: typeof en = {
     howto: "Cómo leer y usar esta vista",
   },
   live: {
-    intro: "Escribe una consulta y busca todos los datasets por significado — el codificador multilingüe corre en tu navegador (ONNX Runtime Web), sin servidor. O re-pondera las evidencias de afinidad y observa el ranking recomputarse en vivo.",
+    intro: "Escribe una consulta y busca todos los datasets por significado · el codificador multilingüe corre en tu navegador (ONNX Runtime Web), sin servidor. O re-pondera las evidencias de afinidad y observa el ranking recomputarse en vivo.",
     badge: "calculado en vivo en tu navegador",
     query: "Consulta semántica",
     run: "Buscar",
@@ -180,7 +180,7 @@ const es: typeof en = {
     running: "Codificando…",
     error: "Falló la ejecución en vivo",
     firstRunNote: "La primera búsqueda descarga el codificador ONNX una vez; las siguientes son instantáneas.",
-    fallbackTitle: "Codificador no cargado — modo similitud entre datasets",
+    fallbackTitle: "Codificador no cargado · modo similitud entre datasets",
     fallbackBody: "La búsqueda de texto libre necesita el codificador ONNX. Hasta que cargue puedes explorar 'datasets similares a este' con los embeddings horneados.",
   },
   viz: {

@@ -49,6 +49,18 @@ def _catalog_json(ctx: CorpusContext) -> dict:
     return {"schema": "atalaya.catalog/v1", "n": len(rows), "datasets": rows}
 
 
+def _embeddings_json(ctx: CorpusContext) -> dict:
+    """Compact baked embeddings for the browser live semantic-search lane: cosine of an in-browser query vector
+    (encoded by transformers.js / onnxruntime-web) against these gives live free-text ranking. Rounded to keep
+    the file small; only profiled datasets (which carry an embedding)."""
+    by_title = {d.id: d.title for d in ctx.datasets}
+    rows = [{"id": p.dataset_id, "title": (by_title.get(p.dataset_id, p.dataset_id))[:90],
+             "v": [round(x, 4) for x in p.embedding]} for p in ctx.profiles if p.embedding]
+    dim = len(rows[0]["v"]) if rows else 0
+    return {"schema": "atalaya.embeddings/v1", "model": "paraphrase-multilingual-MiniLM-L12-v2",
+            "dim": dim, "n": len(rows), "datasets": rows}
+
+
 def _graph_json(ctx: CorpusContext) -> dict:
     counts = ctx.db.counts()
     nodes = ctx.db.nodes(kind="dataset")
@@ -89,6 +101,7 @@ def run(ctx: CorpusContext, metrics: dict, *, seed: int = config.DEFAULT_SEED,
     write_json(manifests / "index.json", build_index(entries))
     write_json(derived / "catalog.json", _catalog_json(ctx))
     write_json(derived / "graph.json", _graph_json(ctx))
+    write_json(derived / "embeddings.json", _embeddings_json(ctx))
     write_json(derived / "metrics.json", metrics)
     write_json(derived / "categories.json",
                {"schema": "atalaya.categories/v1", "categories": registry.list_categories(),

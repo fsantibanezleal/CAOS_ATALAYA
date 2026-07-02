@@ -78,7 +78,7 @@
   <!-- cases by category + mirror -->
   <rect class="grp" x="14" y="312" width="430" height="142" rx="10"/>
   <text class="it" x="30" y="334" style="font-weight:700">Cases by category</text>
-  <text class="cd mono" x="30" y="350">cases/&lt;domain&gt;_cases.py · registry.py</text>
+  <text class="cd mono" x="30" y="350">cases/builders.py · registry.py</text>
   <text class="mu" x="30" y="372">• control / degenerate — sanity anchors</text>
   <text class="mu" x="30" y="392">• canonical regimes — the science range</text>
   <text class="mu" x="30" y="412">• real-data — sourced, labelled honestly</text>
