@@ -1,0 +1,74 @@
+// CAOS_SIMLAB master bibliography. DOIs/URLs verified 2026-06-19.
+// verified:false means "no DOI exists to verify" (book/software/pre-DOI era), NOT "in doubt".
+// Resolve DOIs at https://doi.org/<doi>.
+
+export interface Citation {
+  id: string;
+  label: string;
+  citation: string;
+  doi?: string;
+  url?: string;
+  verified: boolean;
+  tags: Array<"queueing" | "des" | "abm" | "tools" | "optimization">;
+}
+
+export const CITATIONS: Citation[] = [
+  { id: "erlang1917", label: "Erlang 1917", citation: "Erlang, A. K. (1917/1918). Solution of some problems in the theory of probabilities of significance in automatic telephone exchanges. Elektroteknikeren 13; Eng. transl. The Post Office Electrical Engineers' Journal 10 (1918), 189–197.", url: "https://search.worldcat.org/oclc/80012890", verified: false, tags: ["queueing"] },
+  { id: "kendall1953", label: "Kendall 1953", citation: "Kendall, D. G. (1953). Stochastic processes occurring in the theory of queues and their analysis by the method of the imbedded Markov chain. The Annals of Mathematical Statistics 24(3), 338–354.", doi: "10.1214/aoms/1177728975", verified: true, tags: ["queueing"] },
+  { id: "little1961", label: "Little 1961", citation: "Little, J. D. C. (1961). A proof for the queuing formula: L = λW. Operations Research 9(3), 383–387.", doi: "10.1287/opre.9.3.383", verified: true, tags: ["queueing"] },
+  { id: "kingman1961", label: "Kingman 1961", citation: "Kingman, J. F. C. (1961). The single server queue in heavy traffic. Mathematical Proceedings of the Cambridge Philosophical Society 57(4), 902–904.", doi: "10.1017/S0305004100036094", verified: true, tags: ["queueing"] },
+  { id: "pollaczek1930", label: "Pollaczek 1930", citation: "Pollaczek, F. (1930). Über eine Aufgabe der Wahrscheinlichkeitstheorie I–II. Mathematische Zeitschrift 32, 64–100 & 729–750.", doi: "10.1007/BF01194620", verified: false, tags: ["queueing"] },
+  { id: "grossharris2018", label: "Shortle, Thompson, Gross & Harris 2018", citation: "Shortle, J. F., Thompson, J. M., Gross, D., & Harris, C. M. (2018). Fundamentals of Queueing Theory (5th ed.). Hoboken, NJ: Wiley. ISBN 978-1-118-94352-6.", doi: "10.1002/9781119453765", verified: true, tags: ["queueing"] },
+  { id: "lawkelton2015", label: "Law 2015", citation: "Law, A. M. (2015). Simulation Modeling and Analysis (5th ed.). New York: McGraw-Hill Education. ISBN 978-0-07-340132-4.", url: "https://www.mheducation.com/highered/product/simulation-modeling-analysis-law/M9780073401324.html", verified: false, tags: ["des"] },
+  { id: "banks2010", label: "Banks, Carson, Nelson & Nicol 2010", citation: "Banks, J., Carson, J. S., Nelson, B. L., & Nicol, D. M. (2010). Discrete-Event System Simulation (5th ed.). Upper Saddle River, NJ: Pearson. ISBN 978-0-13-606212-7.", url: "https://www.pearson.com/en-us/subject-catalog/p/discrete-event-system-simulation/P200000003161", verified: false, tags: ["des"] },
+  { id: "welch1983", label: "Welch 1983", citation: "Welch, P. D. (1983). The statistical analysis of simulation results. In S. S. Lavenberg (Ed.), The Computer Performance Modeling Handbook (pp. 268–328). New York: Academic Press.", url: "https://search.worldcat.org/oclc/8451904", verified: false, tags: ["des"] },
+  { id: "sargent2013", label: "Sargent 2013", citation: "Sargent, R. G. (2013). Verification and validation of simulation models. Journal of Simulation 7(1), 12–24.", doi: "10.1057/jos.2012.20", verified: true, tags: ["des"] },
+  { id: "lecuyer1999", label: "L'Ecuyer 1999", citation: "L'Ecuyer, P. (1999). Good parameter sets for combined multiple recursive random number generators. Operations Research 47(1), 159–164.", doi: "10.1287/opre.47.1.159", verified: true, tags: ["des"] },
+  { id: "matsumoto1998", label: "Matsumoto & Nishimura 1998", citation: "Matsumoto, M., & Nishimura, T. (1998). Mersenne twister: A 623-dimensionally equidistributed uniform pseudo-random number generator. ACM TOMACS 8(1), 3–30.", doi: "10.1145/272991.272995", verified: true, tags: ["des"] },
+  { id: "schelling1971", label: "Schelling 1971", citation: "Schelling, T. C. (1971). Dynamic models of segregation. The Journal of Mathematical Sociology 1(2), 143–186.", doi: "10.1080/0022250X.1971.9989794", verified: true, tags: ["abm"] },
+  { id: "kermack1927", label: "Kermack & McKendrick 1927", citation: "Kermack, W. O., & McKendrick, A. G. (1927). A contribution to the mathematical theory of epidemics. Proceedings of the Royal Society of London A 115(772), 700–721.", doi: "10.1098/rspa.1927.0118", verified: true, tags: ["abm"] },
+  { id: "reynolds1987", label: "Reynolds 1987", citation: "Reynolds, C. W. (1987). Flocks, herds and schools: A distributed behavioral model. Computer Graphics (SIGGRAPH '87) 21(4), 25–34.", doi: "10.1145/37402.37406", verified: true, tags: ["abm"] },
+  { id: "bonabeau2002", label: "Bonabeau 2002", citation: "Bonabeau, E. (2002). Agent-based modeling: Methods and techniques for simulating human systems. PNAS 99(suppl. 3), 7280–7287.", doi: "10.1073/pnas.082080899", verified: true, tags: ["abm"] },
+  { id: "grimm2006", label: "Grimm et al. 2006", citation: "Grimm, V., Berger, U., Bastiansen, F., et al. (2006). A standard protocol for describing individual-based and agent-based models. Ecological Modelling 198(1–2), 115–126.", doi: "10.1016/j.ecolmodel.2006.04.023", verified: true, tags: ["abm"] },
+  { id: "grimm2020", label: "Grimm et al. 2020", citation: "Grimm, V., Railsback, S. F., Vincenot, C. E., et al. (2020). The ODD protocol for describing agent-based and other simulation models: A second update. JASSS 23(2), 7.", doi: "10.18564/jasss.4259", verified: true, tags: ["abm"] },
+  { id: "epstein1996", label: "Epstein & Axtell 1996", citation: "Epstein, J. M., & Axtell, R. (1996). Growing Artificial Societies: Social Science from the Bottom Up. Brookings Institution Press & MIT Press. ISBN 978-0-262-55025-3.", url: "https://direct.mit.edu/books/monograph/2503", verified: false, tags: ["abm"] },
+  { id: "simpy", label: "SimPy", citation: "Team SimPy (2002–present). SimPy: Discrete-event simulation for Python (process-based DES framework) [Software].", url: "https://simpy.readthedocs.io/", verified: false, tags: ["tools", "des"] },
+  { id: "kazil2020", label: "Kazil, Masad & Crooks 2020", citation: "Kazil, J., Masad, D., & Crooks, A. (2020). Utilizing Python for agent-based modeling: The Mesa framework. In SBP-BRiMS 2020, LNCS 12268 (pp. 308–317). Springer.", doi: "10.1007/978-3-030-61255-9_30", verified: true, tags: ["tools", "abm"] },
+  { id: "terhoeven2025", label: "ter Hoeven et al. 2025", citation: "ter Hoeven, E., Kwakkel, J., Hess, V., et al. (2025). Mesa 3: Agent-based modeling with Python in 2025. Journal of Open Source Software 10(107), 7668.", doi: "10.21105/joss.07668", verified: true, tags: ["tools", "abm"] },
+  { id: "ortools", label: "OR-Tools", citation: "Perron, L., & Furnon, V. (Google) (2010–present). OR-Tools: Google's operations research software suite [Software].", url: "https://developers.google.com/optimization", verified: false, tags: ["tools"] },
+  { id: "erlang1909", label: "Erlang 1909", citation: "Erlang, A. K. (1909). The theory of probabilities and telephone conversations. Nyt Tidsskrift for Matematik B 20, 33–39.", url: "https://search.worldcat.org/oclc/80012890", verified: false, tags: ["queueing"] },
+  { id: "wolff1982", label: "Wolff 1982", citation: "Wolff, R. W. (1982). Poisson arrivals see time averages. Operations Research 30(2), 223–231.", doi: "10.1287/opre.30.2.223", verified: true, tags: ["queueing"] },
+  { id: "lecuyer2002", label: "L'Ecuyer et al. 2002", citation: "L'Ecuyer, P., Simard, R., Chen, E. J., & Kelton, W. D. (2002). An object-oriented random-number package with many long streams and substreams. Operations Research 50(6), 1073–1075.", doi: "10.1287/opre.50.6.1073.358", verified: true, tags: ["des"] },
+  { id: "monks2019", label: "Monks et al. 2019", citation: "Monks, T., Currie, C. S. M., Onggo, B. S., Robinson, S., Kunc, M., & Taylor, S. J. E. (2019). Strengthening the reporting of empirical simulation studies: Introducing the STRESS guidelines. Journal of Simulation 13(1), 55–67.", doi: "10.1080/17477778.2018.1442155", verified: true, tags: ["des"] },
+  { id: "grimm2010", label: "Grimm et al. 2010", citation: "Grimm, V., Berger, U., DeAngelis, D. L., Polhill, J. G., Giske, J., & Railsback, S. F. (2010). The ODD protocol: A review and first update. Ecological Modelling 221(23), 2760–2768.", doi: "10.1016/j.ecolmodel.2010.08.019", verified: true, tags: ["abm"] },
+  { id: "masad2015", label: "Masad & Kazil 2015", citation: "Masad, D., & Kazil, J. (2015). Mesa: An agent-based modeling framework. In Proceedings of the 14th Python in Science Conference (SciPy 2015), 51–58.", doi: "10.25080/Majora-7b98e3ed-009", verified: true, tags: ["tools", "abm"] },
+
+  // ── Optimization / Operations Research ──
+  { id: "dantzig1963", label: "Dantzig 1963", citation: "Dantzig, G. B. (1963). Linear Programming and Extensions. Princeton, NJ: Princeton University Press. ISBN 978-0-691-05913-6.", doi: "10.1515/9781400884179", verified: true, tags: ["optimization"] },
+  { id: "dantzig1959vrp", label: "Dantzig & Ramser 1959", citation: "Dantzig, G. B., & Ramser, J. H. (1959). The truck dispatching problem. Management Science 6(1), 80–91.", doi: "10.1287/mnsc.6.1.80", verified: true, tags: ["optimization"] },
+  { id: "karmarkar1984", label: "Karmarkar 1984", citation: "Karmarkar, N. (1984). A new polynomial-time algorithm for linear programming. Combinatorica 4(4), 373–395.", doi: "10.1007/BF02579150", verified: true, tags: ["optimization"] },
+  { id: "vonneumann1947", label: "von Neumann 1947", citation: "von Neumann, J. (1947). Discussion of a maximum problem (unpublished working paper, Institute for Advanced Study); reprinted in A. H. Taub (Ed.), John von Neumann: Collected Works, Vol. VI (1963), pp. 89–95. Oxford: Pergamon Press.", url: "https://search.worldcat.org/oclc/707021", verified: false, tags: ["optimization"] },
+  { id: "land1960", label: "Land & Doig 1960", citation: "Land, A. H., & Doig, A. G. (1960). An automatic method of solving discrete programming problems. Econometrica 28(3), 497–520.", doi: "10.2307/1910129", verified: true, tags: ["optimization"] },
+  { id: "gomory1958", label: "Gomory 1958", citation: "Gomory, R. E. (1958). Outline of an algorithm for integer solutions to linear programs. Bulletin of the American Mathematical Society 64(5), 275–278.", doi: "10.1090/S0002-9904-1958-10224-4", verified: true, tags: ["optimization"] },
+  { id: "dijkstra1959", label: "Dijkstra 1959", citation: "Dijkstra, E. W. (1959). A note on two problems in connexion with graphs. Numerische Mathematik 1(1), 269–271.", doi: "10.1007/BF01386390", verified: true, tags: ["optimization"] },
+  { id: "fisher1963", label: "Fisher & Thompson 1963", citation: "Fisher, H., & Thompson, G. L. (1963). Probabilistic learning combinations of local job-shop scheduling rules. In J. F. Muth & G. L. Thompson (Eds.), Industrial Scheduling (pp. 225–251). Englewood Cliffs, NJ: Prentice-Hall.", url: "https://search.worldcat.org/oclc/1041390", verified: false, tags: ["optimization"] },
+  { id: "rossit2019", label: "Rossit, Tohmé & Frutos 2019", citation: "Rossit, D. A., Tohmé, F., & Frutos, M. (2019). The non-permutation flow-shop scheduling problem: A literature review. Omega 77, 143–153 (job-shop disjunctive formulation review).", doi: "10.1016/j.omega.2017.05.010", verified: true, tags: ["optimization"] },
+  { id: "ohrimenko2009", label: "Ohrimenko, Stuckey & Codish 2009", citation: "Ohrimenko, O., Stuckey, P. J., & Codish, M. (2009). Propagation via lazy clause generation. Constraints 14(3), 357–391.", doi: "10.1007/s10601-008-9064-x", verified: true, tags: ["optimization"] },
+  { id: "rossi2006", label: "Rossi, van Beek & Walsh 2006", citation: "Rossi, F., van Beek, P., & Walsh, T. (Eds.) (2006). Handbook of Constraint Programming. Amsterdam: Elsevier. ISBN 978-0-444-52726-4.", url: "https://search.worldcat.org/oclc/162587579", verified: false, tags: ["optimization"] },
+  { id: "tothvigo2014", label: "Toth & Vigo 2014", citation: "Toth, P., & Vigo, D. (Eds.) (2014). Vehicle Routing: Problems, Methods, and Applications (2nd ed.). MOS-SIAM Series on Optimization. Philadelphia: SIAM.", doi: "10.1137/1.9781611973594", verified: true, tags: ["optimization"] },
+  { id: "applegate2006", label: "Applegate et al. 2006", citation: "Applegate, D. L., Bixby, R. E., Chvátal, V., & Cook, W. J. (2006). The Traveling Salesman Problem: A Computational Study. Princeton, NJ: Princeton University Press. ISBN 978-0-691-12993-8.", url: "https://search.worldcat.org/oclc/65799140", verified: false, tags: ["optimization"] },
+  { id: "voudouris1999", label: "Voudouris & Tsang 1999", citation: "Voudouris, C., & Tsang, E. (1999). Guided local search and its application to the traveling salesman problem. European Journal of Operational Research 113(2), 469–499.", doi: "10.1016/S0377-2217(98)00099-X", verified: true, tags: ["optimization"] },
+  { id: "pyvrp2024", label: "Wouda, Lan & Kool 2024", citation: "Wouda, N. A., Lan, L., & Kool, W. (2024). PyVRP: a high-performance VRP solver package. INFORMS Journal on Computing 36(4), 943–955 (hybrid genetic search VRP solver).", doi: "10.1287/ijoc.2023.0055", verified: true, tags: ["optimization"] },
+  { id: "papadimitriou1998", label: "Papadimitriou & Steiglitz 1998", citation: "Papadimitriou, C. H., & Steiglitz, K. (1998). Combinatorial Optimization: Algorithms and Complexity. Mineola, NY: Dover Publications. ISBN 978-0-486-40258-1.", url: "https://search.worldcat.org/oclc/38055966", verified: false, tags: ["optimization"] },
+  { id: "garey1979", label: "Garey & Johnson 1979", citation: "Garey, M. R., & Johnson, D. S. (1979). Computers and Intractability: A Guide to the Theory of NP-Completeness. San Francisco: W. H. Freeman. ISBN 978-0-7167-1045-5.", url: "https://search.worldcat.org/oclc/4195125", verified: false, tags: ["optimization"] },
+  { id: "morgan1968", label: "Morgan & Peterson 1968", citation: "Morgan, W. C., & Peterson, L. L. (1968). Determining shovel–truck productivity. Mining Engineering 20(12), 76–80 (origin of the match-factor ratio).", url: "https://search.worldcat.org/oclc/1758387", verified: false, tags: ["optimization"] },
+  { id: "burt2014", label: "Burt & Caccetta 2014", citation: "Burt, C. N., & Caccetta, L. (2014). Equipment selection for surface mining: A review. Interfaces 44(2), 143–162 (match factor and fleet-sizing review).", doi: "10.1287/inte.2013.0732", verified: true, tags: ["optimization"] },
+];
+
+export const CITATIONS_BY_ID: Record<string, Citation> = Object.fromEntries(CITATIONS.map((c) => [c.id, c]));
+export type CitationId = string;
+
+export function citationHref(c: Citation): string | undefined {
+  if (c.doi) return `https://doi.org/${c.doi}`;
+  return c.url;
+}

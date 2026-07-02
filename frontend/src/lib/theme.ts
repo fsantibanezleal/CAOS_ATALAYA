@@ -1,0 +1,22 @@
+export type Theme = "light" | "dark";
+
+const KEY = "caos.atalaya.theme";
+
+export function readTheme(): Theme {
+  try {
+    const saved = localStorage.getItem(KEY) as Theme | null;
+    if (saved === "light" || saved === "dark") return saved;
+    return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  } catch {
+    return "dark";
+  }
+}
+
+export function applyTheme(theme: Theme): void {
+  document.documentElement.setAttribute("data-theme", theme);
+  try {
+    localStorage.setItem(KEY, theme);
+  } catch {
+    /* ignore */
+  }
+}

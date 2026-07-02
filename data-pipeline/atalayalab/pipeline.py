@@ -1,88 +1,73 @@
-"""The offline pipeline orchestrator + CLI (ADR-0057). Runs the named stages per case, applies CONTRACT 1, writes
-the compact artifact + manifest (CONTRACT 2) and a flat index.json.
+"""The offline pipeline orchestrator + CLI (ADR-0057). Runs the named stages over the whole corpus, mines the
+knowledge graph, fits the model ladder, validates it, and exports the compact web artifacts + manifests.
 
-    python -m atalayalab.pipeline            # all cases
-    python -m atalayalab.pipeline EX02_epidemic --seed 7
+Stages (frozen names + one domain stage `harvest` prepended):
+    harvest -> preprocess -> feature_extraction -> train -> infer(relate) -> evaluate -> export
+
+    python -m atalayalab.pipeline                 # full run (assumes harvest already mirrored the data)
+    python -m atalayalab.pipeline --harvest       # also (re)run the size-gated download first
+    python -m atalayalab.pipeline --limit 200     # cap resources (smoke / dev)
+    python -m atalayalab.pipeline --no-onnx       # skip the ONNX export (faster dev loop)
 """
 from __future__ import annotations
 
 import argparse
-import time
-from pathlib import Path
 
-from . import registry
-from .core.manifest import build_index
-from .core.rng import make_rng
-from .io.contract import validate_rows
-from .io.formats import write_json
-from .io.schema import SIRParams
-from .stages import evaluate, export, infer, train
+from . import config
+from .cases.builders import CorpusContext
+from .stages import evaluate, export, feature_extraction, harvest, infer, preprocess, train
 
-# data-pipeline/atalayalab/pipeline.py -> parents[2] = repo root (works under `pip install -e .` too)
-REPO_ROOT = Path(__file__).resolve().parents[2]
-DERIVED = REPO_ROOT / "data" / "derived"
-MANIFESTS = DERIVED / "manifests"
-MODELS = REPO_ROOT / "models"
-
-STAGES = ("preprocess", "feature_extraction", "train", "infer", "evaluate", "export")
+STAGES = ("harvest", "preprocess", "feature_extraction", "train", "infer", "evaluate", "export")
 
 
-def _train_model() -> dict:
-    # didactic surrogate: train on the non-degenerate case params; held-out eval uses a disjoint synthetic draw
-    params = [c.params for c in registry.list_cases() if c.params.I0 > 0]
-    return train.run(params, str(MODELS))
+def run_all(*, do_harvest: bool = False, seed: int = config.DEFAULT_SEED, limit: int | None = None,
+            sample_rows: int | None = 50_000, export_onnx: bool = True, log=print) -> dict:
+    config.ensure_scratch_dirs()
+    # 0. harvest (enumerate always; download optional)
+    docs = harvest.enumerate_catalog()
+    datasets = harvest.build_inventory(docs)
+    size_rep = harvest.size_report(datasets)
+    if do_harvest:
+        harvest.download_tier_a(datasets, limit=limit, log=log)
+    slug_to_id = {d.slug: d.id for d in datasets}
 
+    # 1. preprocess -> normalized parquet
+    normalized = preprocess.run(sample_rows=sample_rows, slug_to_id=slug_to_id, limit=limit, log=log)
+    if not normalized:
+        raise SystemExit("no normalized resources; run with --harvest first to mirror the catalog")
 
-def _holdout_params(seed: int) -> list[SIRParams]:
-    rng = make_rng(seed + 999)  # disjoint from training => leakage-safe
-    out: list[SIRParams] = []
-    for i in range(20):
-        out.append(SIRParams(f"_holdout{i}", beta=float(rng.uniform(0.15, 1.2)),
-                             gamma=float(rng.uniform(0.15, 0.40)), N=100_000.0, I0=50.0))
-    return out
+    # 2. feature_extraction -> profiles (+ embeddings)
+    profiles = feature_extraction.run(datasets, normalized, log=log)
 
+    # 3. train -> model ladder (coords/clusters/nulls) + ONNX encoder
+    model_bundle = train.run(profiles, seed=seed, export_onnx=export_onnx, log=log)
 
-def precompute(case_id: str, seed: int = 42, model: dict | None = None) -> dict:
-    case = registry.get_case(case_id)
-    if model is None:
-        model = _train_model()
-    t0 = time.perf_counter()
-    # run CONTRACT 1 on the case params (proves the gate + carries flags); a real product reads raw data here
-    rep = validate_rows([{"case_id": case.params.case_id, "beta": case.params.beta, "gamma": case.params.gamma,
-                          "N": case.params.N, "I0": case.params.I0, "days": case.params.days}])
-    params = rep.accepted[0] if rep.accepted else case.params
-    result = infer.run(params)
-    metrics = evaluate.run(model, _holdout_params(seed))
-    run_ms = (time.perf_counter() - t0) * 1000.0
-    return export.run(case=case, params=params, result=result, seed=seed, run_ms=run_ms,
-                      flags=rep.flagged, metrics=metrics, derived_dir=str(DERIVED), manifests_dir=str(MANIFESTS))
+    # 4. infer (relate) -> knowledge graph
+    db = infer.run(profiles, normalized, datasets, model_bundle, seed=seed, log=log)
 
+    # 5. evaluate -> metrics (negative controls, coherence, sanity)
+    metrics = evaluate.run(db, profiles, normalized, datasets, seed=seed, log=log)
 
-def run_all(seed: int = 42) -> list[dict]:
-    model = _train_model()
-    entries = []
-    for c in registry.list_cases():
-        precompute(c.id, seed=seed, model=model)
-        entries.append({"case_id": c.id, "category": c.category, "manifest_path": f"manifests/{c.id}.json"})
-    write_json(MANIFESTS / "index.json", build_index(entries))
-    return entries
+    # 6. export -> compact web artifacts + manifests + catalog + graph
+    ctx = CorpusContext(datasets=datasets, profiles=profiles, normalized=normalized, db=db,
+                        model_bundle=model_bundle, size_report=size_rep)
+    entries = export.run(ctx, metrics, seed=seed, log=log)
+    db.close()
+    return {"n_datasets": len(datasets), "n_profiled": len(profiles), "n_cases": len(entries),
+            "graph": metrics.get("graph", {}), "neg_control": metrics.get("negative_control", {})}
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(prog="atalayalab.pipeline")
-    ap.add_argument("case", nargs="?", default="all", help="a case id, or 'all'")
-    ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--harvest", action="store_true", help="run the size-gated download before processing")
+    ap.add_argument("--seed", type=int, default=config.DEFAULT_SEED)
+    ap.add_argument("--limit", type=int, default=None, help="cap resources processed (smoke/dev)")
+    ap.add_argument("--sample-rows", type=int, default=50_000, help="rows read per table for profiling")
+    ap.add_argument("--no-onnx", action="store_true", help="skip the ONNX encoder export")
     args = ap.parse_args()
-    if args.case == "all":
-        entries = run_all(args.seed)
-        print(f"precomputed {len(entries)} cases -> {DERIVED}")
-        for e in entries:
-            print(f"  {e['case_id']:20s} [{e['category']}]")
-        print(f"index -> {MANIFESTS / 'index.json'}")
-    else:
-        m = precompute(args.case, args.seed)
-        print(f"precomputed {args.case}: lane={m['lane']} bytes={m['artifact']['bytes']} "
-              f"metrics={m['metrics']} -> {DERIVED / m['artifact']['path']}")
+    summary = run_all(do_harvest=args.harvest, seed=args.seed, limit=args.limit,
+                      sample_rows=args.sample_rows, export_onnx=not args.no_onnx)
+    print(f"[pipeline] done: {summary}")
 
 
 if __name__ == "__main__":
