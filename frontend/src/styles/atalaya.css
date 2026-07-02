@@ -23,6 +23,10 @@
 .viz-svg { width: 100%; height: 460px; background: var(--color-surface-2); border: 1px solid var(--color-border);
   border-radius: 10px; touch-action: none; }
 .viz-svg:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+/* Relation network + arc get a deep dark surface so the additive-blend (screen) halos glow like the WebGL modes. */
+.viz-graph, .viz-arc { height: 520px;
+  background: radial-gradient(120% 120% at 50% 35%, #0c1424 0%, #080d18 55%, #05080f 100%); border-color: #1e293b; }
+.viz-arc { height: auto; min-height: 340px; }
 .viz-map { width: 100%; max-width: 320px; height: 470px; }
 .viz-mini { width: 100%; max-width: 340px; height: 150px; background: var(--color-surface-2);
   border: 1px solid var(--color-border); border-radius: 8px; }
@@ -142,11 +146,11 @@
 .viz-empty { display: flex; align-items: center; justify-content: center; min-height: 260px;
   color: var(--color-fg-faint); font-style: italic; text-align: center; }
 
-/* adjacency matrix + arc surfaces */
+/* adjacency matrix surface (light: dark viridis cells read best on a light ground) */
 .viz-matrix { border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-surface);
   align-self: center; cursor: crosshair; }
-.viz-arc { width: 100%; height: auto; border: 1px solid var(--color-border); border-radius: 10px;
-  background: var(--color-surface); }
+/* .viz-arc dark surface is set together with .viz-graph above (additive-blend arcs need a dark ground) */
+.viz-arc { width: 100%; }
 
 /* coverage theme-mix stacked bar */
 .cov-fill-stack { display: flex; overflow: hidden; }

@@ -3,7 +3,14 @@
 All notable changes to this product. Format: `X.XX.XXX` (display) · see `atalayalab.__version__`. Keep `0.x`
 while the corpus + web app are still being brought to the product-quality bar. Tag every release.
 
-## [0.07.000] · 2026-07-02
+## [0.07.001] · 2026-07-02
+
+### Changed
+- Graph + map visuals made genuinely vibrant (they were flat pastel dots on a light ground). The Catalog map,
+  the Clean 2D relation network and the Arc diagram now render on a deep dark surface with additive-blend
+  (mix-blend-mode: screen) node halos and community-coloured edges, so clusters glow like a nebula while staying
+  precise SVG. Correlation arcs glow green (+ρ) / red (−ρ). The Matrix keeps its light ground (dark viridis cells
+  read best there). Brings all Explorer modes to one premium aesthetic; no data or interaction change.
 
 ### Added
 - Classical lexical foil completes the model ladder, honestly: `evaluate.lexical_baseline` fits a real TF-IDF

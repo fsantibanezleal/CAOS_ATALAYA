@@ -45,6 +45,7 @@ export default function GraphView({
     return s;
   }, [hover, hoverEdges]);
   const q = query.trim().toLowerCase();
+  const ec = (id: string) => { const n = byId.get(id); return n ? color(n) : "#64748b"; };
 
   if (edges.length === 0) {
     return (
@@ -73,15 +74,30 @@ export default function GraphView({
           </filter>
         </defs>
         <g transform={`translate(${t.x},${t.y}) scale(${t.k})`}>
-          {edges.map((e, i) => {
-            const a = pos.get(e.s); const b = pos.get(e.t);
-            if (!a || !b) return null;
-            const active = !hover || e.s === hover || e.t === hover;
-            return <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-                         stroke={active && hover ? color(byId.get(hover)!) : "var(--color-accent)"}
-                         strokeOpacity={active ? 0.12 + 0.55 * e.w : 0.03}
-                         strokeWidth={(0.5 + 3 * e.w) / t.k} strokeLinecap="round" />;
-          })}
+          {/* edges coloured by their source community, additively blended -> the structure glows like a nebula */}
+          <g style={{ mixBlendMode: "screen" }}>
+            {edges.map((e, i) => {
+              const a = pos.get(e.s); const b = pos.get(e.t);
+              if (!a || !b) return null;
+              const active = !hover || e.s === hover || e.t === hover;
+              return <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+                           stroke={ec(e.s)}
+                           strokeOpacity={active ? 0.1 + 0.5 * e.w : 0.02}
+                           strokeWidth={(0.6 + 3.2 * e.w) / t.k} strokeLinecap="round" />;
+            })}
+          </g>
+          {/* soft halos (additive) give each node depth without a per-node blur filter */}
+          <g style={{ mixBlendMode: "screen" }}>
+            {nodes.map((n) => {
+              const p = pos.get(n.id); if (!p) return null;
+              const r = (3.2 + 1.4 * Math.sqrt(deg.get(n.id) ?? 0)) / t.k;
+              const matchDim = q.length > 0 && !n.title.toLowerCase().includes(q);
+              const active = !matchDim && (!hoverSet || hoverSet.has(n.id));
+              return <circle key={n.id} cx={p.x} cy={p.y} r={r * 2.7} fill={color(n)}
+                             fillOpacity={matchDim ? 0.02 : active ? 0.18 : 0.05} />;
+            })}
+          </g>
+          {/* solid cores on top */}
           {nodes.map((n) => {
             const p = pos.get(n.id); if (!p) return null;
             const r = (3.2 + 1.4 * Math.sqrt(deg.get(n.id) ?? 0)) / t.k;
@@ -89,9 +105,9 @@ export default function GraphView({
             const matchHit = q.length > 0 && !matchDim;
             const active = !matchDim && (!hoverSet || hoverSet.has(n.id));
             return <circle key={n.id} cx={p.x} cy={p.y} r={r} fill={color(n)}
-                           fillOpacity={matchDim ? 0.1 : active ? 0.95 : 0.15}
+                           fillOpacity={matchDim ? 0.12 : active ? 1 : 0.25}
                            filter={n.id === hover || matchHit ? "url(#atl-glow)" : undefined}
-                           stroke={n.id === hover || matchHit ? "var(--color-fg)" : "none"} strokeWidth={1.5 / t.k}
+                           stroke={n.id === hover || matchHit ? "#fff" : "none"} strokeWidth={1.5 / t.k}
                            style={{ cursor: "pointer" }} onPointerEnter={() => setHover(n.id)} />;
           })}
         </g>
