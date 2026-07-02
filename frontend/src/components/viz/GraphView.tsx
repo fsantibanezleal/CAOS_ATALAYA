@@ -16,7 +16,7 @@ export default function GraphView({
   payload, minWeight = 0, edgeLabel = "strength",
 }: { payload: GraphPayload; minWeight?: number; edgeLabel?: string }) {
   const lang = useLang();
-  const { t, reset, handlers } = usePanZoom();
+  const { t, reset, zoomRef, handlers } = usePanZoom();
   const [hover, setHover] = useState<string | null>(null);
 
   const nodes = payload.nodes;
@@ -46,7 +46,7 @@ export default function GraphView({
         <span className="viz-hint">{nodes.length} {lang === "es" ? "nodos" : "nodes"} · {edges.length} {lang === "es" ? "relaciones" : "edges"} · {lang === "es" ? "rueda = zoom, arrastra = mover" : "wheel = zoom, drag = pan"}</span>
         <button type="button" className="btn" onClick={reset}>{lang === "es" ? "Reiniciar vista" : "Reset view"}</button>
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="viz-svg viz-graph" role="img" tabIndex={0} {...handlers}
+      <svg ref={zoomRef} viewBox={`0 0 ${W} ${H}`} className="viz-svg viz-graph" role="img" tabIndex={0} {...handlers}
            onPointerLeave={() => setHover(null)}
            aria-label={lang === "es" ? "Red de relaciones entre datasets" : "Dataset relation network"}>
         <defs>
