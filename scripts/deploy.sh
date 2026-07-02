@@ -6,8 +6,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-HOST="${ATALAYA_HOST:-root@91.99.199.70}"
+HOST="${ATALAYA_HOST:?set ATALAYA_HOST to the deploy target, e.g. root@your.host}"
 KEY="${ATALAYA_SSH_KEY:?set ATALAYA_SSH_KEY to the vault SSH key path}"
+EMAIL="${ATALAYA_CERTBOT_EMAIL:?set ATALAYA_CERTBOT_EMAIL for the TLS certificate}"
 DOMAIN="atalaya.fasl-work.com"
 ROOT="/var/www/${DOMAIN}"
 
@@ -23,6 +24,6 @@ scp -i "$KEY" deploy/${DOMAIN}.nginx "${HOST}:/etc/nginx/sites-available/${DOMAI
 ssh -i "$KEY" "$HOST" "ln -sf /etc/nginx/sites-available/${DOMAIN} /etc/nginx/sites-enabled/${DOMAIN} && nginx -t && systemctl reload nginx"
 
 echo "[deploy] ensure TLS cert (certbot, idempotent)"
-ssh -i "$KEY" "$HOST" "certbot --nginx -d ${DOMAIN} --non-interactive --agree-tos -m fsantibanez@gmail.com --redirect || true; systemctl reload nginx"
+ssh -i "$KEY" "$HOST" "certbot --nginx -d ${DOMAIN} --non-interactive --agree-tos -m ${EMAIL} --redirect || true; systemctl reload nginx"
 
 echo "[deploy] done -> https://${DOMAIN}"

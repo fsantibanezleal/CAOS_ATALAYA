@@ -20,9 +20,10 @@ def _env_path(var: str, default: str) -> Path:
     return Path(os.environ.get(var, default)).expanduser()
 
 
-# --- OUT-OF-GIT scratch (heavy) — default to the E: volume, override per machine ---
-DATA_ROOT = _env_path("ATALAYA_DATA_ROOT", r"E:\_Datos\atalaya")
-MODEL_ROOT = _env_path("ATALAYA_MODEL_ROOT", r"E:\_Models\atalaya")
+# --- OUT-OF-GIT scratch (heavy). Set ATALAYA_DATA_ROOT / ATALAYA_MODEL_ROOT (a scratch volume with room for the
+# raw mirror + models); the generic fallback below keeps the pipeline runnable without configuration. ---
+DATA_ROOT = _env_path("ATALAYA_DATA_ROOT", str(Path.home() / "atalaya-scratch" / "data"))
+MODEL_ROOT = _env_path("ATALAYA_MODEL_ROOT", str(Path.home() / "atalaya-scratch" / "models"))
 
 RAW_DIR = DATA_ROOT / "raw"                 # mirrored source files, one folder per dataset
 NORM_DIR = DATA_ROOT / "derived"            # normalized parquet per resource (heavy, out-of-git)

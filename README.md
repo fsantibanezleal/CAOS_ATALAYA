@@ -107,9 +107,9 @@ scientific archives (it references them), and states its limitations per view.
 cd frontend && npm install && npm run dev
 ```
 
-Secrets (the read-only catalog credential) live only in the private CAOS management vault and are materialized
-into `.env` by `setup.*`; the repo commits only `.env.example`. Heavy data and models stay out-of-git on the
-`E:\_Datos\atalaya` / `E:\_Models\atalaya` scratch; only compact derived artifacts are committed.
+Secrets (the read-only catalog credential) live only in the private management vault and are materialized
+into `.env` by `setup.*`; the repo commits only `.env.example`. Heavy data and models stay out-of-git on a scratch
+volume configured via `ATALAYA_DATA_ROOT` / `ATALAYA_MODEL_ROOT`; only compact derived artifacts are committed.
 
 ## Repository structure
 
