@@ -30,6 +30,7 @@ def _node_view(ctx: CorpusContext) -> dict:
     by_id = ctx.by_id()
     coords = ctx.model_bundle.get("coords", {})
     clusters = ctx.model_bundle.get("clusters", {})
+    fpos = {n["id"]: n["attrs"].get("fpos") for n in ctx.db.nodes(kind="dataset")}
     out = {}
     for p in ctx.profiles:
         d = by_id.get(p.dataset_id)
@@ -37,9 +38,10 @@ def _node_view(ctx: CorpusContext) -> dict:
             "id": p.dataset_id, "title": (d.title if d else p.dataset_id)[:100],
             "theme": d.theme if d else "", "origin": d.origin if d else "",
             "org": (d.org if d else "")[:60], "license": d.license if d else "",
-            "keys": p.entity_keys, "n_cols": p.n_cols, "n_rows": p.n_rows,
+            "keys": p.entity_keys, "n_cols": p.n_cols, "n_rows": p.n_rows, "profiled": p.n_cols > 0,
             "year_min": p.year_min, "year_max": p.year_max,
-            "coord": coords.get(p.dataset_id, [0, 0]), "cluster": clusters.get(p.dataset_id, 0),
+            "coord": coords.get(p.dataset_id, [0, 0]), "fpos": fpos.get(p.dataset_id),
+            "cluster": clusters.get(p.dataset_id, 0),
             "null_frac": round(sum(c.null_frac for c in p.columns) / max(1, len(p.columns)), 3),
             "lat": d.lat if d else None, "lon": d.lon if d else None,
         }
@@ -74,16 +76,13 @@ def build_overview(ctx: CorpusContext) -> tuple[str, dict, dict]:
 
 # ---------------------------------------------------------------- SEMANTIC / GRAPH ---------------------------------
 
-def _graph_payload(ctx: CorpusContext, edge_kind: str, weight_field: str = "weight") -> dict:
+def _graph_payload(ctx: CorpusContext, edge_kind: str, edge_limit: int = 2500) -> dict:
     nv = _node_view(ctx)
     edges = ctx.db.edges(kind=edge_kind)
-    used = set()
-    erows = []
-    for e in edges:
-        erows.append({"s": e["src"], "t": e["dst"], "w": round(e["weight"], 4), "ev": e["evidence"]})
-        used.add(e["src"])
-        used.add(e["dst"])
-    erows = decimate_rows(erows, key=lambda r: r["w"], limit=1200)
+    erows = decimate_rows(
+        [{"s": e["src"], "t": e["dst"], "w": round(e["weight"], 4), "ev": e["evidence"]} for e in edges],
+        key=lambda r: r["w"], limit=edge_limit)
+    used = {r["s"] for r in erows} | {r["t"] for r in erows}
     nodes = [nv[i] for i in used if i in nv]
     return {"nodes": nodes, "edges": erows}
 

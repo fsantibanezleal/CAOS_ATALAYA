@@ -242,6 +242,28 @@ def _affinity_edges(profiles, sem, join, corr, nulls) -> list[Edge]:
     return edges
 
 
+def _force_layout(node_ids: list[str], edges: list[Edge], seed: int, log=print) -> dict[str, list[float]]:
+    """Bake a force-directed layout (rustworkx spring_layout, seeded) over the semantic+joinable edge set, so the
+    graph views render a real structural layout (clusters pull together) instead of a circle. Deterministic."""
+    try:
+        import rustworkx as rx
+    except Exception:
+        return {}
+    g = rx.PyGraph()
+    idx = {nid: g.add_node(nid) for nid in node_ids}
+    for e in edges:
+        if e.src in idx and e.dst in idx:
+            g.add_edge(idx[e.src], idx[e.dst], float(e.weight))
+    if g.num_nodes() == 0:
+        return {}
+    try:
+        pos = rx.spring_layout(g, weight_fn=float, num_iter=120, scale=1.0, seed=seed)
+    except Exception as ex:
+        log(f"[relate] spring_layout skipped: {type(ex).__name__}: {ex}")
+        return {}
+    return {nid: [round(float(pos[i][0]), 4), round(float(pos[i][1]), 4)] for nid, i in idx.items() if i in pos}
+
+
 def run(profiles: list[DatasetProfile], normalized: list, datasets: list, model_bundle: dict, *,
         seed: int = config.DEFAULT_SEED, graph_path=None, log=print) -> GraphDB:
     """Mine all edge kinds and persist the knowledge graph (SQLite-WAL). Returns the open GraphDB."""
@@ -249,7 +271,18 @@ def run(profiles: list[DatasetProfile], normalized: list, datasets: list, model_
     db = GraphDB(graph_path or config.GRAPH_DB)
     db.clear()
 
-    # nodes: one per profiled dataset, carrying its display attrs + profile summary as observations
+    # mine edges first (over ALL profiles: semantic + same-source + affinity span the whole catalog; joinability
+    # + correlation are on the profiled subset that has data)
+    sem = _semantic_edges(profiles)
+    same = _same_source_edges(profiles, by_id)
+    join = _joinable_edges(profiles)
+    spatial = _spatial_edges(profiles, by_id)
+    corr = _correlation_edges(profiles, normalized, model_bundle.get("nulls", {}), seed=seed, log=log)
+    aff = _affinity_edges(profiles, sem, join, corr, model_bundle.get("nulls", {}))
+
+    # bake a force layout over the semantic+joinable structure so graph views look structural, not circular
+    fpos = _force_layout([p.dataset_id for p in profiles], sem + join, seed, log=log)
+
     coords = model_bundle.get("coords", {})
     clusters = model_bundle.get("clusters", {})
     for p in profiles:
@@ -258,18 +291,11 @@ def run(profiles: list[DatasetProfile], normalized: list, datasets: list, model_
             "theme": d.theme if d else "", "org": d.org if d else "", "origin": d.origin if d else "",
             "sub_category": d.sub_category if d else "", "license": d.license if d else "",
             "n_cols": p.n_cols, "n_rows": p.n_rows, "entity_keys": p.entity_keys,
-            "year_min": p.year_min, "year_max": p.year_max,
-            "coord": coords.get(p.dataset_id), "cluster": clusters.get(p.dataset_id),
+            "year_min": p.year_min, "year_max": p.year_max, "profiled": p.n_cols > 0,
+            "coord": coords.get(p.dataset_id), "fpos": fpos.get(p.dataset_id), "cluster": clusters.get(p.dataset_id),
             "lat": d.lat if d else None, "lon": d.lon if d else None,
         })
         db.add_observation(p.dataset_id, "columns", [c.name for c in p.columns][:60])
-
-    sem = _semantic_edges(profiles)
-    same = _same_source_edges(profiles, by_id)
-    join = _joinable_edges(profiles)
-    spatial = _spatial_edges(profiles, by_id)
-    corr = _correlation_edges(profiles, normalized, model_bundle.get("nulls", {}), seed=seed, log=log)
-    aff = _affinity_edges(profiles, sem, join, corr, model_bundle.get("nulls", {}))
 
     for e in sem + same + join + spatial + corr + aff:
         db.add_edge(e.src, e.dst, e.kind, e.weight, e.evidence)

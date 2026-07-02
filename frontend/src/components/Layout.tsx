@@ -6,6 +6,7 @@ import { Briefcase, Database, Github, Globe, Info, Network } from "lucide-react"
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { ArchitectureModal } from "@/components/ArchitectureModal";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { EXTERNAL_LINKS } from "@/lib/links";
 import { ROUTES } from "@/lib/routes";
 import { APP_VERSION } from "@/lib/version";
@@ -64,7 +65,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="page">{children}</main>
+      <main className="page"><ErrorBoundary label="page">{children}</ErrorBoundary></main>
 
       {archOpen && <ArchitectureModal onClose={() => setArchOpen(false)} />}
 

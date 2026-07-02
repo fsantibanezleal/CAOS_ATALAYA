@@ -3,6 +3,27 @@
 All notable changes to this product. Format: `X.XX.XXX` (display) · see `atalayalab.__version__`. Keep `0.x`
 while the corpus + web app are still being brought to the product-quality bar. Tag every release.
 
+## [0.04.000] · 2026-07-02
+
+### Added
+- **Whole-catalog coverage**: every one of the 1017 datasets is now embedded from its metadata (title +
+  description + theme), so the catalog map and the semantic network span the full catalog (~1017 nodes,
+  ~14k mined edges) instead of only the mirrorable subset. Joinability + correlation stay on the profiled subset
+  (they need the data), which is the honest split.
+- **Baked force-directed layout** (rustworkx spring layout) for the graph views, so themes pull into visible
+  communities; the map keeps the PCA embedding layout.
+- **Per-panel + shell error boundaries**: a crash in any one view now renders a message + Retry instead of
+  blacking out the whole app.
+
+### Changed
+- **Explorer information architecture redesigned**: the primary selector is now the 8 analytical LENSES
+  (Catalog map · Semantic network · Joinability · Correlations · Geographic · Temporal · Data quality · Affinity),
+  each exposing its genuine views + Context as sub-tabs. The live semantic search is scoped to the Semantic lens
+  (where it belongs); the repeated "Live" and the weak "Compare" meta-tabs are gone.
+- **Vibrant qualitative palette** for categories (viridis retained only for sequential encodings, per the viz
+  rubric); graph nodes sized by degree, edges weighted by strength, hovered node glows.
+- **Content-page width**: a centered reading column with full-width tables/figures (was a narrow left-jammed column).
+
 ## [0.03.000] · 2026-07-02
 
 ### Added

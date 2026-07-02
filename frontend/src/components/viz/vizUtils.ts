@@ -18,11 +18,12 @@ export function viridis(t: number): string {
   return `rgb(${c[0]},${c[1]},${c[2]})`;
 }
 
-// Qualitative palette (Okabe-Ito-ish, colour-blind-safe, legible on light and dark surfaces).
+// Vibrant qualitative palette (high-saturation, distinct, legible on both light and dark surfaces). Qualitative,
+// NOT a rainbow gradient over continuous data (viridis handles sequential), so it stays within the viz rubric.
 const CATEGORICAL = [
-  "#4c78a8", "#f58518", "#54a24b", "#e45756", "#72b7b2",
-  "#b279a2", "#ff9da6", "#9d755d", "#bab0ac", "#5c6bc0",
-  "#26a69a", "#d4a017", "#8e44ad", "#16a085", "#c0392b",
+  "#3b82f6", "#ef4444", "#f59e0b", "#10b981", "#a855f7",
+  "#ec4899", "#06b6d4", "#f97316", "#84cc16", "#8b5cf6",
+  "#14b8a6", "#eab308", "#f43f5e", "#0ea5e9", "#22c55e",
 ];
 
 export function makeCategoryColor(values: string[]): (v: string) => string {
