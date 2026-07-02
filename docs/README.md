@@ -1,20 +1,38 @@
-# Docs — the product wiki
+# Atalaya · documentation
 
-SimLab-style navigable wiki (ADR-0056), authored **as the product is built**, not at the end. The pipeline +
-its validation + these docs are the primary product; the web app is a projection of a validated subset.
+Atalaya harvests Chile's Data Observatory open catalog, profiles every downloadable table, and mines five kinds of
+cross-dataset relation into an explorable knowledge graph. This wiki documents how it works, the engines it uses,
+the analytical cases, and how to run and extend it.
 
-## Map
-- **[architecture/](architecture/)** — how the repo works: the frozen base, the two data contracts, determinism +
-  trace, the live/precompute gate, the staged pipeline, model evaluation, deploy.
-- **[frameworks/](frameworks/)** — one card per research-chosen engine/library (what/why · install · usage ·
-  applying). The deep research, made binding (each is pinned in a `requirements-*.txt`).
-- **[guides/](guides/)** — runnable how-tos: **instantiate the template**, run the precompute pipeline,
-  **bring your own data**, the GPU lane, run the API.
-- **[cases/](cases/)** — the CATEGORY taxonomy + the coverage matrix + one page per documented case.
+## How to read this wiki
 
-## Honesty + data policy
-- Numbers come from the calibrated engine / committed artifacts, never from a claim. The EXAMPLE engine (SIR) is
-  synthetic and clearly labelled; a real product states sources, licenses and what is real vs synthetic.
-- Public derived artifacts are committed (`data/derived/`); raw/private sources stay out of git (`data/raw/`,
-  vault) per ADR-0055. The two data contracts ([architecture/08_data-contracts.md](architecture/08_data-contracts.md))
-  govern raw→pipeline and pipeline→web.
+Each theme is a folder with numbered pages in reading order, plus a same-named landing entry. Start here, then
+follow the section that matches your question.
+
+| Section | What it covers |
+|---|---|
+| [architecture/](architecture/) | The lanes (offline / live / replay), the staged pipeline, the measured gate, the two data contracts, and deploy. |
+| [frameworks/](frameworks/) | One card per research-chosen engine actually used by the pipeline: what it is, why it was chosen, how it is installed, and where it is called. |
+| [cases/](cases/README.md) | The category taxonomy and the coverage matrix: the 11 analytical cases across 8 categories. |
+| [guides/](guides/) | Run the precompute pipeline, bring your own data, the architecture modal, and instantiate the base. |
+| [data-contract.md](data-contract.md) | The two enforced contracts: ingestion (raw → pipeline) and artifact (pipeline → web), plus the download-tier policy. |
+
+## What Atalaya is, and is not
+
+- **Is:** a relation explorer over real open data, honest about uncertainty (every correlation passes a permutation
+  null + FDR; a negative control confirms shuffled data yields ~0 findings). A reproducible offline pipeline whose
+  committed artifacts the web replays, plus two genuinely live client-side computations.
+- **Is not:** a data warehouse or a replacement for the official catalog; it does not invent causation; it does not
+  mirror the heavy DOI scientific archives (it references them by link).
+
+## Using the tools on other data
+
+The pipeline is not hard-wired to the Data Observatory. The ingestion contract (`io/contract.py`) accepts any
+tabular file that meets minimum quality bounds, and the profiler + relation miner run on whatever normalized tables
+exist. See [guides/02_bring-your-own-data.md](guides/02_bring-your-own-data.md).
+
+## Provenance + honesty
+
+Dataset content belongs to the Data Observatory and the original Chilean sources under their licenses (mostly
+CC-BY family). Atalaya stores only derived metadata + compact artifacts. Method references carry real DOIs
+(see each framework card and the app's Methodology page).

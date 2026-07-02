@@ -1,73 +1,84 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 460" width="900" class="arch-svg" role="img" aria-label="The science / algorithm flow — placeholder, specialise per product">
-  <!-- PLACEHOLDER (template). Each product REPLACES this with its real algorithm,
-       step by step, with the genuine equations. Keep the shell tokens (themed). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" width="900" class="arch-svg" role="img" aria-label="Relation mining: five edge kinds plus the calibrated affinity fusion">
   <style>
     .arch-svg text { font-family: var(--font-sans, Inter, "Segoe UI", system-ui, sans-serif); }
     .arch-svg .mono { font-family: var(--font-mono, ui-monospace, Consolas, monospace); }
     .arch-svg .bx { fill: var(--color-surface-2); stroke: var(--color-border); stroke-width: 1.2; }
-    .arch-svg .bx-hi { stroke: var(--color-accent); }
-    .arch-svg .bx-good { stroke: var(--color-good); }
+    .arch-svg .bx-a { stroke: var(--color-accent); }
+    .arch-svg .bx-m { stroke: var(--color-magenta); }
+    .arch-svg .bx-g { stroke: var(--color-good); }
     .arch-svg .ttl { fill: var(--color-fg); font-size: 13px; font-weight: 700; }
-    .arch-svg .sub { fill: var(--color-fg-subtle); font-size: 10px; }
-    .arch-svg .it { fill: var(--color-fg); font-size: 10.5px; }
-    .arch-svg .cd { fill: var(--color-accent); font-size: 9.5px; }
-    .arch-svg .eq { fill: var(--color-fg); font-size: 12px; font-style: italic; }
-    .arch-svg .mu { fill: var(--color-fg-subtle); font-size: 10px; }
-    .arch-svg .flow { fill: none; stroke: var(--color-fg-faint); stroke-width: 1.6; }
-    .arch-svg .ph { fill: var(--color-warn); font-size: 10px; font-weight: 600; }
+    .arch-svg .sub { fill: var(--color-fg-subtle); font-size: 11px; }
+    .arch-svg .it { fill: var(--color-fg); font-size: 11px; font-weight: 600; }
+    .arch-svg .cd { fill: var(--color-accent); font-size: 9px; }
+    .arch-svg .mu { fill: var(--color-fg-subtle); font-size: 9px; }
+    .arch-svg .flow { fill: none; stroke: var(--color-fg-faint); stroke-width: 1.3; }
+    .arch-svg .lbl { fill: var(--color-fg-subtle); font-size: 9px; }
   </style>
   <defs>
-    <marker id="sc-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <marker id="s1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M0,0 L8,4 L0,8 z" fill="var(--color-fg-faint)"/>
     </marker>
   </defs>
 
-  <text class="ttl" x="22" y="30">The science / algorithm flow</text>
-  <text class="ph" x="22" y="47">PLACEHOLDER — replace with this product's real stages + equations (e.g. image → watershed → PSD → Rosin–Rammler)</text>
+  <text class="ttl" x="22" y="30">Relation mining — five evidences, fused and calibrated</text>
+  <text class="sub" x="22" y="48">each dataset pair is judged by orthogonal signals, then combined against a null model</text>
 
-  <!-- staged pipeline -->
-  <rect class="bx bx-hi" x="20" y="78" width="180" height="92" rx="10"/>
-  <text class="it" x="34" y="104">① Ingest + normalise</text>
-  <text class="mu" x="34" y="124">validated input (Contract 1)</text>
-  <text class="cd mono" x="34" y="150">stages/01_*.py</text>
+  <rect class="bx" x="18" y="66" width="150" height="150" rx="9"/>
+  <text class="it" x="30" y="90">Per-dataset profile</text>
+  <text class="mu" x="30" y="110">MiniLM embedding (384-d)</text>
+  <text class="mu" x="30" y="126">MinHash of key columns</text>
+  <text class="mu" x="30" y="142">entity keys: comuna,</text>
+  <text class="mu" x="30" y="156">region, year, lat/lon</text>
+  <text class="mu" x="30" y="172">numeric indicators</text>
+  <text class="cd mono" x="30" y="198">feature_extraction.py</text>
 
-  <rect class="bx bx-hi" x="232" y="78" width="180" height="92" rx="10"/>
-  <text class="it" x="246" y="104">② Core transform</text>
-  <text class="mu" x="246" y="124">the real method / model</text>
-  <text class="cd mono" x="246" y="150">stages/02_*.py</text>
+  <rect class="bx bx-a" x="196" y="66" width="200" height="44" rx="7"/>
+  <text class="it" x="208" y="84">SEMANTICALLY_SIMILAR</text>
+  <text class="mu" x="208" y="100">cosine of embeddings ≥ τ</text>
 
-  <rect class="bx bx-hi" x="444" y="78" width="180" height="92" rx="10"/>
-  <text class="it" x="458" y="104">③ Estimate + fit</text>
-  <text class="mu" x="458" y="124">parameters, uncertainty</text>
-  <text class="cd mono" x="458" y="150">stages/03_*.py</text>
+  <rect class="bx bx-a" x="196" y="118" width="200" height="44" rx="7"/>
+  <text class="it" x="208" y="136">JOINABLE_ON</text>
+  <text class="mu" x="208" y="152">MinHash set containment</text>
 
-  <rect class="bx bx-good" x="656" y="78" width="180" height="92" rx="10"/>
-  <text class="it" x="670" y="104">④ Metrics + artifact</text>
-  <text class="mu" x="670" y="124">scored vs baseline / truth</text>
-  <text class="cd mono" x="670" y="150">stages/04_*.py</text>
+  <rect class="bx bx-m" x="196" y="170" width="200" height="60" rx="7"/>
+  <text class="it" x="208" y="188">CORRELATES</text>
+  <text class="mu" x="208" y="204">Spearman ρ · permutation null</text>
+  <text class="mu" x="208" y="219">Benjamini-Hochberg FDR · partial-out</text>
 
-  <path class="flow" d="M200,124 H230" marker-end="url(#sc-arrow)"/>
-  <path class="flow" d="M412,124 H442" marker-end="url(#sc-arrow)"/>
-  <path class="flow" d="M624,124 H654" marker-end="url(#sc-arrow)"/>
+  <rect class="bx bx-g" x="196" y="238" width="200" height="44" rx="7"/>
+  <text class="it" x="208" y="256">SPATIALLY_OVERLAPS · SAME_SOURCE</text>
+  <text class="mu" x="208" y="272">shared geo key / publisher</text>
 
-  <!-- equation band -->
-  <rect class="bx" x="20" y="200" width="816" height="86" rx="10"/>
-  <text class="it" x="36" y="224">The governing relation (replace with the product's real equation):</text>
-  <text class="eq" x="36" y="256">y = f( x ; θ )            P(x) = 1 − exp[ −(x / x_c)^n ]            (placeholder)</text>
-  <text class="mu" x="36" y="276">render the real maths with KaTeX on the Methodology page; this SVG mirrors it visually.</text>
+  <path class="flow" d="M168,120 H196" marker-end="url(#s1)"/>
+  <path class="flow" d="M168,135 H196" marker-end="url(#s1)"/>
+  <path class="flow" d="M168,150 H196" marker-end="url(#s1)"/>
+  <path class="flow" d="M168,165 H196" marker-end="url(#s1)"/>
 
-  <!-- baseline vs learned -->
-  <rect class="bx" x="20" y="312" width="404" height="128" rx="10"/>
-  <text class="it" x="36" y="336" style="font-weight:700">Classical baseline</text>
-  <text class="mu" x="36" y="358">a transparent, deterministic method —</text>
-  <text class="mu" x="36" y="378">the honest reference every result is</text>
-  <text class="mu" x="36" y="398">measured against.</text>
-  <text class="cd mono" x="36" y="424">src/&lt;domain&gt;/*.ts (runs live)</text>
+  <rect class="bx bx-m" x="430" y="120" width="220" height="120" rx="9"/>
+  <text class="it" x="444" y="142">Calibrate each evidence</text>
+  <text class="mu" x="444" y="162">f_e = null-CDF percentile</text>
+  <text class="mu" x="444" y="178">(vs random pairs), so a score</text>
+  <text class="mu" x="444" y="194">means "stronger than chance"</text>
+  <text class="cd mono" x="444" y="218">model/affinity.py</text>
+  <path class="flow" d="M396,150 H430" marker-end="url(#s1)"/>
+  <path class="flow" d="M396,200 Q414,200 428,190" marker-end="url(#s1)"/>
 
-  <rect class="bx bx-good" x="444" y="312" width="392" height="128" rx="10"/>
-  <text class="it" x="460" y="336" style="font-weight:700">Learned model</text>
-  <text class="mu" x="460" y="358">trained offline (torch), exported to</text>
-  <text class="mu" x="460" y="378">ONNX, run client-side; reported with</text>
-  <text class="mu" x="460" y="398">held-out skill vs the baseline.</text>
-  <text class="cd mono" x="460" y="424">model/learned.py → *.onnx → ort.ts</text>
+  <rect class="bx bx-g" x="684" y="120" width="198" height="120" rx="9"/>
+  <text class="it" x="696" y="142">AFFINITY (novel)</text>
+  <text class="mu" x="696" y="162">reliability-weighted fusion:</text>
+  <text class="cd mono" x="696" y="180">S = Σ w·r·f / Σ w·r</text>
+  <text class="mu" x="696" y="200">auditable, live-reweightable</text>
+  <text class="mu" x="696" y="216">in the browser</text>
+  <path class="flow" d="M650,180 H684" marker-end="url(#s1)"/>
+
+  <rect class="bx" x="18" y="300" width="864" height="76" rx="9"/>
+  <text class="it" x="32" y="324">Validation — the honest test</text>
+  <text class="mu" x="32" y="344">negative control: re-mine correlations on SHUFFLED key alignments with the same null + FDR;</text>
+  <text class="mu" x="32" y="360">a trustworthy pipeline yields ~0 survivors (an empirical false-discovery rate). See Benchmark.</text>
+  <text class="cd mono" x="600" y="360">stages/evaluate.py</text>
+
+  <rect class="bx bx-a" x="18" y="392" width="864" height="60" rx="9"/>
+  <text class="it" x="32" y="416">Persisted to the knowledge graph + baked to compact web artifacts</text>
+  <text class="mu" x="32" y="434">nodes = datasets · edges = the five relations + the fused affinity · every edge carries its evidence</text>
+  <text class="cd mono" x="640" y="434">core/graphdb.py → graph.json</text>
 </svg>

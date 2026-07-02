@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 import "@/i18n/config";
 import { applyTheme, readTheme } from "@/lib/theme";
 import "@/styles/globals.css";
+import "@/styles/atalaya.css";
 import AppRouter from "@/router";
 
 applyTheme(readTheme());

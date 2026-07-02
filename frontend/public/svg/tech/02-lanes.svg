@@ -40,7 +40,7 @@
 
   <rect class="bx" x="30" y="122" width="258" height="58" rx="7"/>
   <text class="it" x="42" y="142">Deterministic engine (TS)</text>
-  <text class="cd mono" x="42" y="158">frontend/src/&lt;domain&gt;/</text>
+  <text class="cd mono" x="42" y="158">frontend/src/components/viz/</text>
   <text class="mu" x="42" y="172">re-runs on every control change</text>
 
   <rect class="bx" x="30" y="190" width="258" height="58" rx="7"/>
@@ -50,12 +50,12 @@
 
   <rect class="bx" x="30" y="258" width="258" height="58" rx="7"/>
   <text class="it" x="42" y="278">6-page SPA + live viz</text>
-  <text class="cd mono" x="42" y="294">caos-app-shell · uPlot · three</text>
+  <text class="cd mono" x="42" y="294">react-router · katex · svg viz</text>
   <text class="mu" x="42" y="308">App reacts to the case selector</text>
 
   <rect class="bx" x="30" y="326" width="258" height="58" rx="7"/>
   <text class="it" x="42" y="346">Loads baked artifacts</text>
-  <text class="cd mono" x="42" y="362">/case-results.json · /data/manifests</text>
+  <text class="cd mono" x="42" y="362">/data/graph.json · /data/manifests</text>
   <text class="mu" x="42" y="376">read-only — never recomputes the bake</text>
   <text class="mu" x="30" y="406">User: pick a case OR drop your own data</text>
   <text class="mu" x="30" y="420">→ engine + inference run client-side, live</text>
@@ -67,7 +67,7 @@
 
   <rect class="bx" x="334" y="122" width="258" height="58" rx="7"/>
   <text class="it" x="346" y="142">Precompute / bake pipeline</text>
-  <text class="cd mono" x="346" y="158">data-pipeline/&lt;pkg&gt;/pipeline.py</text>
+  <text class="cd mono" x="346" y="158">data-pipeline/atalayalab/pipeline.py</text>
   <text class="mu" x="346" y="172">numpy-light default · staged · gated</text>
 
   <rect class="bx" x="334" y="190" width="258" height="58" rx="7"/>
@@ -77,8 +77,8 @@
 
   <rect class="bx" x="334" y="258" width="258" height="58" rx="7"/>
   <text class="it" x="346" y="278">Two-language bake (parity)</text>
-  <text class="cd mono" x="346" y="294">science/bake_cases.mjs · tsx</text>
-  <text class="mu" x="346" y="308">Node runs the SAME TS engine</text>
+  <text class="cd mono" x="346" y="294">atalayalab/stages/export.py</text>
+  <text class="mu" x="346" y="308">one engine bakes all artifacts</text>
 
   <rect class="bx" x="334" y="326" width="258" height="58" rx="7"/>
   <text class="it" x="346" y="346">Writes canonical artifacts</text>

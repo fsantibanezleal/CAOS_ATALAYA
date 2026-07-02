@@ -19,19 +19,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Regenerate artifacts (fresh deterministic replay outputs)
-        run: |
-          pip install -r data-pipeline/requirements.txt -e .
-          python -m atalayalab.pipeline all
+      # No pipeline run in CI: the compact web artifacts are COMMITTED (data/derived) and are the source of truth
+      # (deterministic replay). The heavy pipeline needs the out-of-git mirror + SOTA venv and runs locally only.
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - name: Build the SPA (copy-data.mjs overlays data/derived -> public/)
+      - name: Build the SPA (copy-data.mjs overlays committed data/derived -> public/)
         run: cd frontend && npm ci && npm run build
       - uses: actions/upload-pages-artifact@v3
         with:

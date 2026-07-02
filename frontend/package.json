@@ -1,7 +1,7 @@
 {
-  "name": "caos-simlab-web",
+  "name": "atalaya-web",
   "private": true,
-  "version": "0.17.5",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "predev": "node copy-data.mjs",
@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@huggingface/transformers": "^3.3.0",
     "i18next": "^23.16.8",
     "katex": "^0.16.11",
     "lucide-react": "^0.460.0",
