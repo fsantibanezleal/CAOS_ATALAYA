@@ -12,6 +12,14 @@ while the corpus + web app are still being brought to the product-quality bar. T
 - Wheel-zoom no longer triggers the passive-listener warning: a non-passive native wheel listener is bound via a
   ref, so zoom can prevent the page scroll cleanly.
 
+## [0.05.001] · 2026-07-02
+
+### Changed
+- Footer redesigned to the compact, informative CAOS_RES_Lidar3D style (ADR-0016 §2, adjusted): product · CAOS
+  research project · version · **"Developed by Felipe Santibáñez-Leal"** (ES "Desarrollado por…") · data provenance
+  (Data Observatory, CC-BY) · a single GitHub link · MIT · an honest one-liner. Removed the personal/portfolio links
+  from the footer (they already live in the header; repeating them was a focus error).
+
 ## [0.05.000] · 2026-07-02
 
 ### Added
