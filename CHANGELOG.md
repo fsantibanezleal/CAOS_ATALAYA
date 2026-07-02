@@ -3,6 +3,13 @@
 All notable changes to this product. Format: `X.XX.XXX` (display) · see `atalayalab.__version__`. Keep `0.x`
 while the corpus + web app are still being brought to the product-quality bar. Tag every release.
 
+## [0.06.001] · 2026-07-02
+
+### Changed
+- Harvest size claim made auditable + accurate: committed `data/harvest_report.json` (measured from the local
+  Tier-A mirror: 24.8 GB, 303 datasets, 1382 files) and corrected the Implementation page + README from the
+  rounded "~21 GB" to the measured "~25 GB", citing the receipt.
+
 ## [0.06.000] · 2026-07-02
 
 ### Added

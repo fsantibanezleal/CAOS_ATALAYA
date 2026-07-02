@@ -31,7 +31,7 @@ relational structure explicit, honest and explorable.
 
 ## Impact / status
 
-- **1017** datasets catalogued; the gov direct-file subset (**~21 GB**) downloaded + processed offline.
+- **1017** datasets catalogued; the gov direct-file subset (**~25 GB**, 303 datasets / 1382 files, measured in `data/harvest_report.json`) downloaded + processed offline.
 - **8** analytical categories, **11** cases, each a genuine interactive domain view.
 - Honesty gate: on real data the correlation miner finds relationships that survive FDR; on the **same shuffled**
   alignments it finds **~0** (an empirical false-discovery rate near 0).
