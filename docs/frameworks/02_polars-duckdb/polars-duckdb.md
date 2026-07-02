@@ -7,7 +7,10 @@ separators, BOMs) at corpus scale and profiles every column. A pandas-per-file l
 for a 1000+ dataset scan. **Polars** is the columnar dataframe engine: multithreaded, Arrow-backed, out-of-core,
 with a forgiving CSV reader (`ignore_errors`, `truncate_ragged_lines`, `null_values`) that survives ragged gov
 exports. **PyArrow** is the on-disk exchange format: normalized tables are written to **parquet** (zstd) as the
-derived standard. **DuckDB** is available for SQL-over-parquet cross-dataset queries without loading tables to RAM.
+derived standard. **DuckDB** is pinned in the precompute venv for SQL-over-parquet cross-dataset queries without
+loading tables to RAM, but the shipped pipeline does not import it: the hot path is polars end to end, and the
+correlation aggregation uses polars `group_by`. Treat duckdb as an available yardstick for ad-hoc analysis, not a
+stage engine.
 
 Chosen over pandas because the reader must not die on the first malformed row and the scan must stay bounded in
 memory; over raw csv because typed columns + fast `n_unique`/aggregation feed the profiler directly.
@@ -19,7 +22,7 @@ Pinned in `data-pipeline/requirements-precompute.txt`:
 ```
 polars==1.17.1
 pyarrow==18.1.0
-duckdb==1.1.3
+duckdb==1.1.3     # available for ad-hoc SQL-over-parquet; not imported by any stage
 ```
 
 ## Usage
@@ -52,4 +55,5 @@ df.write_parquet("norm.parquet", compression="zstd")
 Polars/DuckDB/PyArrow are all MIT/Apache-2.0 (redistributable). `read_excel` needs `openpyxl`/`xlrd`/
 `python-calamine` (also pinned). The `strict=False` float cast silently nulls uncoercible cells by design (the
 contract, not the reader, decides acceptance). Row-capping (`n_rows`/`max_rows`) keeps the scan bounded; the full
-file stays on disk. DuckDB is available for ad-hoc SQL; the hot path uses polars directly.
+file stays on disk. DuckDB stays pinned for ad-hoc SQL exploration only; no stage imports it, so the shipped hot
+path is polars end to end.

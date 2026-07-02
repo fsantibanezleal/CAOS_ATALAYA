@@ -5,32 +5,33 @@
 The `CORRELATES` edge claims two indicators (aggregated to a shared key such as comuna) move together. That claim
 must survive three tests, or the graph fills with spurious links: a robust rank correlation, a calibrated
 significance test (gov indicators are rarely bivariate-normal), and multiple-testing control across thousands of
-candidate pairs. **SciPy** and **statsmodels** provide the reference statistical machinery; **phik** provides a
-correlation coefficient that works on mixed categorical/numeric columns (where Spearman does not apply).
+candidate pairs.
 
-Design note: the hot correlation path is **hand-implemented in `model/stats.py`** (Spearman, a seeded permutation
-null, Benjamini–Hochberg FDR, first-order partial correlation) so the *identical* code runs offline in `relate`
-and in the browser live lane (numpy-only, Pyodide-safe). SciPy/statsmodels are the pinned reference implementations
-these were validated against; phik is available for the mixed-type case the rank correlation cannot cover.
+The shipped correlation path is **hand-implemented in numpy in `model/stats.py`** (Spearman, a seeded permutation
+null, Benjamini-Hochberg FDR, first-order partial correlation) so the *identical* code runs offline in `relate`
+and in the browser live lane (numpy-only, Pyodide-safe). No stage imports scipy, statsmodels, or phik: they are
+pinned in the precompute venv as reference implementations to check the numpy code against, and as an optional
+mixed-type coefficient (phik) for future work, but they do not run the pipeline. Where you see the numbers, they
+came from `model/stats.py`, not from scipy.
 
 ## Install (exact, verified)
 
-Pinned in `data-pipeline/requirements-precompute.txt`:
+Pinned in `data-pipeline/requirements-precompute.txt` as reference implementations only (no stage imports them):
 
 ```
-phik==0.12.4
-scipy==1.14.1
-statsmodels==0.14.4
+phik==0.12.4        # optional mixed-type coefficient; not wired into any stage
+scipy==1.14.1       # reference for the numpy stats; not imported by the pipeline
+statsmodels==0.14.4 # reference for BH-FDR; not imported by the pipeline
 ```
 
 ## Usage
 
 ```python
-import phik                                   # DataFrame.phik_matrix() for mixed-type association
-from atalayalab.model import stats
+from atalayalab.model import stats            # the shipped path: numpy only, Pyodide-safe
 rho  = stats.spearman(xa, xb)                 # rank correlation
 p    = stats.permutation_pvalue(xa, xb, rho, n_perm=1000, seed=42)  # seeded null
 keep = stats.bh_fdr(pvals, q=0.05)            # BH-FDR mask across the family
+# phik (optional, not used by any stage): DataFrame.phik_matrix() for mixed-type association
 ```
 
 ## Applying it here
@@ -40,8 +41,10 @@ keep = stats.bh_fdr(pvals, q=0.05)            # BH-FDR mask across the family
   (seeded, 1000 perms) and `stats.bh_fdr` (q = 0.05) across the whole candidate family before emitting a
   `CORRELATES` edge. `stats.partial_spearman` guards against a correlation explained away by a common driver.
 - The surviving `abs(rho)` feeds the affinity `f_stat` term (`_affinity_edges`).
-- `export.py` credits `scipy` + `atalayalab.stats(permutation+BH-FDR)` on the `findings` render kind.
-- phik is the mixed-type fallback (categorical × numeric) where rank correlation is undefined.
+- `export.py` carries a `"scipy"` label on the `findings` render kind, but the numbers are produced by
+  `atalayalab.model.stats` (numpy); the label names the statistical family, not an imported engine.
+- phik would be the mixed-type fallback (categorical × numeric) where rank correlation is undefined, but it is not
+  wired in today; the shipped edge only mines numeric-vs-numeric Spearman.
 
 ## Caveats / license
 
