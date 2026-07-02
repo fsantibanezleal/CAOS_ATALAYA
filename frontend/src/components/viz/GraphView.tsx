@@ -11,10 +11,14 @@ const R = 240;
 /** Relation network: nodes are datasets, edges the mined relation of one kind. Layout uses the baked force-directed
  * positions (rustworkx spring layout) so clusters pull together; falls back to the PCA embedding coordinate, then a
  * deterministic circular placement. Vibrant node colours + a glow, edge opacity/width by strength, node size by
- * degree. Zoom (wheel), pan (drag), hover to highlight a node's edges. No animation loop (no compute bomb). */
+ * degree. Zoom (wheel), pan (drag), hover to highlight a node's edges, search to highlight by name. The colour and
+ * legend come from the panel (theme or mined cluster). No animation loop (no compute bomb). */
 export default function GraphView({
-  payload, minWeight = 0, edgeLabel = "strength",
-}: { payload: GraphPayload; minWeight?: number; edgeLabel?: string }) {
+  payload, minWeight = 0, edgeLabel = "strength", colorFor, legend: legendProp, query = "",
+}: {
+  payload: GraphPayload; minWeight?: number; edgeLabel?: string;
+  colorFor?: (n: MapNode) => string; legend?: { label: string; color: string }[]; query?: string;
+}) {
   const lang = useLang();
   const { t, reset, zoomRef, handlers } = usePanZoom();
   const [hover, setHover] = useState<string | null>(null);
@@ -22,8 +26,9 @@ export default function GraphView({
   const nodes = payload.nodes;
   const edges = useMemo(() => payload.edges.filter((e) => e.w >= minWeight), [payload.edges, minWeight]);
   const pos = useMemo(() => layout(nodes), [nodes]);
-  const colorFn = useMemo(() => makeCategoryColor(nodes.map((n) => n.theme)), [nodes]);
-  const legend = useMemo(() => legendFor(nodes.map((n) => n.theme)), [nodes]);
+  const colorFallback = useMemo(() => makeCategoryColor(nodes.map((n) => n.theme)), [nodes]);
+  const color = (n: MapNode) => (colorFor ? colorFor(n) : colorFallback(n.theme));
+  const legend = legendProp ?? legendFor(nodes.map((n) => n.theme));
   const deg = useMemo(() => {
     const d = new Map<string, number>();
     edges.forEach((e) => { d.set(e.s, (d.get(e.s) ?? 0) + 1); d.set(e.t, (d.get(e.t) ?? 0) + 1); });
@@ -39,6 +44,18 @@ export default function GraphView({
     hoverEdges.forEach((e) => { s.add(e.s); s.add(e.t); });
     return s;
   }, [hover, hoverEdges]);
+  const q = query.trim().toLowerCase();
+
+  if (edges.length === 0) {
+    return (
+      <div className="viz-wrap">
+        <div className="viz-toolbar">
+          <span className="viz-hint">{nodes.length} {lang === "es" ? "nodos" : "nodes"} · 0 {lang === "es" ? "relaciones" : "edges"}</span>
+        </div>
+        <p className="viz-empty">{lang === "es" ? "Sin relaciones en este umbral — baja el umbral." : "No relations at this threshold — lower the threshold."}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="viz-wrap">
@@ -61,18 +78,20 @@ export default function GraphView({
             if (!a || !b) return null;
             const active = !hover || e.s === hover || e.t === hover;
             return <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-                         stroke={active && hover ? colorFn((byId.get(hover)?.theme) ?? "") : "var(--color-accent)"}
+                         stroke={active && hover ? color(byId.get(hover)!) : "var(--color-accent)"}
                          strokeOpacity={active ? 0.12 + 0.55 * e.w : 0.03}
                          strokeWidth={(0.5 + 3 * e.w) / t.k} strokeLinecap="round" />;
           })}
           {nodes.map((n) => {
             const p = pos.get(n.id); if (!p) return null;
             const r = (3.2 + 1.4 * Math.sqrt(deg.get(n.id) ?? 0)) / t.k;
-            const active = !hoverSet || hoverSet.has(n.id);
-            return <circle key={n.id} cx={p.x} cy={p.y} r={r} fill={colorFn(n.theme)}
-                           fillOpacity={active ? 0.95 : 0.15}
-                           filter={n.id === hover ? "url(#atl-glow)" : undefined}
-                           stroke={n.id === hover ? "var(--color-fg)" : "none"} strokeWidth={1.5 / t.k}
+            const matchDim = q.length > 0 && !n.title.toLowerCase().includes(q);
+            const matchHit = q.length > 0 && !matchDim;
+            const active = !matchDim && (!hoverSet || hoverSet.has(n.id));
+            return <circle key={n.id} cx={p.x} cy={p.y} r={r} fill={color(n)}
+                           fillOpacity={matchDim ? 0.1 : active ? 0.95 : 0.15}
+                           filter={n.id === hover || matchHit ? "url(#atl-glow)" : undefined}
+                           stroke={n.id === hover || matchHit ? "var(--color-fg)" : "none"} strokeWidth={1.5 / t.k}
                            style={{ cursor: "pointer" }} onPointerEnter={() => setHover(n.id)} />;
           })}
         </g>

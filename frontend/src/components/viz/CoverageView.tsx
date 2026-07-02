@@ -8,8 +8,10 @@ const LAT0 = -56, LAT1 = -17, LON0 = -76, LON1 = -66;
 const W = 300, H = 470;
 
 /** Geographic coverage: which datasets are keyed at comuna / region / point level, as a coverage bar, plus a
- * point map of the datasets that carry coordinates. Colour by theme. */
-export default function CoverageView({ payload, level = "any" }: { payload: CoveragePayload; level?: string }) {
+ * point map of the datasets that carry coordinates. Colour by theme. The `metric` variant switches the bars
+ * between a plain dataset count and a theme-mix stack (the theme composition within each key level). */
+export default function CoverageView({ payload, level = "any", metric = "count" }:
+  { payload: CoveragePayload; level?: string; metric?: string }) {
   const lang = useLang();
   const [hover, setHover] = useState<CoverageRow | null>(null);
   const rows = payload.rows;
@@ -26,6 +28,20 @@ export default function CoverageView({ payload, level = "any" }: { payload: Cove
   };
   const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
 
+  // Theme composition within each geo-key level (for the "Theme mix" metric): from the rows themselves so the
+  // stack answers "is comuna-keyed data mostly one theme, or diverse?".
+  const themeMix = useMemo(() => {
+    const m = new Map<string, Map<string, number>>();
+    for (const r of rows) {
+      const lvl = order.includes(r.level) ? r.level : "none";
+      if (!m.has(lvl)) m.set(lvl, new Map());
+      const tm = m.get(lvl)!;
+      tm.set(r.theme, (tm.get(r.theme) ?? 0) + 1);
+    }
+    return m;
+  }, [rows]);
+  const showThemes = metric === "themes";
+
   const pts = rows.filter((r) => r.lat != null && r.lon != null &&
     (level === "any" || level === "points" || r.level === level));
   const sx = (lon: number) => ((lon - LON0) / (LON1 - LON0)) * (W - 30) + 15;
@@ -35,14 +51,28 @@ export default function CoverageView({ payload, level = "any" }: { payload: Cove
     <div className="viz-wrap">
       <div className="viz-split">
         <div className="cov-bars">
-          <span className="viz-hint">{lang === "es" ? "Cobertura por nivel de clave geográfica" : "Coverage by geographic key level"}</span>
-          {order.map((k) => (
-            <div key={k} className="cov-row" onPointerEnter={() => setHover(null)}>
-              <span className="cov-label">{labels[k]}</span>
-              <span className="cov-track"><span className="cov-fill" style={{ width: `${((counts[k] ?? 0) / total) * 100}%` }} /></span>
-              <span className="num">{counts[k] ?? 0}</span>
-            </div>
-          ))}
+          <span className="viz-hint">{showThemes
+            ? (lang === "es" ? "Mezcla temática por nivel de clave geográfica" : "Theme mix by geographic key level")
+            : (lang === "es" ? "Cobertura por nivel de clave geográfica" : "Coverage by geographic key level")}</span>
+          {order.map((k) => {
+            const c = counts[k] ?? 0;
+            const mix = themeMix.get(k);
+            return (
+              <div key={k} className="cov-row" onPointerEnter={() => setHover(null)}>
+                <span className="cov-label">{labels[k]}</span>
+                <span className="cov-track">
+                  {showThemes && mix
+                    ? <span className="cov-fill cov-fill-stack" style={{ width: `${(c / total) * 100}%` }}>
+                        {Array.from(mix.entries()).sort((a, b) => b[1] - a[1]).map(([th, n]) => (
+                          <span key={th} className="cov-seg" title={`${th} · ${n}`} style={{ flex: n, background: colorFn(th) }} />
+                        ))}
+                      </span>
+                    : <span className="cov-fill" style={{ width: `${(c / total) * 100}%` }} />}
+                </span>
+                <span className="num">{c}</span>
+              </div>
+            );
+          })}
           <div className="viz-legend">
             {legend.map((l) => <span key={l.label} className="viz-legend-item"><span className="viz-swatch" style={{ background: l.color }} /> {l.label}</span>)}
           </div>

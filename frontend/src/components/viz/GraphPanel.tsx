@@ -1,29 +1,51 @@
 import { useMemo, useState } from "react";
-import type { GraphPayload } from "@/lib/types";
+import type { GraphPayload, MapNode } from "@/lib/types";
 import { useLang } from "@/lib/useLang";
+import { makeCategoryColor, legendFor } from "./vizUtils";
 import GraphView from "./GraphView";
-import GraphGL, { themeColorer } from "./GraphGL";
-import { legendFor } from "./vizUtils";
+import GraphGL from "./GraphGL";
+import GraphMatrix from "./GraphMatrix";
+import GraphArc from "./GraphArc";
 
-type Mode = "clean" | "glow" | "3d";
+type Mode = "clean" | "glow" | "3d" | "matrix" | "arc";
+type ColorKey = "theme" | "cluster";
 
-/** The graph workbench: choose how to render the relation network. "Clean" is the precise, accessible SVG (baked
- * force layout). "Glow" is a WebGL 2D canvas with additive blending + live physics (the nebula look). "3D" is a
- * three.js orbitable graph with bloom. Plus a labels toggle + node search that highlights matches. */
+/** The graph workbench: choose HOW to render the relation network — the same mined graph, five genuinely
+ * different representations. "Clean" is the precise, accessible SVG node-link (baked force layout); "Glow" is a
+ * WebGL 2D nebula; "3D" is an orbitable three.js graph; "Matrix" is a cluster-reordered adjacency matrix
+ * (occlusion-free — reads the dense hairballs a node-link cannot); "Arc" is a 1-D arc diagram (best for sparse
+ * lenses, makes cross-community bridges obvious). Plus a colour-by (theme / mined cluster) toggle, a labels
+ * toggle, and a node search that highlights matches across every mode. */
 export default function GraphPanel({
-  payload, minWeight = 0, edgeLabel = "strength",
-}: { payload: GraphPayload; minWeight?: number; edgeLabel?: string }) {
+  payload, minWeight = 0, edgeLabel = "strength", edgeKey,
+}: { payload: GraphPayload; minWeight?: number; edgeLabel?: string; edgeKey?: string }) {
   const lang = useLang();
   const [mode, setMode] = useState<Mode>("clean");
   const [labels, setLabels] = useState(false);
   const [query, setQuery] = useState("");
-  const colorForTheme = useMemo(() => themeColorer(payload.nodes), [payload.nodes]);
-  const legend = useMemo(() => legendFor(payload.nodes.map((n) => n.theme)), [payload.nodes]);
+  const [colorKey, setColorKey] = useState<ColorKey>("theme");
+
+  // A variant may scope the network to one join key (e.g. comuna_cut vs region); filter edges by ev.key.
+  const view = useMemo<GraphPayload>(() => {
+    if (!edgeKey) return payload;
+    const edges = payload.edges.filter((e) => (e.ev?.key as string | undefined) === edgeKey);
+    const used = new Set<string>([...edges.map((e) => e.s), ...edges.map((e) => e.t)]);
+    return { nodes: payload.nodes.filter((n) => used.has(n.id)), edges };
+  }, [payload, edgeKey]);
+
+  const catValue = (n: MapNode) => (colorKey === "cluster" ? `cluster ${n.cluster}` : n.theme);
+  const colorFor = useMemo(() => {
+    const cat = makeCategoryColor(view.nodes.map(catValue));
+    return (n: MapNode) => cat(catValue(n));
+  }, [view.nodes, colorKey]);
+  const legend = useMemo(() => legendFor(view.nodes.map(catValue)), [view.nodes, colorKey]);
 
   const MODES: { id: Mode; en: string; es: string }[] = [
     { id: "clean", en: "Clean 2D", es: "Limpio 2D" },
     { id: "glow", en: "Glow (WebGL)", es: "Glow (WebGL)" },
     { id: "3d", en: "3D", es: "3D" },
+    { id: "matrix", en: "Matrix", es: "Matriz" },
+    { id: "arc", en: "Arc", es: "Arco" },
   ];
 
   return (
@@ -37,7 +59,12 @@ export default function GraphPanel({
           ))}
         </div>
         <div className="graph-tools">
-          {mode !== "clean" && (
+          <div className="graph-colorby" role="group" aria-label={lang === "es" ? "Colorear por" : "Colour by"}>
+            <span className="graph-tool-lbl">{lang === "es" ? "Color" : "Colour"}</span>
+            <button type="button" className={"chip sm" + (colorKey === "theme" ? " on" : "")} onClick={() => setColorKey("theme")}>{lang === "es" ? "tema" : "theme"}</button>
+            <button type="button" className={"chip sm" + (colorKey === "cluster" ? " on" : "")} onClick={() => setColorKey("cluster")}>{lang === "es" ? "clúster" : "cluster"}</button>
+          </div>
+          {(mode === "glow" || mode === "3d") && (
             <label className="graph-toggle">
               <input type="checkbox" checked={labels} onChange={(e) => setLabels(e.target.checked)} />
               {lang === "es" ? "Etiquetas" : "Labels"}
@@ -49,14 +76,19 @@ export default function GraphPanel({
       </div>
 
       {mode === "clean"
-        ? <GraphView payload={payload} minWeight={minWeight} edgeLabel={edgeLabel} />
-        : <GraphGL payload={payload} minWeight={minWeight} mode={mode} showLabels={labels} query={query}
-                   colorForTheme={colorForTheme} />}
+        ? <GraphView payload={view} minWeight={minWeight} edgeLabel={edgeLabel} colorFor={colorFor} legend={legend} query={query} />
+        : mode === "matrix"
+        ? <GraphMatrix payload={view} minWeight={minWeight} edgeLabel={edgeLabel} colorFor={colorFor} query={query} />
+        : mode === "arc"
+        ? <GraphArc payload={view} minWeight={minWeight} edgeLabel={edgeLabel} colorFor={colorFor} query={query} signed={edgeLabel === "ρ"} />
+        : <GraphGL payload={view} minWeight={minWeight} mode={mode} showLabels={labels} query={query} colorFor={colorFor} />}
 
-      {mode !== "clean" && (
+      {mode !== "clean" && mode !== "matrix" && (
         <div className="viz-legend">
           {legend.map((l) => <span key={l.label} className="viz-legend-item"><span className="viz-swatch" style={{ background: l.color }} /> {l.label}</span>)}
-          <span className="viz-hint">{lang === "es" ? "arrastra un nodo · rueda = zoom" + (mode === "3d" ? " · arrastra el fondo = orbitar" : "") : "drag a node · wheel = zoom" + (mode === "3d" ? " · drag background = orbit" : "")}</span>
+          <span className="viz-hint">{lang === "es"
+            ? (mode === "arc" ? "nodos ordenados por clúster · pasa el cursor" : "arrastra un nodo · rueda = zoom" + (mode === "3d" ? " · arrastra el fondo = orbitar" : ""))
+            : (mode === "arc" ? "nodes ordered by cluster · hover" : "drag a node · wheel = zoom" + (mode === "3d" ? " · drag background = orbit" : ""))}</span>
         </div>
       )}
     </div>

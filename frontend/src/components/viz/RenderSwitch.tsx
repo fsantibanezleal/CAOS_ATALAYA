@@ -22,6 +22,7 @@ export default function RenderSwitch({ kind, artifact, variant }:
     case "graph":
       return <GraphPanel payload={payload}
         minWeight={(p.min_cos as number) ?? (p.min_c as number) ?? (p.min_rho as number) ?? 0}
+        edgeKey={p.key as string | undefined}
         edgeLabel={p.min_cos !== undefined ? "cos" : p.min_c !== undefined ? "containment" : "ρ"} />;
     case "findings":
       return <FindingsTable payload={payload} minRho={(p.min_rho as number) ?? 0} sign={p.sign as never} />;
@@ -29,9 +30,9 @@ export default function RenderSwitch({ kind, artifact, variant }:
       return <AffinityView payload={payload} weights={(p.w as [number, number, number]) ?? [0.34, 0.4, 0.26]}
         limit={(p.limit as number) ?? 120} minScore={(p.min_score as number) ?? 0} />;
     case "coverage":
-      return <CoverageView payload={payload} level={(p.level as string) ?? "any"} />;
+      return <CoverageView payload={payload} level={(p.level as string) ?? "any"} metric={(p.metric as string) ?? "count"} />;
     case "timeline":
-      return <TimelineView payload={payload} scope={(p.scope as string) ?? "all"} since={p.since as number} />;
+      return <TimelineView payload={payload} scope={(p.scope as string) ?? "all"} since={p.since as number} sort={(p.sort as string) ?? "start"} />;
     case "quality":
       return <QualityView payload={payload} metric={(p.metric as string) ?? "null"} />;
     case "overview":
