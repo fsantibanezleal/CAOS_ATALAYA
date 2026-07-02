@@ -110,8 +110,11 @@ code, kbd { font-family: var(--font-mono); }
    filled with sub-tabs, two-column grids, figure+text rows and definition grids — not a narrow column) */
 .prose { font-size: 0.98rem; }
 .prose section { margin-block: 1.75rem; }
-/* A readable single-column measure for long flowing paragraphs that aren't in a grid. */
-.measure { max-width: 70ch; }
+/* A readable, CENTERED reading column for long-form pages, so content fills the page-body in a balanced way
+   instead of a narrow left-jammed column. Tables/figures/equations inside may break out to full width (below). */
+.measure { max-width: 82ch; margin-inline: auto; }
+/* structural content breaks out of the reading measure to use the full page width */
+.measure > .viz-table, .measure > .viz-tablewrap, .measure > .equation, .measure > table { max-width: none; }
 /* Figure + text side-by-side row (fills width). */
 .fig-row { display: grid; grid-template-columns: 1.1fr 1fr; gap: 1.5rem; align-items: center; margin-block: 1.5rem; }
 .fig-row.rev { grid-template-columns: 1fr 1.1fr; }
