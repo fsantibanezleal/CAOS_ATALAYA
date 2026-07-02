@@ -36,13 +36,20 @@ export default function ScatterMap({ payload, colorBy = "theme" }: { payload: Ma
         <span className="viz-hint">{nodes.length} {lang === "es" ? "datasets" : "datasets"} · {lang === "es" ? "rueda = zoom, arrastra = mover" : "wheel = zoom, drag = pan"}</span>
         <button type="button" className="btn" onClick={reset}>{lang === "es" ? "Reiniciar vista" : "Reset view"}</button>
       </div>
-      <svg ref={zoomRef} viewBox={`0 0 ${W} ${H}`} className="viz-svg" role="img"
+      <svg ref={zoomRef} viewBox={`0 0 ${W} ${H}`} className="viz-svg viz-graph" role="img"
            tabIndex={0} {...handlers} onPointerLeave={() => setHover(null)}
            aria-label={lang === "es" ? "Mapa del catálogo por embedding" : "Catalog embedding map"}>
         <g transform={`translate(${t.x},${t.y}) scale(${t.k})`}>
+          {/* additive halos -> the embedding clusters glow on the dark surface */}
+          <g style={{ mixBlendMode: "screen" }}>
+            {nodes.map((n) => (
+              <circle key={n.id} cx={sx(n.coord[0])} cy={sy(n.coord[1])} r={(hover?.id === n.id ? 9 : 5.5) / t.k}
+                      fill={colorFn(n)} fillOpacity={0.16} />
+            ))}
+          </g>
           {nodes.map((n) => (
-            <circle key={n.id} cx={sx(n.coord[0])} cy={sy(n.coord[1])} r={hover?.id === n.id ? 7 / t.k : 4.2 / t.k}
-                    fill={colorFn(n)} fillOpacity={0.82} stroke={hover?.id === n.id ? "var(--color-fg)" : "none"}
+            <circle key={n.id} cx={sx(n.coord[0])} cy={sy(n.coord[1])} r={(hover?.id === n.id ? 6.5 : 3.6) / t.k}
+                    fill={colorFn(n)} fillOpacity={hover?.id === n.id ? 1 : 0.92} stroke={hover?.id === n.id ? "#fff" : "none"}
                     strokeWidth={1.5 / t.k} onPointerEnter={() => setHover(n)} style={{ cursor: "pointer" }} />
           ))}
         </g>
