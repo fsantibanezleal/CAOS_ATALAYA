@@ -227,7 +227,7 @@ def _serve_stdio() -> None:
             continue
         method, mid, params = req.get("method"), req.get("id"), req.get("params", {})
         if method == "initialize":
-            reply(mid, {"protocolVersion": "2024-11-05", "serverInfo": {"name": "atalaya", "version": "0.2.0"},
+            reply(mid, {"protocolVersion": "2024-11-05", "serverInfo": {"name": "atalaya", "version": "0.9.2"},
                         "capabilities": {"tools": {}}})
         elif method == "tools/list":
             reply(mid, {"tools": [{"name": n, "description": d,
