@@ -7,7 +7,7 @@ describe the same thing, and which actually correlate when aligned by comuna or 
 
 > An observatory of the observatory: a catalog of a thousand datasets has no map; Atalaya builds one.
 
-Live: `atalaya.fasl-work.com` (planned) · Source: github.com/fsantibanezleal/CAOS_ATALAYA
+Live: [atalaya.fasl-work.com](https://atalaya.fasl-work.com) · Source: github.com/fsantibanezleal/CAOS_ATALAYA
 
 ---
 
@@ -93,23 +93,38 @@ scientific archives (it references them), and states its limitations per view.
 
 ## Quick start
 
+Atalaya ships every web artifact under `data/derived/`, so the default reproducible path needs **no data and no
+credential**: run the app on the committed artifacts.
+
+```bash
+# Run the app on the committed artifacts (zero setup: no data, no credential)
+cd frontend && npm install && npm run dev
+```
+
+That gives you the full explorer (all cases, the 3-D views, live in-browser semantic search and affinity
+reweight) served entirely from the committed compact artifacts.
+
+### Reproduce the pipeline (optional, heavy)
+
+Rebuilding the artifacts from scratch is the heavy lane. It needs the two isolated venvs and, to re-crawl the
+catalog, the read-only catalog credential (you extract it from the public catalog site's own network requests;
+see `docs/frameworks/01_opensearch-catalog/opensearch-catalog.md`). `--harvest` re-downloads the ~25 GB mirror.
+
 ```bash
 # 1. environments (two venvs) + .env, no global installs
 ./scripts/setup.ps1            # or scripts/setup.sh
 
-# 2. run the offline pipeline (harvest already-mirrored data + mine the graph)
-./scripts/precompute.ps1       # python -m atalayalab.pipeline ; add --harvest to re-crawl
+# 2. run the offline pipeline (mine the graph from an already-mirrored corpus)
+./scripts/precompute.ps1       # python -m atalayalab.pipeline ; add --harvest to re-crawl (~25 GB)
 
 # 3. tests + CONTRACT-2 check
 .venv-pipeline/Scripts/python -m pytest ; python scripts/check_artifacts.py
-
-# 4. the web app
-cd frontend && npm install && npm run dev
 ```
 
-Secrets (the read-only catalog credential) are kept OUT of this repo and are read from the environment / your secret store; they are materialized
-into `.env` by `setup.*`; the repo commits only `.env.example`. Heavy data and models stay out-of-git on a scratch
-volume configured via `ATALAYA_DATA_ROOT` / `ATALAYA_MODEL_ROOT`; only compact derived artifacts are committed.
+Secrets are never committed: the read-only catalog credential is provided via the environment (`.env`, copied
+from `.env.example`), never checked in; `setup.*` materializes `.env` from your local secrets file if you point
+`ATALAYA_ENV_SRC` at one, else from `.env.example`. Heavy data and models stay out-of-git on a scratch volume
+configured via `ATALAYA_DATA_ROOT` / `ATALAYA_MODEL_ROOT`; only compact derived artifacts are committed.
 
 ## Repository structure
 
@@ -147,6 +162,7 @@ See [mcp/README.md](mcp/README.md).
 
 ## License
 
-MIT · see [LICENSE](LICENSE). Dataset content belongs to the Data Observatory and the original Chilean sources
-under their respective licenses (mostly CC-BY family); Atalaya stores only derived metadata + compact artifacts.
+MIT · see [LICENSE](LICENSE) for the code license and [LICENSES.md](LICENSES.md) for the third-party breakdown.
+Dataset content belongs to the Data Observatory and the original Chilean sources under their respective licenses
+(mostly CC-BY family); Atalaya stores only derived metadata + compact artifacts.
 Built by Felipe Santibáñez-Leal · a CAOS research project.

@@ -49,4 +49,4 @@ auth-gated private data), which Atalaya does not require.
 "Live" means the query encoder and the affinity fusion run in the browser, not that the pipeline re-runs
 client-side. If WASM is blocked, semantic search still works (keyword fallback) and the affinity view shows the
 baked default weights, so a visitor always sees a complete, correct product. See
-[../architecture/04_live-lane-pyodide.md](../architecture/04_live-lane-pyodide.md).
+[../architecture/04_live-lane.md](../architecture/04_live-lane.md).

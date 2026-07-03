@@ -10,11 +10,12 @@ Atalaya keeps two isolated virtualenvs (never a global install):
 - **`.venv-pipeline`** (offline SOTA lane): installs `requirements-precompute.txt` plus `requirements-dev.txt`
   plus the editable package. This is where the whole pipeline runs (polars, sentence-transformers, scikit-learn,
   datasketch, rustworkx, and the rest).
-- **`.venv`** (runtime / live-thin lane): installs `requirements.txt` (just `numpy`), the Pyodide-safe core. This
+- **`.venv`** (runtime / live-thin lane): installs `requirements.txt` (just `numpy`), the live-lane-safe (numpy-only) core. This
   is the minimal environment that mirrors what the browser lane is allowed to import.
 
-`scripts/setup.{sh,ps1}` creates both, installs each lane, and materializes `.env` (from the vault if
-`ATALAYA_ENV_SRC` points at it, else from `.env.example`).
+`scripts/setup.{sh,ps1}` creates both, installs each lane, and materializes `.env` (from a local secrets file if
+`ATALAYA_ENV_SRC` points at one, else from `.env.example`). Secrets are provided via the environment; nothing is
+committed.
 
 ## Run it
 
@@ -42,8 +43,9 @@ per-resource monster cap; see [../data-contract.md](../data-contract.md)). A nor
 reuses the already-mirrored raw tree. If no normalized resources exist, the pipeline stops and tells you to run
 `--harvest` first.
 
-To re-harvest, `.env` must carry the OpenSearch credential (materialized from the vault); a fresh clone without it
-can still run over an existing mirror but cannot enumerate or download.
+To re-harvest, `.env` must carry the read-only OpenSearch credential you extract from the public catalog site's
+own network requests (see the [opensearch-catalog card](../frameworks/01_opensearch-catalog/opensearch-catalog.md));
+a fresh clone without it can still run over an existing mirror but cannot enumerate or download.
 
 ## Outputs
 

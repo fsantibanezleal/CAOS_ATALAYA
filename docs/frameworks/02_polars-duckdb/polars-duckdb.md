@@ -48,7 +48,7 @@ df.write_parquet("norm.parquet", compression="zstd")
 - `infer.py` `_indicator_series` / `_numeric_cols` aggregate each dataset's numeric columns to a shared entity key
   (`group_by(key).agg(mean)`) to build the indicator series that the correlation edge mines.
 - `export.py` records `polars` as the producing engine for the `overview`, `coverage`, `timeline`, `quality`
-  render kinds. Import of polars is lazy so the pure-Python core stays Pyodide-safe.
+  render kinds. Import of polars is lazy so the pure-Python core stays live-lane-safe (numpy-only).
 
 ## Caveats / license
 

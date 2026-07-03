@@ -5,10 +5,11 @@ datasets), profiles every downloadable table, mines five kinds of cross-dataset 
 and ships an explorer over that graph as a static site. It never hosts the source data; it stores only derived
 metadata plus compact web artifacts.
 
-The product is an instance of the CAOS product-repo archetype ([ADR-0057]): offline-pipeline-heavy,
+The product is an instance of the CAOS product-repo archetype (ADR-0057): offline-pipeline-heavy,
 backend-optional, deploying as a static deterministic-replay viewer. The base layout, the two contracts, the
 staged pipeline names, and the gate are frozen; the per-product surface is the science (the stage bodies and
-`model/`), the visualizations, and the cases plus content.
+`model/`), the visualizations, and the cases plus content. (ADR-xxxx ids refer to internal architecture decision
+records; they are not part of this public repo.)
 
 ## The pipeline
 
@@ -38,7 +39,7 @@ Run it with `python -m atalayalab.pipeline` (full run over an already-mirrored c
 | Lane | Where | What runs | Notes |
 |---|---|---|---|
 | **Offline (precompute)** | `data-pipeline/atalayalab`, `.venv-pipeline` | the whole pipeline; SOTA engines pinned in `requirements-precompute.txt` | bakes the committed artifacts; heavy; never deployed |
-| **Live (client-side)** | `frontend/` | ONNX semantic search plus JS affinity reweight | genuine in-browser compute, no server (see [04](04_live-lane-pyodide.md)) |
+| **Live (client-side)** | `frontend/` | ONNX semantic search plus JS affinity reweight | genuine in-browser compute, no server (see [04](04_live-lane.md)) |
 | **Replay** | `frontend/` | loads the committed manifests plus artifacts | always present; the site paints instantly on first load |
 
 A measured [gate](03_the-gate.md) records, per case, whether a computation is small and safe enough to run live or
@@ -66,5 +67,3 @@ out of git under the `E:` scratch tree (`config.py`). Only the decimated web art
 - **Is not:** a data warehouse or a replacement for the official catalog; it does not host the source files, it
   does not claim causation from a correlation, and it does not mirror the heavy DOI scientific archives (it
   references them by link).
-
-[ADR-0057]: ../../../conventions/architecture/0-archetype/ADR-0057-product-repo-archetype.md

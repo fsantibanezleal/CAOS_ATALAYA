@@ -20,9 +20,16 @@ then work from the cache), and a documented re-extraction step if the credential
 ## The document schema (DataCite-derived)
 
 `_source` carries: `titles[].name`, `descriptions[].description`, `categories[]{name, sub_category}` (the six
-OECD areas), `rights[].rights_identifier` (SPDX license id), `publishers[].publisher_name`, `roles[]`,
-`geo_locations[]`, `origin_name` (`Data Observatory` vs `DataCite`), and the download field
-`media_files[]{file_uri, format, sizes[], Collections[]}`.
+OECD areas at `name`, finer OECD sub-categories at `sub_category`), `rights[].rights_identifier` (SPDX license
+id), `publishers[].publisher_name`, `roles[]`, `geo_locations[]`, `origin_name` (`Data Observatory` vs
+`DataCite`), and the download field `media_files[]{file_uri, format, sizes[], Collections[]}`.
+
+**`categories` is multi-valued.** About 70% of datasets carry 2 to 5 categories. `inventory.py` keeps the first
+as the primary `theme` / `sub_category`, but the full set matters downstream: the offline
+`scripts/topics_offline.py` reads **every** `categories[].sub_category` and bakes a `topics[]` list onto each
+catalog node (27 clean sub-category values across the corpus: `Ciencias de la salud`, `Derecho`, `Economía y
+negocios`, `Sociología`, `Ciencias de la Tierra`, and so on). Those `topics[]` power the Catalog map's "Colour by
+topic" variant and the hover read-out (see [CART_map](../../cases/CART_map.md)).
 
 `max_result_window` (10 000) far exceeds the 1017 documents, so plain `from`/`size` paging enumerates the whole
 catalog; no scroll/PIT is needed. The document `_id` is the stable key used everywhere downstream.
@@ -42,7 +49,7 @@ tenacity==9.0.0
 ```python
 import base64, httpx, json
 BASE = "https://d2i4qx9nxxjzd9.cloudfront.net/prod-v3"
-auth = base64.b64encode(b"front-reader:<password-from-vault>").decode()
+auth = base64.b64encode(b"front-reader:<read-only-password-from-the-catalog-site>").decode()
 h = {"Authorization": f"Basic {auth}", "Content-Type": "application/json"}
 r = httpx.post(f"{BASE}/_count", headers=h, content=json.dumps({"query": {"match_all": {}}}))
 print(r.json())   # {"count": 1017, ...}

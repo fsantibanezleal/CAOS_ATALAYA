@@ -30,18 +30,18 @@ const li = (items: ReactNode[]) => <ul>{items.map((x, i) => <li key={i}>{x}</li>
 const CART_map = (lang: Language) => block(lang,
   {
     problem: <p>Where does each dataset sit in "meaning space", and which datasets are neighbours? A catalog of a thousand datasets has no map; this view builds one from the text of every dataset.</p>,
-    components: li(["Nodes: one per profiled dataset.", "Position: a 2-D PCA projection of the dataset's multilingual sentence embedding.", "Colour: the facet you choose (theme, origin, cluster, join keys, recency, null rate).", "Read-out: title, theme, publisher, size, keys, temporal span, null fraction."]),
+    components: li(["Nodes: one per profiled dataset.", "Position: a 2-D PCA projection of the dataset's multilingual sentence embedding (a 2D/3D toggle also orbits a 3-D PCA layout).", "Colour: the facet you choose (theme, origin, cluster, join keys, recency, null rate, or topic).", "Read-out: title, theme, publisher, size, keys, temporal span, null fraction, and the dataset's full list of OECD sub-categories (topics)."]),
     formal: <><p>Each dataset's title + description + column names is encoded to a vector <InlineMath tex="\mathbf{e}\in\mathbb{R}^{384}" /> by a multilingual MiniLM. We project to 2-D with PCA:</p><Equation tex="\mathbf{y}_i = W^\top (\mathbf{e}_i - \bar{\mathbf{e}}),\quad W=[\mathbf{w}_1,\mathbf{w}_2]" caption={lang === "es" ? "las dos primeras componentes principales de los embeddings" : "the top two principal components of the embeddings"} /></>,
     scope: <p><strong>Modeled:</strong> semantic proximity of dataset descriptions. <strong>Out of scope:</strong> row-level content (this is metadata + column-name semantics, not the values). <strong>Honesty:</strong> PCA keeps only the two directions of largest variance; datasets far apart in 2-D are dissimilar, but 2-D closeness can hide differences visible in the full 384-D space.</p>,
-    variants: <p>The six variants recolour the same points: by <em>theme</em> (the OECD area), <em>origin</em> (curated vs DOI), <em>cluster</em> (k-means over the embeddings), <em>join keys</em> (which entity key a dataset carries), <em>recency</em> (viridis over the latest year), and <em>null rate</em> (data quality). The layout never changes, so you compare facets on a fixed map.</p>,
+    variants: <p>The seven variants recolour the same points: by <em>theme</em> (the OECD area), <em>origin</em> (curated vs DOI), <em>cluster</em> (k-means over the embeddings), <em>join keys</em> (which entity key a dataset carries), <em>recency</em> (viridis over the latest year), <em>null rate</em> (data quality), and <em>topic</em> (the full 27-value OECD sub-category taxonomy, finer than the five top themes). The layout never changes, so you compare facets on a fixed map; a 2D/3D toggle switches between the flat SVG map and an orbitable 3-D PCA view.</p>,
     howto: <p>Look for tight colour clusters (a theme that is semantically coherent) and outliers (a dataset that sits far from its theme-mates). Hover any point to read the dataset; switch the colour facet to ask a different question of the same geography.</p>,
   },
   {
     problem: <p>¿Dónde se ubica cada dataset en el "espacio de significado" y cuáles son vecinos? Un catálogo de mil datasets no tiene mapa; esta vista construye uno a partir del texto de cada dataset.</p>,
-    components: li(["Nodos: uno por dataset perfilado.", "Posición: proyección PCA 2-D del embedding multilingüe del dataset.", "Color: la faceta que elijas (tema, origen, clúster, claves, actualidad, tasa de nulos).", "Lectura: título, tema, editor, tamaño, claves, extensión temporal, fracción de nulos."]),
+    components: li(["Nodos: uno por dataset perfilado.", "Posición: proyección PCA 2-D del embedding multilingüe (un toggle 2D/3D también orbita un layout PCA 3-D).", "Color: la faceta que elijas (tema, origen, clúster, claves, actualidad, tasa de nulos o subcategoría).", "Lectura: título, tema, editor, tamaño, claves, extensión temporal, fracción de nulos, y la lista completa de subcategorías OECD (temas) del dataset."]),
     formal: <><p>El título + descripción + nombres de columnas de cada dataset se codifica a un vector <InlineMath tex="\mathbf{e}\in\mathbb{R}^{384}" /> con un MiniLM multilingüe. Proyectamos a 2-D con PCA:</p><Equation tex="\mathbf{y}_i = W^\top (\mathbf{e}_i - \bar{\mathbf{e}}),\quad W=[\mathbf{w}_1,\mathbf{w}_2]" caption="las dos primeras componentes principales de los embeddings" /></>,
     scope: <p><strong>Modelado:</strong> proximidad semántica de las descripciones. <strong>Fuera de alcance:</strong> el contenido a nivel de fila (esto es metadata + semántica de nombres de columnas, no los valores). <strong>Honestidad:</strong> PCA conserva solo las dos direcciones de mayor varianza; puntos lejanos en 2-D son distintos, pero cercanía en 2-D puede ocultar diferencias del espacio completo de 384-D.</p>,
-    variants: <p>Las seis variantes recolorean los mismos puntos: por <em>tema</em>, <em>origen</em> (curado vs DOI), <em>clúster</em> (k-means sobre embeddings), <em>claves de unión</em>, <em>actualidad</em> (viridis sobre el último año) y <em>tasa de nulos</em>. El layout no cambia, así comparas facetas sobre un mapa fijo.</p>,
+    variants: <p>Las siete variantes recolorean los mismos puntos: por <em>tema</em>, <em>origen</em> (curado vs DOI), <em>clúster</em> (k-means sobre embeddings), <em>claves de unión</em>, <em>actualidad</em> (viridis sobre el último año), <em>tasa de nulos</em>, y <em>subcategoría</em> (la taxonomía OECD completa de 27 valores, más fina que los cinco temas). El layout no cambia, así comparas facetas sobre un mapa fijo; un toggle 2D/3D alterna entre el mapa plano SVG y una vista PCA 3-D orbitable.</p>,
     howto: <p>Busca clústers de color compactos (un tema semánticamente coherente) y outliers (un dataset lejos de sus pares). Pasa el cursor por cualquier punto para leer el dataset; cambia la faceta de color para hacer otra pregunta sobre la misma geografía.</p>,
   });
 
@@ -50,16 +50,16 @@ const mk = (en: Sec, es: Sec) => (lang: Language) => block(lang, en, es);
 
 const SEM_network = mk(
   { problem: <p>Which datasets describe the same kind of thing, purely from their text? This network links datasets whose embeddings are close.</p>,
-    components: li(["Nodes: datasets. Edges: cosine similarity above a threshold. Node size: degree.", "Colour: theme."]),
+    components: li(["Nodes: datasets. Edges: cosine similarity above a threshold. Node size: degree.", "Colour: theme, or the mined k-means cluster (toggle)."]),
     formal: <><p>The edge weight is the cosine of the two embeddings:</p><Equation tex="\text{sim}(i,j)=\frac{\mathbf{e}_i\cdot\mathbf{e}_j}{\lVert\mathbf{e}_i\rVert\,\lVert\mathbf{e}_j\rVert}" /></>,
     scope: <p><strong>Honesty:</strong> semantic similarity is topical, not causal or joinable. Two datasets can be neighbours here yet share no join key (see Joinability).</p>,
-    variants: <p>The variants raise the cosine threshold (0.45 → 0.92): higher thresholds keep only the tightest topical pairs, so the graph thins to its strongest communities.</p>,
+    variants: <p>The threshold variants raise the cosine cutoff (0.45 to 0.92): higher thresholds keep only the tightest topical pairs, so the graph thins to its strongest communities. The same graph renders five ways: <em>Clean 2D</em> (SVG), <em>Glow</em> (WebGL), <em>3D</em> (orbitable, the default), <em>Matrix</em> (a cluster-reordered adjacency, occlusion-free), and <em>Arc</em> (a 1-D diagram). A Colour-by toggle switches theme vs mined cluster, plus a Labels toggle and a Highlight-dataset search.</p>,
     howto: <p>Raise the threshold to find the most confidently related pairs; hover a node to list its neighbours with their cosine. Use it to discover datasets you did not know were related.</p> },
   { problem: <p>¿Qué datasets describen lo mismo, solo por su texto? Esta red une datasets con embeddings cercanos.</p>,
-    components: li(["Nodos: datasets. Aristas: similitud coseno sobre un umbral. Tamaño: grado.", "Color: tema."]),
+    components: li(["Nodos: datasets. Aristas: similitud coseno sobre un umbral. Tamaño: grado.", "Color: tema, o el clúster k-means minado (toggle)."]),
     formal: <><p>El peso de la arista es el coseno de los dos embeddings:</p><Equation tex="\text{sim}(i,j)=\frac{\mathbf{e}_i\cdot\mathbf{e}_j}{\lVert\mathbf{e}_i\rVert\,\lVert\mathbf{e}_j\rVert}" /></>,
     scope: <p><strong>Honestidad:</strong> la similitud semántica es temática, no causal ni unible. Dos datasets pueden ser vecinos aquí sin compartir clave de unión.</p>,
-    variants: <p>Las variantes suben el umbral de coseno (0.45 → 0.92): umbrales altos dejan solo los pares más temáticamente cercanos.</p>,
+    variants: <p>Las variantes de umbral suben el coseno (0.45 a 0.92): umbrales altos dejan solo los pares más cercanos, adelgazando el grafo a sus comunidades fuertes. El mismo grafo se dibuja de cinco formas: <em>Limpio 2D</em> (SVG), <em>Glow</em> (WebGL), <em>3D</em> (orbitable, por defecto), <em>Matriz</em> (adyacencia reordenada por clúster, sin oclusión) y <em>Arco</em> (diagrama 1-D). Un toggle de color alterna tema vs clúster minado, más un toggle de etiquetas y una búsqueda de resaltado.</p>,
     howto: <p>Sube el umbral para hallar los pares más confiables; pasa el cursor por un nodo para ver sus vecinos con su coseno.</p> });
 
 const JOIN = mk(
@@ -67,13 +67,13 @@ const JOIN = mk(
     components: li(["Nodes: datasets carrying the key. Edges: high MinHash containment between the key columns.", "Evidence on each edge: the key, the containment estimate, the column names."]),
     formal: <><p>Joinability is set containment of the smaller key set in the larger, estimated from MinHash signatures:</p><Equation tex="C(A,B)=\frac{|A\cap B|}{|A|},\qquad |A\cap B|=\frac{J}{1+J}\,(|A|+|B|)" caption={"J = MinHash Jaccard estimate"} /></>,
     scope: <p><strong>Honesty:</strong> a shared key means the join is <em>possible</em>, not that the joined result is meaningful · that is what the Correlation view tests. Containment is estimated (MinHash), so near-threshold edges carry sampling error.</p>,
-    variants: <p>The variants raise the containment threshold (0.5 → 0.95). At 0.95 you keep only near-perfect foreign-key relationships.</p>,
+    variants: <p>The variants raise the containment threshold (0.5, 0.95). At 0.95 you keep only near-perfect foreign-key relationships.</p>,
     howto: <p>Raise the threshold to find clean join keys; hover a node to see which datasets it joins and on which column. This is the map of "what can I merge with what".</p> },
   { problem: <p>¿Qué datasets se pueden <em>unir</em> de verdad? Dos datasets son unibles cuando comparten una clave de entidad cuyos valores se solapan.</p>,
     components: li(["Nodos: datasets con la clave. Aristas: alta contención MinHash entre columnas clave.", "Evidencia por arista: la clave, la contención estimada, los nombres de columna."]),
     formal: <><p>La unibilidad es contención del conjunto menor en el mayor, estimada con MinHash:</p><Equation tex="C(A,B)=\frac{|A\cap B|}{|A|},\qquad |A\cap B|=\frac{J}{1+J}\,(|A|+|B|)" caption={"J = estimación Jaccard por MinHash"} /></>,
     scope: <p><strong>Honestidad:</strong> una clave compartida hace la unión <em>posible</em>, no significativa; eso lo prueba la vista de Correlación. La contención es estimada, así que aristas cerca del umbral tienen error de muestreo.</p>,
-    variants: <p>Las variantes suben el umbral de contención (0.5 → 0.95). En 0.95 quedan relaciones de clave foránea casi perfectas.</p>,
+    variants: <p>Las variantes suben el umbral de contención (0.5, 0.95). En 0.95 quedan relaciones de clave foránea casi perfectas.</p>,
     howto: <p>Sube el umbral para hallar claves limpias; pasa el cursor por un nodo para ver con qué datasets une y por qué columna.</p> });
 
 const CORR = mk(
@@ -81,13 +81,13 @@ const CORR = mk(
     components: li(["Rows: a pair of numeric indicators aligned on a shared key.", "ρ: Spearman rank correlation. p adj: Benjamini-Hochberg-adjusted permutation p-value. n: shared units."]),
     formal: <><p>We aggregate each indicator to the key level, rank-correlate, calibrate significance with a seeded permutation null, and control the false-discovery rate across the whole family:</p><Equation tex="\rho = \text{Spearman}(x,y),\quad p=\frac{1+\#\{|\rho^\ast|\ge|\rho|\}}{1+B},\quad \text{keep if } p_{(k)}\le \tfrac{k}{m}q" caption={"permutation null (B draws) + Benjamini-Hochberg at q=0.05"} /></>,
     scope: <p><strong>Honesty:</strong> correlation is not causation, and a shared driver (population, region) can induce it · the pipeline partials out common drivers and the negative control confirms shuffled alignments yield ~0 survivors. Only edges surviving FDR are shown.</p>,
-    variants: <p>The variants raise the |ρ| floor (0.35 → 0.80) and filter by sign (positive / negative only).</p>,
+    variants: <p>The variants raise the |ρ| floor (0.35, 0.80) and filter by sign (positive / negative only).</p>,
     howto: <p>Sort by ρ or adjusted p; the scatter plots each finding as ρ vs significance. Hover to see the exact columns and the number of aligned units behind the number.</p> },
   { problem: <p>¿Dos datasets, alineados sobre una entidad común (comuna o región), realmente <em>correlacionan</em>? Este es el premio: relaciones entre datasets que sobreviven a una prueba de significancia real.</p>,
     components: li(["Filas: un par de indicadores numéricos alineados sobre una clave común.", "ρ: correlación de Spearman. p aj: p de permutación ajustada por Benjamini-Hochberg. n: unidades comunes."]),
     formal: <><p>Agregamos cada indicador al nivel de la clave, correlacionamos por rangos, calibramos la significancia con un nulo de permutación sembrado, y controlamos la tasa de falsos descubrimientos en toda la familia:</p><Equation tex="\rho = \text{Spearman}(x,y),\quad p=\frac{1+\#\{|\rho^\ast|\ge|\rho|\}}{1+B},\quad \text{conservar si } p_{(k)}\le \tfrac{k}{m}q" caption={"nulo de permutación (B sorteos) + Benjamini-Hochberg a q=0.05"} /></>,
     scope: <p><strong>Honestidad:</strong> correlación no es causalidad, y un driver común (población, región) puede inducirla; el pipeline parcializa drivers comunes y el control negativo confirma que alineaciones barajadas dan ~0 sobrevivientes. Solo se muestran aristas que sobreviven FDR.</p>,
-    variants: <p>Las variantes suben el piso de |ρ| (0.35 → 0.80) y filtran por signo (solo positivas / negativas).</p>,
+    variants: <p>Las variantes suben el piso de |ρ| (0.35, 0.80) y filtran por signo (solo positivas / negativas).</p>,
     howto: <p>Ordena por ρ o p ajustada; el scatter grafica cada hallazgo como ρ vs significancia. Pasa el cursor para ver las columnas exactas y el n detrás del número.</p> });
 
 const GEO = mk(

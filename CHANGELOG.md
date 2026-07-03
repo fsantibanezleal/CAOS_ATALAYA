@@ -3,6 +3,17 @@
 All notable changes to this product. Format: `X.XX.XXX` (display) · see `atalayalab.__version__`. Keep `0.x`
 while the corpus + web app are still being brought to the product-quality bar. Tag every release.
 
+## [0.09.001] · 2026-07-02
+
+### Changed
+- Final content/docs/UX polish (deep 4-dimension review): the Context write-ups, the Architecture modal and the
+  docs/ wiki now describe the CURRENT app (5 render modes with 3D default, Matrix + Arc, the 2D/3D catalog map,
+  topics/Colour-by-topic, the TF-IDF lexical foil, the 8 lenses opening on Semantic), and the live lane is stated
+  as transformers.js/onnxruntime-web (not the stale "Pyodide"). Correlations now open on their signed Arc; the 3-D
+  map fits the camera to the cloud on load; the Labels toggle stays put (disabled) outside Glow/3D; the map's
+  untagged topic bucket is labelled. Removed every em-dash / arrow separator from the UI prose. README states the
+  site is LIVE; a top-level MIT LICENSE was added; internal/private references were removed for the public repo.
+
 ## [0.09.000] · 2026-07-02
 
 ### Added

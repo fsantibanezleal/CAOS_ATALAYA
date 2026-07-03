@@ -9,7 +9,7 @@ candidate pairs.
 
 The shipped correlation path is **hand-implemented in numpy in `model/stats.py`** (Spearman, a seeded permutation
 null, Benjamini-Hochberg FDR, first-order partial correlation) so the *identical* code runs offline in `relate`
-and in the browser live lane (numpy-only, Pyodide-safe). No stage imports scipy, statsmodels, or phik: they are
+and in the browser live lane (numpy-only, live-lane-safe). No stage imports scipy, statsmodels, or phik: they are
 pinned in the precompute venv as reference implementations to check the numpy code against, and as an optional
 mixed-type coefficient (phik) for future work, but they do not run the pipeline. Where you see the numbers, they
 came from `model/stats.py`, not from scipy.
@@ -27,7 +27,7 @@ statsmodels==0.14.4 # reference for BH-FDR; not imported by the pipeline
 ## Usage
 
 ```python
-from atalayalab.model import stats            # the shipped path: numpy only, Pyodide-safe
+from atalayalab.model import stats            # the shipped path: numpy only, live-lane-safe
 rho  = stats.spearman(xa, xb)                 # rank correlation
 p    = stats.permutation_pvalue(xa, xb, rho, n_perm=1000, seed=42)  # seeded null
 keep = stats.bh_fdr(pvals, q=0.05)            # BH-FDR mask across the family

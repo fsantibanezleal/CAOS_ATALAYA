@@ -23,6 +23,7 @@ export default function RenderSwitch({ kind, artifact, variant }:
       return <GraphPanel payload={payload}
         minWeight={(p.min_cos as number) ?? (p.min_c as number) ?? (p.min_rho as number) ?? 0}
         edgeKey={p.key as string | undefined}
+        initialMode={p.min_cos === undefined && p.min_c === undefined ? "arc" : "3d"}
         edgeLabel={p.min_cos !== undefined ? "cos" : p.min_c !== undefined ? "containment" : "ρ"} />;
     case "findings":
       return <FindingsTable payload={payload} minRho={(p.min_rho as number) ?? 0} sign={p.sign as never} />;

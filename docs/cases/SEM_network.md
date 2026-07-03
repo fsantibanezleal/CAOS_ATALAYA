@@ -19,6 +19,23 @@ back the `SEMANTICALLY_SIMILAR` edges as a graph payload (nodes plus decimated e
 A cosine threshold slider: 0.45, 0.55, 0.65, 0.75, 0.85, 0.92. Higher thresholds keep only the strongest topical
 links; the web filters the single baked payload client-side.
 
+## Render modes (all `graph`-kind cases)
+
+The relation network renders the **same mined graph** five genuinely different ways, so the reader can pick the
+representation that best reveals the structure at hand. This layer is shared by every `graph`-kind case
+(SEM_network, JOIN_comuna, JOIN_region, CORR_network); see `frontend/src/components/viz/GraphPanel.tsx`.
+
+- **Clean 2D** · precise, accessible SVG node-link over the baked force layout.
+- **Glow (WebGL)** · a WebGL 2-D nebula for the denser lenses.
+- **3D (three.js)** · an orbitable three.js graph. **This is the default view** (drag the background to orbit,
+  wheel to zoom).
+- **Matrix** · a cluster-reordered adjacency matrix, occlusion-free, reads the dense hairballs a node-link cannot.
+- **Arc** · a 1-D arc diagram that makes cross-community bridges obvious. For CORR_network it is **signed**:
+  green for a positive ρ, red for a negative ρ.
+
+Three controls sit alongside the modes: a **Colour-by** toggle (theme or mined cluster), a **Labels** toggle
+(3D / Glow), and a **Highlight-dataset** search that lights up matching nodes across every mode.
+
 ## Honesty note
 
 Semantic similarity is topical coincidence, not joinability: two datasets can read as similar yet share no join

@@ -52,3 +52,4 @@ models/*.pth
 .DS_Store
 Thumbs.db
 *.log
+data-pipeline/scripts/*_result.json

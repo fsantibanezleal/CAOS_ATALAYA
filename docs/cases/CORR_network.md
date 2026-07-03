@@ -19,6 +19,11 @@ so datasets that co-vary with many others show up as connected components and hu
 `|rho|` thresholds (0.35, 0.50, 0.65, 0.80) plus a key filter (comuna-keyed, region-keyed). The threshold prunes
 weaker edges client-side; the key filter isolates correlations mined on one geographic key.
 
+Like every `graph`-kind case, it renders in five modes (Clean 2D, Glow, 3D-by-default, Matrix, Arc) with the
+Colour-by / Labels / Highlight-dataset controls; the shared render layer is documented in
+[SEM_network · Render modes](SEM_network.md#render-modes-all-graph-kind-cases). For correlations the **Arc** mode
+is signed: green for a positive ρ, red for a negative ρ.
+
 ## Honesty note
 
 Edges are the same FDR-controlled correlations as the findings table, so the same caveats apply: association, not

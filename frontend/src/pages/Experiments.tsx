@@ -38,7 +38,7 @@ export default function Experiments() {
             <tbody>
               <tr><td>{es ? "Nodos (datasets perfilados)" : "Nodes (profiled datasets)"}</td><td className="num">{m.graph.nodes}</td></tr>
               <tr><td>{es ? "Aristas totales" : "Total edges"}</td><td className="num">{m.graph.edges}</td></tr>
-              <tr><td>{es ? "Correlaciones (candidatas → sobreviven)" : "Correlations (candidates → survive)"}</td><td className="num">{m.negative_control.candidates} → {m.graph.by_edge_kind?.CORRELATES ?? 0}</td></tr>
+              <tr><td>{es ? "Correlaciones (candidatas, sobreviven)" : "Correlations (candidates, survive)"}</td><td className="num">{m.negative_control.candidates}, {m.graph.by_edge_kind?.CORRELATES ?? 0}</td></tr>
               <tr className="hl"><td><strong>{es ? "FDR empírica (barajado)" : "Empirical FDR (shuffled)"}</strong></td><td className="num"><strong>{m.negative_control.empirical_fdr}</strong> ({m.negative_control.survivors}/{m.negative_control.candidates})</td></tr>
               <tr><td>{es ? "Coherencia de vecinos semánticos" : "Semantic-neighbour coherence"}</td><td className="num">{m.semantic_coherence.neighbor_theme_match}</td></tr>
               <tr><td>{es ? "Cordura de unibilidad" : "Joinability sanity"}</td><td className="num">{m.joinability_sanity.share_declared_key_frac}</td></tr>

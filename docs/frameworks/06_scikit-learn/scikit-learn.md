@@ -34,6 +34,8 @@ labels = KMeans(n_clusters=8, random_state=seed, n_init=10).fit_predict(embeddin
 
 - `train.py` `_pca_2d` fits `PCA(n_components=2, random_state=seed)` on the embedding matrix and returns the 2-D
   coordinates + `explained_variance_ratio_` (baked into the model card and each graph node's `coord`).
+- The offline `scripts/pca3d_offline.py` additionally fits a `PCA(n_components=3)` over the same baked embeddings
+  to produce the `coord3` used by the Catalog map's 3-D orbit view (the 2-D `coord` is left untouched).
 - `train.py` `_kmeans` fits `KMeans(n_clusters=k, random_state=seed, n_init=10)` and returns per-dataset cluster
   ids (baked as each node's `cluster`). Coordinates + cluster ids flow into `infer.py` node attributes and
   `export.py` `graph.json`.
