@@ -3,6 +3,16 @@
 All notable changes to this product. Format: `X.XX.XXX` (display) · see `atalayalab.__version__`. Keep `0.x`
 while the corpus + web app are still being brought to the product-quality bar. Tag every release.
 
+## [0.09.000] · 2026-07-02
+
+### Added
+- Richer topical dimension from the catalog: the DataCite `categories` are multi-valued (about 70% of datasets
+  carry 2 to 5), so every dataset now exposes its full list of OECD **sub-categories** as `topics[]` (27 clean
+  values: Ciencias de la salud, Derecho, Economia y negocios, Sociologia, Ciencias de la Tierra, ...), not just
+  the first. A new **"Colour by topic"** variant paints the Catalog map by sub-category (finer than the 5 top
+  themes) and the hover lists a dataset's topics. (A shared-topic relation graph was evaluated and dropped: it is
+  a dense hairball dominated by the two most common sub-categories, so colour + hover is the honest surfacing.)
+
 ## [0.08.000] · 2026-07-02
 
 ### Added

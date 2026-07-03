@@ -9,7 +9,7 @@ const W = 760;
 const H = 460;
 const PAD = 28;
 
-type ColorBy = "theme" | "origin" | "cluster" | "keys" | "year" | "quality";
+type ColorBy = "theme" | "origin" | "cluster" | "keys" | "year" | "quality" | "topic";
 
 /** Catalog cartography: each dataset placed by its 2-D PCA embedding coordinate; colour encodes the chosen
  * facet. Zoom (wheel), pan (drag), hover for a value read-out. Reacts to the variant colour knob. */
@@ -93,6 +93,7 @@ export default function ScatterMap({ payload, colorBy = "theme" }: { payload: Ma
         <div className="viz-readout" role="status">
           <strong>{hover.title}</strong>
           <span>{hover.theme}{hover.org ? ` · ${hover.org}` : ""}</span>
+          {hover.topics?.length ? <span className="faint">{lang === "es" ? "temas" : "topics"}: {hover.topics.join(" · ")}</span> : null}
           <span>{hover.n_cols} {lang === "es" ? "columnas" : "cols"} · {hover.n_rows.toLocaleString()} {lang === "es" ? "filas" : "rows"}
             {hover.keys.length ? ` · ${lang === "es" ? "claves" : "keys"}: ${hover.keys.join(", ")}` : ""}
             {hover.year_min ? ` · ${hover.year_min}–${hover.year_max ?? hover.year_min}` : ""}
@@ -114,6 +115,7 @@ function buildColor(nodes: MapNode[], by: ColorBy): (n: MapNode) => string {
   if (by === "origin") { const c = makeCategoryColor(nodes.map((n) => n.origin)); return (n) => c(n.origin); }
   if (by === "cluster") { const c = makeCategoryColor(nodes.map((n) => String(n.cluster))); return (n) => c(String(n.cluster)); }
   if (by === "keys") { const c = makeCategoryColor(nodes.map((n) => n.keys[0] ?? "none")); return (n) => c(n.keys[0] ?? "none"); }
+  if (by === "topic") { const c = makeCategoryColor(nodes.map((n) => n.topics?.[0] ?? "—")); return (n) => c(n.topics?.[0] ?? "—"); }
   if (by === "year") {
     const ys = nodes.map((n) => n.year_max ?? n.year_min ?? 0).filter(Boolean);
     const lo = Math.min(...ys, 2000), hi = Math.max(...ys, 2025);
@@ -127,6 +129,7 @@ function buildLegend(nodes: MapNode[], by: ColorBy) {
   if (by === "origin") return legendFor(nodes.map((n) => n.origin));
   if (by === "cluster") return legendFor(nodes.map((n) => `cluster ${n.cluster}`));
   if (by === "keys") return legendFor(nodes.map((n) => n.keys[0] ?? "none"));
+  if (by === "topic") return legendFor(nodes.map((n) => n.topics?.[0] ?? "—"), 14);
   if (by === "year") return [{ label: "older", color: viridis(0) }, { label: "newer", color: viridis(1) }];
   return [{ label: "more nulls", color: viridis(0) }, { label: "clean", color: viridis(1) }];
 }
