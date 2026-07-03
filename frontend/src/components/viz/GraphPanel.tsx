@@ -20,7 +20,7 @@ export default function GraphPanel({
   payload, minWeight = 0, edgeLabel = "strength", edgeKey,
 }: { payload: GraphPayload; minWeight?: number; edgeLabel?: string; edgeKey?: string }) {
   const lang = useLang();
-  const [mode, setMode] = useState<Mode>("clean");
+  const [mode, setMode] = useState<Mode>("3d");   // 3D orbit is the default view; Clean/Glow/Matrix/Arc a click away
   const [labels, setLabels] = useState(false);
   const [query, setQuery] = useState("");
   const [colorKey, setColorKey] = useState<ColorKey>("theme");
