@@ -13,7 +13,7 @@ then work from the cache), and a documented re-extraction step if the credential
 
 - Base: `https://d2i4qx9nxxjzd9.cloudfront.net/prod-v3`
 - Endpoints: `POST /_search`, `POST /_count` (admin endpoints such as `/_mapping` return `403`).
-- Auth: HTTP Basic, user `front-reader` (credential materialized from the private vault into `.env`, never
+- Auth: HTTP Basic, user `front-reader` (credential read from your environment into `.env`, never
   committed). If `_search` starts returning `401`, re-extract by grepping the SPA JS bundle for
   `d2i4qx9nxxjzd9` / `front-reader`.
 

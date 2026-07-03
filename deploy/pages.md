@@ -11,7 +11,7 @@ statically; there is **no backend** at request time. The workflow `.github/workf
 
 Enable once per product: repo **Settings → Pages → Source = GitHub Actions**. Custom domain: set via
 `gh api PUT repos/<owner>/<repo>/pages -f cname=<sub>.fasl-work.com` (the CNAME file alone does not set the domain
-on Actions deploys — see the CAOS_MANAGE reference note).
+on Actions deploys — see the deploy note).
 
 The VPS path (`setup.sh`/`update.sh` + the systemd/nginx templates here) stays **dormant** unless the `app/`
 backend is activated (ADR-0002).

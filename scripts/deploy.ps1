@@ -1,5 +1,5 @@
 # Deploy the built SPA to the VPS as a static site (vps-static class) at atalaya.fasl-work.com.
-# .ps1 parity of deploy.sh (Felipe runs PowerShell). The SSH key lives in the private CAOS_MANAGE vault.
+# .ps1 parity of deploy.sh (Felipe runs PowerShell). The SSH key is kept out of this repo; provide its path via ATALAYA_SSH_KEY.
 #   $env:ATALAYA_SSH_KEY = "D:\...\hetzner_fasl_prod" ; ./scripts/deploy.ps1
 $ErrorActionPreference = "Stop"
 Set-Location (Join-Path $PSScriptRoot "..")
