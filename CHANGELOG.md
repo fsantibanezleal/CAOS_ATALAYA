@@ -3,6 +3,14 @@
 All notable changes to this product. Format: `X.XX.XXX` (display) · see `atalayalab.__version__`. Keep `0.x`
 while the corpus + web app are still being brought to the product-quality bar. Tag every release.
 
+## [0.09.002] · 2026-07-03
+
+### Fixed
+- Version metadata aligned to the `X.XX.XXX` display version. `frontend/package.json` (was `0.2.0`) and
+  `pyproject.toml` (was `0.5.1`) now carry the PEP 440 form `0.9.2`, and the MCP `serverInfo.version` matches.
+  No functional change: `atalayalab.__version__` and the UI footer move to `0.09.002` together, so every
+  surface now reports one version.
+
 ## [0.09.001] · 2026-07-02
 
 ### Changed
