@@ -11,11 +11,11 @@ Atalaya harvests through this same endpoint because it is the only complete, mac
 catalog. It is treated as an **unofficial, read-only** source: polite pagination, aggressive caching (one crawl,
 then work from the cache), and a documented re-extraction step if the credential rotates.
 
-- Base: `https://d2i4qx9nxxjzd9.cloudfront.net/prod-v3`
+- Base: `https://<catalog-cloudfront-host>/prod-v3`
 - Endpoints: `POST /_search`, `POST /_count` (admin endpoints such as `/_mapping` return `403`).
-- Auth: HTTP Basic, user `front-reader` (credential read from your environment into `.env`, never
+- Auth: HTTP Basic, user `<catalog-read-user>` (credential read from your environment into `.env`, never
   committed). If `_search` starts returning `401`, re-extract by grepping the SPA JS bundle for
-  `d2i4qx9nxxjzd9` / `front-reader`.
+  `<catalog-cloudfront-host>` / `<catalog-read-user>`.
 
 ## The document schema (DataCite-derived)
 
@@ -48,8 +48,8 @@ tenacity==9.0.0
 
 ```python
 import base64, httpx, json
-BASE = "https://d2i4qx9nxxjzd9.cloudfront.net/prod-v3"
-auth = base64.b64encode(b"front-reader:<read-only-password-from-the-catalog-site>").decode()
+BASE = "https://<catalog-cloudfront-host>/prod-v3"
+auth = base64.b64encode(b"<catalog-read-user>:<read-only-password-from-the-catalog-site>").decode()
 h = {"Authorization": f"Basic {auth}", "Content-Type": "application/json"}
 r = httpx.post(f"{BASE}/_count", headers=h, content=json.dumps({"query": {"match_all": {}}}))
 print(r.json())   # {"count": 1017, ...}
