@@ -2,7 +2,7 @@
 
 Discovered 2026-07-01 from the public SvelteKit SPA bundle (the `/api/3/action/*` CKAN path is a dead end that
 returns SPA HTML). The SPA talks straight to OpenSearch with an embedded read-only Basic-auth credential
-(`front-reader`, role `readall`). This is an UNOFFICIAL, undocumented endpoint: treat it as read-only, be polite,
+(`<catalog-read-user>`, role `readall`). This is an UNOFFICIAL, undocumented endpoint: treat it as read-only, be polite,
 cache aggressively, and re-extract the credential from the JS bundle if it starts returning 401. Full mapping: docs/frameworks/opensearch-catalog/.
 
     POST {BASE}/_search   {"query":..., "from":..., "size":..., "_source":[...]}

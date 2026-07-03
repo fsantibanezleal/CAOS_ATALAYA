@@ -31,8 +31,8 @@ CATALOG_DIR = DATA_ROOT / "catalog"         # cached OpenSearch pages + the buil
 GRAPH_DB = CATALOG_DIR / "graph.db"         # SQLite-WAL knowledge graph (out-of-git; a decimated JSON is committed)
 
 # --- the Data Observatory catalog backend (verified 2026-07-01; see docs/frameworks/opensearch-catalog/) ---
-DO_API_BASE = os.environ.get("ATALAYA_DO_API_BASE", "https://d2i4qx9nxxjzd9.cloudfront.net/prod-v3")
-DO_API_USER = os.environ.get("ATALAYA_DO_API_USER", "front-reader")
+DO_API_BASE = os.environ.get("ATALAYA_DO_API_BASE", "https://<catalog-cloudfront-host>/prod-v3")
+DO_API_USER = os.environ.get("ATALAYA_DO_API_USER", "<catalog-read-user>")
 DO_API_PASS = os.environ.get("ATALAYA_DO_API_PASS", "")   # materialized from the vault by scripts/setup.*
 
 # --- harvest budget guardrails ---
