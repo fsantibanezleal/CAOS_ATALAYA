@@ -3,6 +3,13 @@
 All notable changes to this product. Format: `X.XX.XXX` (display) · see `atalayalab.__version__`. Keep `0.x`
 while the corpus + web app are still being brought to the product-quality bar. Tag every release.
 
+## [0.07.003] · 2026-07-02
+
+### Changed
+- The relation-network lenses (Semantic, Joinability, Correlations, Affinity) now open in the 3D orbit view by
+  default (Clean 2D / Glow / Matrix / Arc remain one click away). The Catalog map stays a 2D embedding scatter
+  (it is cartography, not a node-link network, so the graph render-modes do not apply).
+
 ## [0.07.002] · 2026-07-02
 
 ### Changed
