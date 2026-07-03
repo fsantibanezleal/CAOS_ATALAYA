@@ -3,6 +3,17 @@
 All notable changes to this product. Format: `X.XX.XXX` (display) · see `atalayalab.__version__`. Keep `0.x`
 while the corpus + web app are still being brought to the product-quality bar. Tag every release.
 
+## [0.08.000] · 2026-07-02
+
+### Added
+- 3-D embedding view for the Catalog map: every dataset placed at its 3-D PCA coordinate in an orbitable
+  three.js scene (2D / 3D toggle; the 2-D SVG map is unchanged). The 3-D coordinate is computed from the same
+  MiniLM embeddings (data/harvest_report sibling: coord3 baked into the catalog artifact).
+
+### Changed
+- The Explorer opens on the **Semantic network** lens by default (its 3-D network is the nicest first view);
+  the other lenses are one tab away.
+
 ## [0.07.003] · 2026-07-02
 
 ### Changed

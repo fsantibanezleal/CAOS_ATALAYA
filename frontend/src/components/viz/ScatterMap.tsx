@@ -3,6 +3,7 @@ import type { MapNode, MapPayload } from "@/lib/types";
 import { useLang } from "@/lib/useLang";
 import { usePanZoom } from "./usePanZoom";
 import { legendFor, makeCategoryColor, viridis, fmtPct, shade } from "./vizUtils";
+import ScatterMap3D from "./ScatterMap3D";
 
 const W = 760;
 const H = 460;
@@ -16,6 +17,7 @@ export default function ScatterMap({ payload, colorBy = "theme" }: { payload: Ma
   const lang = useLang();
   const { t, reset, zoomRef, handlers } = usePanZoom();
   const [hover, setHover] = useState<MapNode | null>(null);
+  const [dim, setDim] = useState<"2d" | "3d">("2d");
 
   const nodes = payload.nodes;
   const bounds = useMemo(() => {
@@ -32,13 +34,25 @@ export default function ScatterMap({ payload, colorBy = "theme" }: { payload: Ma
   // reusable spherical gradient per colour -> each point reads as a small sphere (depth on light or dark)
   const gradId = new Map<string, string>();
   for (const n of nodes) { const c = colorFn(n); if (!gradId.has(c)) gradId.set(c, `atl-map-${gradId.size}`); }
+  const has3d = nodes.some((n) => n.coord3);
 
   return (
     <div className="viz-wrap">
       <div className="viz-toolbar">
-        <span className="viz-hint">{nodes.length} {lang === "es" ? "datasets" : "datasets"} · {lang === "es" ? "rueda = zoom, arrastra = mover" : "wheel = zoom, drag = pan"}</span>
-        <button type="button" className="btn" onClick={reset}>{lang === "es" ? "Reiniciar vista" : "Reset view"}</button>
+        <span className="viz-hint">{nodes.length} {lang === "es" ? "datasets" : "datasets"} · {dim === "3d" ? (lang === "es" ? "arrastra = orbitar, rueda = zoom" : "drag = orbit, wheel = zoom") : (lang === "es" ? "rueda = zoom, arrastra = mover" : "wheel = zoom, drag = pan")}</span>
+        <span className="viz-toolbar-right">
+          {has3d && (
+            <span className="graph-modes" role="group">
+              <button type="button" className={"chip sm" + (dim === "2d" ? " on" : "")} onClick={() => setDim("2d")}>2D</button>
+              <button type="button" className={"chip sm" + (dim === "3d" ? " on" : "")} onClick={() => setDim("3d")}>3D</button>
+            </span>
+          )}
+          {dim === "2d" && <button type="button" className="btn" onClick={reset}>{lang === "es" ? "Reiniciar vista" : "Reset view"}</button>}
+        </span>
       </div>
+      {dim === "3d" ? (
+        <ScatterMap3D nodes={nodes} colorFn={colorFn} />
+      ) : (
       <svg ref={zoomRef} viewBox={`0 0 ${W} ${H}`} className="viz-svg viz-graph" role="img"
            tabIndex={0} {...handlers} onPointerLeave={() => setHover(null)}
            aria-label={lang === "es" ? "Mapa del catálogo por embedding" : "Catalog embedding map"}>
@@ -67,6 +81,7 @@ export default function ScatterMap({ payload, colorBy = "theme" }: { payload: Ma
           })}
         </g>
       </svg>
+      )}
       <div className="viz-legend">
         {legend.map((l) => (
           <span key={l.label} className="viz-legend-item">

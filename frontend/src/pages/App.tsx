@@ -62,6 +62,7 @@ export default function App() {
       {cats && (
         <Tabs
           ariaLabel={t("app.caseSelector")}
+          initial="semantic"
           tabs={LENSES.filter((l) => byCat.get(l.id)?.length).map((l) => ({
             id: l.id,
             label: lang === "es" ? l.es : l.en,
