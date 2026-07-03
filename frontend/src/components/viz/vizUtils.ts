@@ -26,6 +26,26 @@ const CATEGORICAL = [
   "#14b8a6", "#eab308", "#f43f5e", "#0ea5e9", "#22c55e",
 ];
 
+// Parse "#rrggbb" or "rgb(r,g,b)" to [r,g,b].
+function toRGB(c: string): [number, number, number] {
+  if (c.startsWith("#")) {
+    const m = c.slice(1);
+    const h = m.length === 3 ? m.split("").map((x) => x + x).join("") : m;
+    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+  }
+  const m = c.match(/(\d+)/g);
+  return m ? [+m[0], +m[1], +m[2]] : [136, 136, 136];
+}
+
+/** Shade a colour toward white (amt > 0) or black (amt < 0); amt in [-1, 1]. Used to build spherical node
+ * gradients (light highlight -> base -> dark rim) that read as depth on BOTH light and dark surfaces. */
+export function shade(c: string, amt: number): string {
+  const [r, g, b] = toRGB(c);
+  const t = amt < 0 ? 0 : 255, p = Math.min(1, Math.abs(amt));
+  const mix = (v: number) => Math.round(v + (t - v) * p);
+  return `rgb(${mix(r)},${mix(g)},${mix(b)})`;
+}
+
 export function makeCategoryColor(values: string[]): (v: string) => string {
   const uniq = Array.from(new Set(values.filter(Boolean))).sort();
   const map = new Map(uniq.map((v, i) => [v, CATEGORICAL[i % CATEGORICAL.length]]));

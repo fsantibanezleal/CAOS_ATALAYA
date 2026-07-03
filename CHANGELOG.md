@@ -3,6 +3,15 @@
 All notable changes to this product. Format: `X.XX.XXX` (display) · see `atalayalab.__version__`. Keep `0.x`
 while the corpus + web app are still being brought to the product-quality bar. Tag every release.
 
+## [0.07.002] · 2026-07-02
+
+### Changed
+- Corrects 0.07.001: the graph surface follows the light/dark theme again (0.07.001 wrongly forced a dark
+  ground). Depth now comes from the coloured nodes themselves, not the background: every node/point is a
+  spherical radial gradient (light highlight, base, darker rim) with a soft colour aura, so the datasets read
+  as volume on either theme (catalog map, Clean 2D network, arc). The additive screen-blend (which only worked
+  on dark) is gone. Correlation arcs stay signed green (+ρ) / red (−ρ).
+
 ## [0.07.001] · 2026-07-02
 
 ### Changed

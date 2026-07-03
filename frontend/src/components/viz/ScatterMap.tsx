@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import type { MapNode, MapPayload } from "@/lib/types";
 import { useLang } from "@/lib/useLang";
 import { usePanZoom } from "./usePanZoom";
-import { legendFor, makeCategoryColor, viridis, fmtPct } from "./vizUtils";
+import { legendFor, makeCategoryColor, viridis, fmtPct, shade } from "./vizUtils";
 
 const W = 760;
 const H = 460;
@@ -29,6 +29,9 @@ export default function ScatterMap({ payload, colorBy = "theme" }: { payload: Ma
 
   const colorFn = useMemo(() => buildColor(nodes, colorBy), [nodes, colorBy]);
   const legend = useMemo(() => buildLegend(nodes, colorBy), [nodes, colorBy]);
+  // reusable spherical gradient per colour -> each point reads as a small sphere (depth on light or dark)
+  const gradId = new Map<string, string>();
+  for (const n of nodes) { const c = colorFn(n); if (!gradId.has(c)) gradId.set(c, `atl-map-${gradId.size}`); }
 
   return (
     <div className="viz-wrap">
@@ -39,19 +42,29 @@ export default function ScatterMap({ payload, colorBy = "theme" }: { payload: Ma
       <svg ref={zoomRef} viewBox={`0 0 ${W} ${H}`} className="viz-svg viz-graph" role="img"
            tabIndex={0} {...handlers} onPointerLeave={() => setHover(null)}
            aria-label={lang === "es" ? "Mapa del catálogo por embedding" : "Catalog embedding map"}>
-        <g transform={`translate(${t.x},${t.y}) scale(${t.k})`}>
-          {/* additive halos -> the embedding clusters glow on the dark surface */}
-          <g style={{ mixBlendMode: "screen" }}>
-            {nodes.map((n) => (
-              <circle key={n.id} cx={sx(n.coord[0])} cy={sy(n.coord[1])} r={(hover?.id === n.id ? 9 : 5.5) / t.k}
-                      fill={colorFn(n)} fillOpacity={0.16} />
-            ))}
-          </g>
-          {nodes.map((n) => (
-            <circle key={n.id} cx={sx(n.coord[0])} cy={sy(n.coord[1])} r={(hover?.id === n.id ? 6.5 : 3.6) / t.k}
-                    fill={colorFn(n)} fillOpacity={hover?.id === n.id ? 1 : 0.92} stroke={hover?.id === n.id ? "#fff" : "none"}
-                    strokeWidth={1.5 / t.k} onPointerEnter={() => setHover(n)} style={{ cursor: "pointer" }} />
+        <defs>
+          {Array.from(gradId).map(([c, id]) => (
+            <radialGradient key={id} id={id} cx="0.35" cy="0.3" r="0.75">
+              <stop offset="0%" stopColor={shade(c, 0.55)} />
+              <stop offset="55%" stopColor={c} />
+              <stop offset="100%" stopColor={shade(c, -0.32)} />
+            </radialGradient>
           ))}
+        </defs>
+        <g transform={`translate(${t.x},${t.y}) scale(${t.k})`}>
+          {/* soft colour aura (translucent tint, works on light or dark) */}
+          {nodes.map((n) => (
+            <circle key={n.id} cx={sx(n.coord[0])} cy={sy(n.coord[1])} r={(hover?.id === n.id ? 9 : 5.2) / t.k}
+                    fill={colorFn(n)} fillOpacity={0.08} />
+          ))}
+          {/* spherical points: radial gradient gives each dot volume */}
+          {nodes.map((n) => {
+            const c = colorFn(n);
+            return <circle key={n.id} cx={sx(n.coord[0])} cy={sy(n.coord[1])} r={(hover?.id === n.id ? 6.5 : 3.8) / t.k}
+                    fill={`url(#${gradId.get(c)})`} fillOpacity={hover?.id === n.id ? 1 : 0.95}
+                    stroke={hover?.id === n.id ? "#fff" : shade(c, -0.35)} strokeOpacity={hover?.id === n.id ? 1 : 0.85}
+                    strokeWidth={(hover?.id === n.id ? 1.5 : 0.5) / t.k} onPointerEnter={() => setHover(n)} style={{ cursor: "pointer" }} />;
+          })}
         </g>
       </svg>
       <div className="viz-legend">
