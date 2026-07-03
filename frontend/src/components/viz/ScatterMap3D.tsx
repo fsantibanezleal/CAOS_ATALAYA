@@ -28,6 +28,13 @@ export default function ScatterMap3D({ nodes, colorFn }: { nodes: MapNode[]; col
     return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
+  // fit the camera to the cloud once it is laid out (fixed positions -> onEngineStop can fire too early)
+  useEffect(() => {
+    if (!nodes.some((n) => n.coord3)) return;
+    const id = setTimeout(() => fgRef.current?.zoomToFit?.(700, 60), 400);
+    return () => clearTimeout(id);
+  }, [nodes, size.w]);
+
   const data = useMemo(() => {
     const ns: P3[] = nodes.filter((n) => n.coord3).map((n) => ({
       id: n.id, name: n.title, theme: n.theme, color: colorFn(n),

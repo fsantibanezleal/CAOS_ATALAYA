@@ -28,4 +28,4 @@ card states plainly which case it is, so "pinned" is never confused with "runs t
 
 The live lane's browser encoder is the ONNX export of card 03/08 run through transformers.js on onnxruntime-web
 (WASM); the client-side affinity reweight uses only numpy-safe arithmetic (`model/affinity.py`). See
-[architecture/04_live-lane-pyodide.md](architecture/04_live-lane-pyodide.md).
+[architecture/04_live-lane.md](architecture/04_live-lane.md).

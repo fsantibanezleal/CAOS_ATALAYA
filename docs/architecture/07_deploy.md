@@ -14,8 +14,12 @@ server process; the site is a static bundle plus JSON artifacts plus the WASM ON
 
 The same static bundle can be served from the VPS behind nginx (a plain static site, no app server). This is a
 hosting choice only; the artifact contract and the live lanes are identical. The FastAPI `app/` backend is dormant
-by default and is not needed for Atalaya (activate only on an ADR-0002 trigger, e.g. server-side processing of
+by default and is not needed for Atalaya (activate only on a server-side-processing trigger, e.g. processing of
 uploaded data).
+
+The **live instance at [atalaya.fasl-work.com](https://atalaya.fasl-work.com) runs this vps-static option**;
+GitHub Pages is the equally-supported default for anyone deploying their own copy. The two are interchangeable:
+same bundle, same artifacts, same client-side live lanes.
 
 ## What must be true at deploy time
 

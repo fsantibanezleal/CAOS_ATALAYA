@@ -21,6 +21,10 @@ become `JOINABLE_ON` edges carrying the key, the containment, the column names, 
 A containment threshold: 0.5, 0.6, 0.7, 0.8, 0.9, 0.95 (`key = comuna_cut`). Higher thresholds keep only tighter
 foreign-key relationships. Sibling case JOIN_region uses the same builder with `key = region`.
 
+Like every `graph`-kind case, it renders in five modes (Clean 2D, Glow, 3D-by-default, Matrix, Arc) with the
+Colour-by / Labels / Highlight-dataset controls; see
+[SEM_network · Render modes](SEM_network.md#render-modes-all-graph-kind-cases).
+
 ## Honesty note
 
 Containment is estimated from a 64-permutation MinHash, so it is approximate; the evaluation's joinability-sanity

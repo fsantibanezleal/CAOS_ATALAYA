@@ -24,7 +24,7 @@ categories.
 
 | Case | Category | render_kind | One-line | Variant family |
 |---|---|---|---|---|
-| [CART_map](CART_map.md) | cartography | `map` | 2-D PCA map of profiled datasets, colored by an attribute | color-by: theme / origin / cluster / keys / recency / null-rate |
+| [CART_map](CART_map.md) | cartography | `map` | 2-D + 3-D PCA map of profiled datasets, colored by an attribute | 2D/3D view · color-by: theme / origin / cluster / keys / topic / recency / null-rate |
 | [CAT_overview](CAT_overview.md) | cartography | `overview` | Composition of the full catalog by facet | facet: theme / origin / license / format / tier / size |
 | [SEM_network](SEM_network.md) | semantic | `graph` | Embedding cosine similarity network | cosine threshold: 0.45 to 0.92 |
 | [JOIN_comuna](JOIN_comuna.md) | joinability | `graph` | Datasets joinable on the comuna CUT key | containment threshold: 0.5 to 0.95 |
@@ -35,6 +35,12 @@ categories.
 | [TIME_coverage](TIME_coverage.md) | temporal | `timeline` | Temporal coverage and gaps of the catalog | scope: all / comuna / region; since 2015 / 2010; by span |
 | [QC_census](QC_census.md) | quality | `quality` | Data-quality census across the normalized tables | metric: nulls / wide / flags / dtypes / keys / cardinality |
 | [AFF_top](AFF_top.md) | affinity | `affinity` | Top multi-evidence affinity pairs (the novel proposal) | weights: balanced / semantic / join / correlation-led |
+
+Every `graph`-kind case (SEM_network, JOIN_comuna, JOIN_region, CORR_network) shares a **five-mode render layer**
+over the same mined graph: Clean 2D (SVG), Glow (WebGL), 3D (three.js, the default), Matrix (cluster-reordered
+adjacency), Arc (1-D; signed green +ρ / red −ρ for correlations), plus Colour-by (theme / cluster), Labels, and a
+Highlight-dataset search. See [SEM_network · Render modes](SEM_network.md#render-modes-all-graph-kind-cases). The
+`map`-kind CART_map additionally offers a 2D/3D toggle (an orbitable 3-D PCA view) and a Colour-by-topic variant.
 
 ## Where the cases come from
 

@@ -17,10 +17,10 @@ type ColorKey = "theme" | "cluster";
  * lenses, makes cross-community bridges obvious). Plus a colour-by (theme / mined cluster) toggle, a labels
  * toggle, and a node search that highlights matches across every mode. */
 export default function GraphPanel({
-  payload, minWeight = 0, edgeLabel = "strength", edgeKey,
-}: { payload: GraphPayload; minWeight?: number; edgeLabel?: string; edgeKey?: string }) {
+  payload, minWeight = 0, edgeLabel = "strength", edgeKey, initialMode = "3d",
+}: { payload: GraphPayload; minWeight?: number; edgeLabel?: string; edgeKey?: string; initialMode?: Mode }) {
   const lang = useLang();
-  const [mode, setMode] = useState<Mode>("3d");   // 3D orbit is the default view; Clean/Glow/Matrix/Arc a click away
+  const [mode, setMode] = useState<Mode>(initialMode);   // 3D orbit is the default; correlations open on their signed Arc
   const [labels, setLabels] = useState(false);
   const [query, setQuery] = useState("");
   const [colorKey, setColorKey] = useState<ColorKey>("theme");
@@ -64,12 +64,12 @@ export default function GraphPanel({
             <button type="button" className={"chip sm" + (colorKey === "theme" ? " on" : "")} onClick={() => setColorKey("theme")}>{lang === "es" ? "tema" : "theme"}</button>
             <button type="button" className={"chip sm" + (colorKey === "cluster" ? " on" : "")} onClick={() => setColorKey("cluster")}>{lang === "es" ? "clúster" : "cluster"}</button>
           </div>
-          {(mode === "glow" || mode === "3d") && (
-            <label className="graph-toggle">
-              <input type="checkbox" checked={labels} onChange={(e) => setLabels(e.target.checked)} />
-              {lang === "es" ? "Etiquetas" : "Labels"}
-            </label>
-          )}
+          <label className={"graph-toggle" + (mode === "glow" || mode === "3d" ? "" : " disabled")}
+                 title={mode === "glow" || mode === "3d" ? undefined : (lang === "es" ? "Solo en Glow / 3D" : "Glow / 3D only")}>
+            <input type="checkbox" checked={labels} disabled={!(mode === "glow" || mode === "3d")}
+                   onChange={(e) => setLabels(e.target.checked)} />
+            {lang === "es" ? "Etiquetas" : "Labels"}
+          </label>
           <input className="graph-search" type="text" value={query} onChange={(e) => setQuery(e.target.value)}
                  placeholder={lang === "es" ? "Resaltar dataset…" : "Highlight dataset…"} />
         </div>

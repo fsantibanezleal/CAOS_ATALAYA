@@ -21,7 +21,7 @@ S(A,B) = \frac{w_{\text{sem}}\,f_{\text{sem}} + w_{\text{join}}\,f_{\text{join}}
 
 `infer.py :: _affinity_edges` writes one `AFFINITY` summary edge per related pair, carrying `score`, `f_sem`,
 `f_join`, `f_stat`. `build_affinity` renders the top pairs; the App can reweight live (see the
-[live lane](../architecture/04_live-lane-pyodide.md)).
+[live lane](../architecture/04_live-lane.md)).
 
 ## The variants
 

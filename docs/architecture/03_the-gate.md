@@ -31,7 +31,7 @@ the budget is the artifact byte size, giving an honest per-case verdict recorded
 The genuinely **live** computation in Atalaya is a separate lane, gated separately in the web, not by this
 Python function: the ONNX semantic encoder (transformers.js / onnxruntime-web) plus the client-side affinity
 reweight. Those run against the baked `embeddings.json` and the affinity payload, and never call back to a server.
-See [04_live-lane-pyodide.md](04_live-lane-pyodide.md).
+See [04_live-lane.md](04_live-lane.md).
 
 ## Honesty note
 

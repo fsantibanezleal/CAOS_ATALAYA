@@ -19,6 +19,10 @@ estimates containment between region columns across datasets. The builder (`buil
 A containment threshold: 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, with `key = region`. Because region has far fewer distinct
 values than comuna, containment saturates more easily, so the higher thresholds are the discriminating ones.
 
+Like every `graph`-kind case, it renders in five modes (Clean 2D, Glow, 3D-by-default, Matrix, Arc) with the
+Colour-by / Labels / Highlight-dataset controls; see
+[SEM_network · Render modes](SEM_network.md#render-modes-all-graph-kind-cases).
+
 ## Honesty note
 
 A region-level join is coarser than a comuna-level one: many datasets share the 16 region codes, so a high
