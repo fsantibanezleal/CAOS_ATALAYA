@@ -63,23 +63,21 @@ export default function GraphArc({
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} className="viz-svg viz-arc" role="img" onPointerMove={onMove} onPointerLeave={() => setHover(null)}
            aria-label={lang === "es" ? "Diagrama de arcos de relaciones" : "Relation arc diagram"}>
-        {/* edges (additively blended -> arcs glow on the dark surface) */}
-        <g style={{ mixBlendMode: "screen" }}>
-          {edges.map((e, k) => {
-            const i = idx.get(e.s)!, j = idx.get(e.t)!;
-            const xi = xOf(i), xj = xOf(j);
-            const r = Math.abs(xj - xi) / 2;
-            const active = hover == null || i === hover || j === hover;
-            const dimQ = q.length > 0 && !(nodes[i].title.toLowerCase().includes(q) || nodes[j].title.toLowerCase().includes(q));
-            return (
-              <path key={k} d={`M ${xi} ${BASE} A ${r} ${r} 0 0 0 ${xj} ${BASE}`} fill="none"
-                    stroke={edgeColor(e)} strokeOpacity={dimQ ? 0.05 : active ? 0.28 + 0.6 * e.w : 0.06}
-                    strokeWidth={0.6 + 3 * e.w} strokeLinecap="round" />
-            );
-          })}
-        </g>
+        {/* edges: semicircle per relation, signed green (+rho) / red (-rho) for correlations */}
+        {edges.map((e, k) => {
+          const i = idx.get(e.s)!, j = idx.get(e.t)!;
+          const xi = xOf(i), xj = xOf(j);
+          const r = Math.abs(xj - xi) / 2;
+          const active = hover == null || i === hover || j === hover;
+          const dimQ = q.length > 0 && !(nodes[i].title.toLowerCase().includes(q) || nodes[j].title.toLowerCase().includes(q));
+          return (
+            <path key={k} d={`M ${xi} ${BASE} A ${r} ${r} 0 0 0 ${xj} ${BASE}`} fill="none"
+                  stroke={edgeColor(e)} strokeOpacity={dimQ ? 0.06 : active ? 0.35 + 0.55 * e.w : 0.08}
+                  strokeWidth={0.6 + 3 * e.w} strokeLinecap="round" />
+          );
+        })}
         {/* baseline */}
-        <line x1={MARGIN} y1={BASE} x2={W - MARGIN} y2={BASE} stroke="rgba(148,163,184,0.35)" strokeWidth={1} />
+        <line x1={MARGIN} y1={BASE} x2={W - MARGIN} y2={BASE} stroke="rgba(148,163,184,0.5)" strokeWidth={1} />
         {/* nodes on the baseline + cluster gutter tick */}
         {nodes.map((nd, i) => {
           const x = xOf(i);

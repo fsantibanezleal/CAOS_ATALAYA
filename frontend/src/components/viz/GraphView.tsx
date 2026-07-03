@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import type { GraphPayload, GraphEdgeRow, MapNode } from "@/lib/types";
 import { useLang } from "@/lib/useLang";
 import { usePanZoom } from "./usePanZoom";
-import { hashAngle, makeCategoryColor, legendFor, fmt } from "./vizUtils";
+import { hashAngle, makeCategoryColor, legendFor, fmt, shade } from "./vizUtils";
 
 const W = 820;
 const H = 540;
@@ -46,6 +46,9 @@ export default function GraphView({
   }, [hover, hoverEdges]);
   const q = query.trim().toLowerCase();
   const ec = (id: string) => { const n = byId.get(id); return n ? color(n) : "#64748b"; };
+  // one reusable spherical gradient per colour (light highlight -> base -> dark rim = volume on any theme)
+  const gradId = new Map<string, string>();
+  for (const n of nodes) { const c = color(n); if (!gradId.has(c)) gradId.set(c, `atl-sph-${gradId.size}`); }
 
   if (edges.length === 0) {
     return (
@@ -68,46 +71,53 @@ export default function GraphView({
            onPointerLeave={() => setHover(null)}
            aria-label={lang === "es" ? "Red de relaciones entre datasets" : "Dataset relation network"}>
         <defs>
-          <filter id="atl-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="2.4" result="b" />
+          <filter id="atl-glow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="2.6" result="b" />
             <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
+          {Array.from(gradId).map(([c, id]) => (
+            <radialGradient key={id} id={id} cx="0.35" cy="0.3" r="0.75">
+              <stop offset="0%" stopColor={shade(c, 0.55)} />
+              <stop offset="55%" stopColor={c} />
+              <stop offset="100%" stopColor={shade(c, -0.32)} />
+            </radialGradient>
+          ))}
         </defs>
         <g transform={`translate(${t.x},${t.y}) scale(${t.k})`}>
-          {/* edges coloured by their source community, additively blended -> the structure glows like a nebula */}
-          <g style={{ mixBlendMode: "screen" }}>
-            {edges.map((e, i) => {
-              const a = pos.get(e.s); const b = pos.get(e.t);
-              if (!a || !b) return null;
-              const active = !hover || e.s === hover || e.t === hover;
-              return <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-                           stroke={ec(e.s)}
-                           strokeOpacity={active ? 0.1 + 0.5 * e.w : 0.02}
-                           strokeWidth={(0.6 + 3.2 * e.w) / t.k} strokeLinecap="round" />;
-            })}
-          </g>
-          {/* soft halos (additive) give each node depth without a per-node blur filter */}
-          <g style={{ mixBlendMode: "screen" }}>
-            {nodes.map((n) => {
-              const p = pos.get(n.id); if (!p) return null;
-              const r = (3.2 + 1.4 * Math.sqrt(deg.get(n.id) ?? 0)) / t.k;
-              const matchDim = q.length > 0 && !n.title.toLowerCase().includes(q);
-              const active = !matchDim && (!hoverSet || hoverSet.has(n.id));
-              return <circle key={n.id} cx={p.x} cy={p.y} r={r * 2.7} fill={color(n)}
-                             fillOpacity={matchDim ? 0.02 : active ? 0.18 : 0.05} />;
-            })}
-          </g>
-          {/* solid cores on top */}
+          {/* edges coloured by their source community */}
+          {edges.map((e, i) => {
+            const a = pos.get(e.s); const b = pos.get(e.t);
+            if (!a || !b) return null;
+            const active = !hover || e.s === hover || e.t === hover;
+            return <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+                         stroke={ec(e.s)}
+                         strokeOpacity={active ? 0.14 + 0.5 * e.w : 0.04}
+                         strokeWidth={(0.6 + 3.2 * e.w) / t.k} strokeLinecap="round" />;
+          })}
+          {/* soft colour aura (theme-agnostic: a translucent tint, not a blend mode) */}
           {nodes.map((n) => {
             const p = pos.get(n.id); if (!p) return null;
             const r = (3.2 + 1.4 * Math.sqrt(deg.get(n.id) ?? 0)) / t.k;
             const matchDim = q.length > 0 && !n.title.toLowerCase().includes(q);
+            const active = !matchDim && (!hoverSet || hoverSet.has(n.id));
+            if (matchDim || !active) return null;
+            return <circle key={n.id} cx={p.x} cy={p.y} r={r * 2.1} fill={color(n)} fillOpacity={0.1} />;
+          })}
+          {/* spherical cores: radial gradient (highlight -> base -> dark rim) reads as volume on light or dark */}
+          {nodes.map((n) => {
+            const p = pos.get(n.id); if (!p) return null;
+            const r = (3.2 + 1.4 * Math.sqrt(deg.get(n.id) ?? 0)) / t.k;
+            const c = color(n);
+            const matchDim = q.length > 0 && !n.title.toLowerCase().includes(q);
             const matchHit = q.length > 0 && !matchDim;
             const active = !matchDim && (!hoverSet || hoverSet.has(n.id));
-            return <circle key={n.id} cx={p.x} cy={p.y} r={r} fill={color(n)}
-                           fillOpacity={matchDim ? 0.12 : active ? 1 : 0.25}
+            return <circle key={n.id} cx={p.x} cy={p.y} r={r}
+                           fill={matchDim ? "#94a3b8" : `url(#${gradId.get(c)})`}
+                           fillOpacity={matchDim ? 0.15 : active ? 1 : 0.4}
                            filter={n.id === hover || matchHit ? "url(#atl-glow)" : undefined}
-                           stroke={n.id === hover || matchHit ? "#fff" : "none"} strokeWidth={1.5 / t.k}
+                           stroke={n.id === hover || matchHit ? "#fff" : shade(c, -0.35)}
+                           strokeWidth={(n.id === hover || matchHit ? 1.5 : 0.5) / t.k}
+                           strokeOpacity={active ? 0.9 : 0.3}
                            style={{ cursor: "pointer" }} onPointerEnter={() => setHover(n.id)} />;
           })}
         </g>
