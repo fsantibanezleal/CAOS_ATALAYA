@@ -1,7 +1,7 @@
 # PRECOMPUTE lane — the heavy, research-chosen SOTA engines (in .venv-pipeline; local-only, never deployed).
 # THIS is where the deep research becomes binding: every engine pinned here is documented in docs/frameworks/<tool>/
 # and actually used by data-pipeline/atalayalab/stages/. Verified install on Python 3.12 (Windows), 2026-07-01.
-# Dossier: (CAOS_MANAGE) wip/atalaya/memory-mcp-research-2026-07-01.md + catalog-research-2026-07-01.md.
+# Dossier: the research notes that motivated these pins (kept out of this repo).
 
 # --- harvest: catalog enumeration + resilient bulk download ---
 httpx[http2]==0.28.1          # HTTP/2 client for the OpenSearch catalog + file mirroring (retry, resume, streaming)

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Deploy the built SPA to the VPS as a static site (vps-static class) at atalaya.fasl-work.com.
-# Prereq: the SSH key to the host (kept in the private CAOS_MANAGE vault, NOT in this repo). Pass its path via
+# Prereq: the SSH key to the host (kept OUT of this repo). Pass its path via
 #   ATALAYA_SSH_KEY=/path/to/hetzner_fasl_prod ./scripts/deploy.sh
 # Idempotent: builds fresh, rsyncs dist, installs/reloads the nginx site, provisions the cert if missing.
 set -euo pipefail
