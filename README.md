@@ -1,5 +1,10 @@
 # Atalaya
 
+[![CI](https://img.shields.io/github/actions/workflow/status/fsantibanezleal/CAOS_ATALAYA/ci.yml?branch=main&label=CI)](https://github.com/fsantibanezleal/CAOS_ATALAYA/actions)
+[![License](https://img.shields.io/github/license/fsantibanezleal/CAOS_ATALAYA)](LICENSE)
+[![Version](https://img.shields.io/github/v/tag/fsantibanezleal/CAOS_ATALAYA?label=version&sort=semver)](https://github.com/fsantibanezleal/CAOS_ATALAYA/tags)
+[![Live demo](https://img.shields.io/badge/demo-live-2ea44f)](https://atalaya.fasl-work.com)
+
 **A watchtower over Chile's open data.** Atalaya harvests the [Data Observatory](https://catalogo.dataobservatory.net)
 open catalog, profiles every downloadable table, and mines five kinds of cross-dataset relation into an explorable
 knowledge graph, so you can see not just *what* datasets exist but *how they connect*: which can be joined, which
