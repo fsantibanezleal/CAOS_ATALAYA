@@ -105,6 +105,7 @@ export interface MapNode {
   keys: string[]; n_cols: number; n_rows: number; year_min: number | null; year_max: number | null;
   coord: [number, number]; coord3?: [number, number, number]; fpos?: [number, number] | null; cluster: number; profiled?: boolean;
   null_frac: number; lat: number | null; lon: number | null;
+  topics?: string[];   // all OECD sub-categories the catalog assigns (up to 5), not just the first
 }
 export interface MapPayload { nodes: MapNode[]; pca_var: number[]; themes: string[]; clusters: number[] }
 
