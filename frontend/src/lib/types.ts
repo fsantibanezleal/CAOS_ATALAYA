@@ -103,7 +103,7 @@ export interface GraphData {
 export interface MapNode {
   id: string; title: string; theme: string; origin: string; org: string; license: string;
   keys: string[]; n_cols: number; n_rows: number; year_min: number | null; year_max: number | null;
-  coord: [number, number]; fpos?: [number, number] | null; cluster: number; profiled?: boolean;
+  coord: [number, number]; coord3?: [number, number, number]; fpos?: [number, number] | null; cluster: number; profiled?: boolean;
   null_frac: number; lat: number | null; lon: number | null;
 }
 export interface MapPayload { nodes: MapNode[]; pca_var: number[]; themes: string[]; clusters: number[] }

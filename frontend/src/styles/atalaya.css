@@ -141,6 +141,7 @@
 .graph-colorby { display: inline-flex; align-items: center; gap: 0.3rem; }
 .graph-tool-lbl { font-size: 0.75rem; color: var(--color-fg-faint); }
 .chip.sm { padding: 0.12rem 0.45rem; font-size: 0.72rem; }
+.viz-toolbar-right { display: inline-flex; align-items: center; gap: 0.6rem; }
 
 /* empty-state banner shared by every graph mode */
 .viz-empty { display: flex; align-items: center; justify-content: center; min-height: 260px;
