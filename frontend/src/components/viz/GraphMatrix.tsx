@@ -7,7 +7,7 @@ const SIDE = 560;        // square drawing area (px)
 const GUTTER = 12;       // cluster colour strip (px)
 const CAP = 160;         // readable/interactive cap; larger graphs show the top-CAP most connected
 
-/** Cluster-reordered ADJACENCY MATRIX — the occlusion-free reading of a dense relation network. Rows and columns
+/** Cluster-reordered adjacency matrix: the occlusion-free reading of a dense relation network. Rows and columns
  * are the datasets, ordered by mined community (cluster) then degree, so communities appear as bright blocks on
  * the diagonal; a filled cell (i,j) is a relation, its colour the strength (viridis). This answers what a
  * node-link hairball cannot: within a community, is it a clique (fully joinable) or a star (one hub)? Drawn to a
@@ -97,7 +97,7 @@ export default function GraphMatrix({
   }, [nodes, cell, n, colorFor, q, hoverCell, minWeight, payload.edges, model.idx]);
 
   if (n === 0) {
-    return <div className="viz-wrap"><p className="viz-empty">{lang === "es" ? "Sin relaciones en este umbral — baja el umbral." : "No relations at this threshold — lower the threshold."}</p></div>;
+    return <div className="viz-wrap"><p className="viz-empty">{lang === "es" ? "Sin relaciones en este umbral. Bajar el umbral." : "No relations at this threshold. Lower the threshold."}</p></div>;
   }
 
   const onMove = (ev: React.PointerEvent<HTMLCanvasElement>) => {

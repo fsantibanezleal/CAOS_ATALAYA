@@ -39,7 +39,7 @@ live lanes have their vectors and payloads. The first semantic search downloads 
 
 ## Why not a server
 
-The relation-mining science runs offline and reaches the web only as the committed artifacts (CONTRACT 2). The two
+The relation-mining science runs offline and reaches the web only as the committed artifacts (Contract 2). The two
 live computations are small, safe, and interactive by design; they do not need, and do not use, a backend. The
 `app/` FastAPI scaffold would only be activated on an ADR-0002 trigger (server-side processing of uploaded data,
 auth-gated private data), which Atalaya does not require.

@@ -1,5 +1,5 @@
 // Single source of truth for the product routes. Both the router and the header nav read this list.
-// Order matters: the WORKBENCH is the landing ("/") — you enter and go straight to the tool. The five deep
+// Order matters: the workbench is the landing ("/"), entering goes straight to the tool. The five deep
 // pages (Introduction, Methodology, Implementation, Experiments, Benchmark) sit alongside it.
 export interface RouteDef {
   path: string;

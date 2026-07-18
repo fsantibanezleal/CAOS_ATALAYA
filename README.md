@@ -122,7 +122,7 @@ see `docs/frameworks/01_opensearch-catalog/opensearch-catalog.md`). `--harvest` 
 # 2. run the offline pipeline (mine the graph from an already-mirrored corpus)
 ./scripts/precompute.ps1       # python -m atalayalab.pipeline ; add --harvest to re-crawl (~25 GB)
 
-# 3. tests + CONTRACT-2 check
+# 3. tests + Contract-2 check
 .venv-pipeline/Scripts/python -m pytest ; python scripts/check_artifacts.py
 ```
 
@@ -135,7 +135,7 @@ configured via `ATALAYA_DATA_ROOT` / `ATALAYA_MODEL_ROOT`; only compact derived 
 
 ```
 data-pipeline/atalayalab/   engine: catalog/ · io/ · core/ · model/ · stages/ · cases/ · pipeline.py · live.py
-data/derived/               committed compact web artifacts + manifests (CONTRACT 2)
+data/derived/               committed compact web artifacts + manifests (Contract 2)
 frontend/                   React 19 + Vite SPA (6 pages, viz, i18n, theming, ⓘ modal)
 mcp/                        read-only MCP server over the knowledge graph
 docs/                       the wiki (architecture · frameworks · cases · guides · data-contract)

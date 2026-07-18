@@ -6,7 +6,7 @@ import { useLang } from "@/lib/useLang";
 import RenderSwitch from "@/components/viz/RenderSwitch";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
-/** One concrete analytical VIEW of a lens: the variant bar (real regime knobs) + the interactive viz + a small
+/** One concrete analytical view of a lens: the variant bar (real regime knobs) + the interactive viz + a small
  * provenance footer. Loads its manifest + artifact once; variant switching is client-side (no recompute). This is
  * the leaf the CategoryView composes; the Context write-up + live search are separate sub-tabs at the lens level. */
 export default function CaseView({ def }: { def: CaseDef }) {

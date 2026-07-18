@@ -93,7 +93,7 @@ export default function GraphGL({
   if (data.nodes.length === 0) {
     return (
       <div ref={wrapRef} className="graphgl-wrap graphgl-empty">
-        <p className="viz-empty">{lang === "es" ? "Sin relaciones en este umbral — baja el umbral." : "No relations at this threshold — lower the threshold."}</p>
+        <p className="viz-empty">{lang === "es" ? "Sin relaciones en este umbral. Bajar el umbral." : "No relations at this threshold. Lower the threshold."}</p>
       </div>
     );
   }

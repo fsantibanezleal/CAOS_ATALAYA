@@ -5,11 +5,11 @@
 ## The question
 
 How clean and how usable are the catalog's tables? What is the null burden, how wide are the tables, which
-CONTRACT-1 flags fire, and what type mix and key coverage do datasets have?
+Contract-1 flags fire, and what type mix and key coverage do datasets have?
 
 ## The method
 
-`build_quality` rolls up the CONTRACT-1 report (`io/contract.py`) and the profiles: per dataset it reports column
+`build_quality` rolls up the Contract-1 report (`io/contract.py`) and the profiles: per dataset it reports column
 count, row count, average null fraction, the number of entity keys present, and the maximum column cardinality; it
 also tallies the contract flags across normalized tables (e.g. `dropped_N_null_cols`, `high_null_frac`,
 `wide_N_cols`, `single_row`, `duplicate_headers`) and the dtype mix (str, float, date). Rows are decimated by null

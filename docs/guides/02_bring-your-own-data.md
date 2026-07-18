@@ -1,7 +1,7 @@
 # Guide, bring your own data
 
 Atalaya is **not hard-wired to the Data Observatory**. The pipeline runs over whatever normalized tables exist, so
-you can point it at your own tabular data. The door is **CONTRACT 1** (`data-pipeline/atalayalab/io/contract.py`),
+you can point it at your own tabular data. The door is **Contract 1** (`data-pipeline/atalayalab/io/contract.py`),
 the ingestion gate.
 
 ## The ingestion contract is the door
@@ -25,7 +25,7 @@ the manifest.
    out of git under the `E:` scratch tree (`config.py`, `ATALAYA_DATA_ROOT`).
 2. Run the pipeline **without** `--harvest` so it skips the catalog download and processes the raw tree you
    staged: `python -m atalayalab.pipeline` (or `./scripts/precompute.ps1`).
-3. `preprocess` applies CONTRACT 1 to each file; `feature_extraction` profiles the accepted tables and detects
+3. `preprocess` applies Contract 1 to each file; `feature_extraction` profiles the accepted tables and detects
    entity keys (comuna CUT, region, year, lat/lon, rut via `catalog/entities.py`); `infer` mines the same five
    edge kinds plus affinity; `export` bakes the compact artifacts the SPA replays.
 
@@ -35,13 +35,13 @@ recognized key still get profiled, embedded, and semantically linked.
 
 ## Extending the contract
 
-If your data legitimately does not fit (a new key type, a new format), extend CONTRACT 1 and its tests
+If your data legitimately does not fit (a new key type, a new format), extend Contract 1 and its tests
 **deliberately**, never loosen it just to make bad data pass. The entity-key detectors in `entities.py` are the
 natural extension point for a new join key; add both the header hint and the value-shape check (both must agree, by
 design, to avoid false keys).
 
 ## Honesty note
 
-Entity-key detection is conservative on purpose (header AND value shape must agree), so a real key in an
+Entity-key detection is conservative on purpose (header and value shape must agree), so a real key in an
 unrecognized format will be missed rather than guessed. Rejected files are reported with a reason and simply do
 not enter the corpus; nothing is silently imputed.

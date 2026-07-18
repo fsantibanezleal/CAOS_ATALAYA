@@ -5,7 +5,7 @@ pipeline) and an **artifact** contract (pipeline to web). Both are code, both ar
 canonical, detailed reference is [../data-contract.md](../data-contract.md); this page is the architecture-level
 summary.
 
-## CONTRACT 1, ingestion (raw to pipeline)
+## Contract 1, ingestion (raw to pipeline)
 
 `data-pipeline/atalayalab/io/contract.py :: validate_table()` is the bring-your-own-data gate. It accepts a raw
 file as a profilable table, rejects it with a reason, or accepts-and-flags it, never silently coercing bad data.
@@ -26,7 +26,7 @@ checksummed. Table acceptance is explicit: unreadable or empty tables are reject
 an all-null column is dropped and flagged; a high overall null fraction, very wide tables, and single-row tables
 are flagged (accepted). Flags travel with the dataset into the profile and the manifest.
 
-## CONTRACT 2, artifact (pipeline to web)
+## Contract 2, artifact (pipeline to web)
 
 `core/manifest.py` plus `core/trace.py` define the compact, versioned artifact the web replays. The web loads
 **only** manifests plus artifacts; it never recomputes the science.
@@ -43,7 +43,7 @@ disk.
 
 ## Why this matters
 
-Without CONTRACT 1 the tool could not be pointed at new data (it would be a demo, not a tool). Without CONTRACT 2
+Without Contract 1 the tool could not be pointed at new data (it would be a demo, not a tool). Without Contract 2
 the web could silently drift from what the pipeline produced. The contracts are the seam that makes Atalaya a
 tool, not a slideshow. Artifacts are decimated (strongest N rows/edges) so the committed copy stays small; the
 full graph lives in the out-of-git SQLite store and is queryable via the [MCP server](../../mcp/README.md).
