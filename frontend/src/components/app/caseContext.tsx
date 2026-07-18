@@ -42,7 +42,7 @@ const CART_map = (lang: Language) => block(lang,
     formal: <><p>El título + descripción + nombres de columnas de cada dataset se codifica a un vector <InlineMath tex="\mathbf{e}\in\mathbb{R}^{384}" /> con un MiniLM multilingüe. Proyectamos a 2-D con PCA:</p><Equation tex="\mathbf{y}_i = W^\top (\mathbf{e}_i - \bar{\mathbf{e}}),\quad W=[\mathbf{w}_1,\mathbf{w}_2]" caption="las dos primeras componentes principales de los embeddings" /></>,
     scope: <p><strong>Modelado:</strong> proximidad semántica de las descripciones. <strong>Fuera de alcance:</strong> el contenido a nivel de fila (esto es metadata + semántica de nombres de columnas, no los valores). <strong>Honestidad:</strong> PCA conserva solo las dos direcciones de mayor varianza; puntos lejanos en 2-D son distintos, pero cercanía en 2-D puede ocultar diferencias del espacio completo de 384-D.</p>,
     variants: <p>Las siete variantes recolorean los mismos puntos: por <em>tema</em>, <em>origen</em> (curado vs DOI), <em>clúster</em> (k-means sobre embeddings), <em>claves de unión</em>, <em>actualidad</em> (viridis sobre el último año), <em>tasa de nulos</em>, y <em>subcategoría</em> (la taxonomía OECD completa de 27 valores, más fina que los cinco temas). El layout no cambia, así comparas facetas sobre un mapa fijo; un toggle 2D/3D alterna entre el mapa plano SVG y una vista PCA 3-D orbitable.</p>,
-    howto: <p>Busca clústers de color compactos (un tema semánticamente coherente) y outliers (un dataset lejos de sus pares). Pasa el cursor por cualquier punto para leer el dataset; cambia la faceta de color para hacer otra pregunta sobre la misma geografía.</p>,
+    howto: <p>Busca clústers de color compactos (un tema semánticamente coherente) y outliers (un dataset lejos de sus pares). Al pasar el cursor por cualquier punto para leer el dataset; cambia la faceta de color para hacer otra pregunta sobre la misma geografía.</p>,
   });
 
 // generic builder for the rest (concise but real content)
@@ -88,7 +88,7 @@ const CORR = mk(
     formal: <><p>Agregamos cada indicador al nivel de la clave, correlacionamos por rangos, calibramos la significancia con un nulo de permutación sembrado, y controlamos la tasa de falsos descubrimientos en toda la familia:</p><Equation tex="\rho = \text{Spearman}(x,y),\quad p=\frac{1+\#\{|\rho^\ast|\ge|\rho|\}}{1+B},\quad \text{conservar si } p_{(k)}\le \tfrac{k}{m}q" caption={"nulo de permutación (B sorteos) + Benjamini-Hochberg a q=0.05"} /></>,
     scope: <p><strong>Honestidad:</strong> correlación no es causalidad, y un driver común (población, región) puede inducirla; el pipeline parcializa drivers comunes y el control negativo confirma que alineaciones barajadas dan ~0 sobrevivientes. Solo se muestran aristas que sobreviven FDR.</p>,
     variants: <p>Las variantes suben el piso de |ρ| (0.35, 0.80) y filtran por signo (solo positivas / negativas).</p>,
-    howto: <p>Ordena por ρ o p ajustada; el scatter grafica cada hallazgo como ρ vs significancia. Pasa el cursor para ver las columnas exactas y el n detrás del número.</p> });
+    howto: <p>Ordena por ρ o p ajustada; el scatter grafica cada hallazgo como ρ vs significancia. Al pasar el cursor para ver las columnas exactas y el n detrás del número.</p> });
 
 const GEO = mk(
   { problem: <p>How geographically grounded is the catalog? Which datasets can be placed on a comuna, a region, or a point, and where are the georeferenced ones?</p>,
