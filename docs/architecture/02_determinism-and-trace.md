@@ -34,7 +34,7 @@ so the strongest evidence is always what ships, and weak or borderline edges are
 from the DB).
 
 The artifact shape is mirrored by `frontend/src/lib/contract.types.ts`, so any drift between what the pipeline
-writes and what the web expects fails the web build (`tsc`). This is CONTRACT 2, detailed in
+writes and what the web expects fails the web build (`tsc`). This is Contract 2, detailed in
 [08_data-contracts.md](08_data-contracts.md).
 
 ## Honesty note

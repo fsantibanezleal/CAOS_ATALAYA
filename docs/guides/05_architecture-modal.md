@@ -1,6 +1,6 @@
 # 05 · The in-app Architecture / "How it works" modal (ADR-0058)
 
-Every CAOS/Faena web app **MUST** ship an in-app **Architecture / "How it works"** modal, opened by an
+Every CAOS/Faena web app **must** ship an in-app **Architecture / "How it works"** modal, opened by an
 always-visible **ⓘ button in the header**. It is the fast visual proof the app is a *real, complete system*, not a
 demo. The chrome (button + modal) is provided by the shared shell; each product supplies only its diagrams + copy.
 
@@ -62,4 +62,4 @@ Binding decision: ADR-0058 (the in-app architecture modal). Reference implementa
 
 The screenshot-verify step (mandatory before any deploy) **must open the modal and confirm every tab renders its
 diagram (themed, no broken SVG) + its text with no error**, in both light and dark. A product is **not "done"**
-without the ⓘ Architecture modal at full depth · it is a NON-NEGOTIABLE row in the product-quality bar.
+without the ⓘ Architecture modal at full depth · it is a non-negotiable row in the product-quality bar.

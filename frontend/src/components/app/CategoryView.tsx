@@ -8,8 +8,8 @@ import SemanticSearch from "@/components/app/SemanticSearch";
 import { CASE_CONTEXT } from "@/components/app/caseContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
-/** A genuine analytical LENS over the catalog (cartography, semantic, joinability, correlation, geographic,
- * temporal, quality, affinity). Its sub-tabs are the REAL views of that lens (one per case), plus a Context
+/** A genuine analytical lens over the catalog (cartography, semantic, joinability, correlation, geographic,
+ * temporal, quality, affinity). Its sub-tabs are the real views of that lens (one per case), plus a Context
  * write-up, plus (semantic only) the live search where it belongs. No repeated meta-tabs across lenses. */
 export default function CategoryView({ name, cases }: { name: string; cases: CaseDef[] }) {
   const { t } = useTranslation();

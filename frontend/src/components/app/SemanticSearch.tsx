@@ -15,7 +15,7 @@ function cosine(a: number[], b: number[]): number {
   return na && nb ? d / Math.sqrt(na * nb) : 0;
 }
 
-/** LIVE lane: free-text semantic search over the whole catalog. The multilingual MiniLM runs in the browser
+/** Live lane: free-text semantic search over the whole catalog. The multilingual MiniLM runs in the browser
  * (transformers.js / onnxruntime-web, WASM) · no server. The query vector is cosine-ranked against the baked
  * dataset embeddings. Graceful: if the model fails to load, it falls back to keyword matching over titles. */
 export default function SemanticSearch() {

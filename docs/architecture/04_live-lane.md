@@ -50,7 +50,7 @@ the App reacts instantly with no per-variant recompute and no compute bomb (`cas
 
 ## Replay is always the floor
 
-Everything the web needs is committed as a static artifact (CONTRACT 2). The live lane is additive: if WASM
+Everything the web needs is committed as a static artifact (Contract 2). The live lane is additive: if WASM
 loading is blocked or slow, semantic search falls back to keyword search and the affinity view shows the baked
 default weights. A visitor always sees a complete, correct product; the live compute makes it interactive, it is
 never a prerequisite.

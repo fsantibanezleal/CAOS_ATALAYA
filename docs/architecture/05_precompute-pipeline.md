@@ -19,7 +19,7 @@ only with `--harvest`. DOI archives and geoservices are referenced, never mirror
 
 ## preprocess, `stages/preprocess.py`
 
-Read each raw tier-A tabular resource, apply CONTRACT 1 (`io/contract.py`), and normalize the accepted tables to
+Read each raw tier-A tabular resource, apply Contract 1 (`io/contract.py`), and normalize the accepted tables to
 zstd parquet in the out-of-git derived tree. Encoding is sniffed and the separator inferred because Chilean gov
 CSVs are inconsistent. Heavy tables are row-capped for profiling (`sample_rows`, default 50000) so the corpus
 scan stays bounded; the full file stays on disk.
@@ -63,7 +63,7 @@ SOTA embedding: 93.0% vs 94.4%, chance 47.8%), joinability sanity, and graph cov
 
 ## export, `stages/export.py`
 
-CONTRACT 2. Write the compact per-case artifacts and manifests, plus the global payloads: `catalog.json` (all
+Contract 2. Write the compact per-case artifacts and manifests, plus the global payloads: `catalog.json` (all
 1017 datasets, lightweight), `graph.json` (decimated graph), `embeddings.json` (for live search),
 `metrics.json` (the evaluation metrics), `categories.json` (the case/variant registry), and `manifests/index.json`.
 The manifest names the real engines that produced each render kind (traceability, no toy-substitute claims).

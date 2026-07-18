@@ -42,7 +42,7 @@ df.write_parquet("norm.parquet", compression="zstd")
 - `io/formats.py` `read_table` is the single robust reader for the `preprocess` stage: it sniffs
   encoding/separator, dispatches by extension (CSV/TXT/TSV, XLSX/XLS, JSON/GeoJSON, parquet) into a polars
   `DataFrame`, and raises `UnreadableResource` on total failure. `write_parquet` emits the normalized table
-  (zstd). This satisfies **CONTRACT 1** (`io/contract.py`), whose null/width checks run on the polars frame.
+  (zstd). This satisfies **Contract 1** (`io/contract.py`), whose null/width checks run on the polars frame.
 - `feature_extraction.py` `_profile_table` reads the normalized parquet and computes per-column stats via polars
   (`n_unique`, `drop_nulls`, `cast(pl.Float64, strict=False)` for numeric coercion).
 - `infer.py` `_indicator_series` / `_numeric_cols` aggregate each dataset's numeric columns to a shared entity key

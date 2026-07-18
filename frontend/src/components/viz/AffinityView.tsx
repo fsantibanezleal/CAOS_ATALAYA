@@ -4,7 +4,7 @@ import { useLang } from "@/lib/useLang";
 import { fmt } from "./vizUtils";
 
 // TS mirror of atalayalab.model.affinity.affinity() reliability + fusion, so the live reweight matches the
-// baked score at the default weights (parity). The payload stores the CALIBRATED f_* percentiles, so no null
+// baked score at the default weights (parity). The payload stores the calibrated f_* percentiles, so no null
 // CDF is reapplied here.
 function reliability(sem: number, join: number, stat: number) {
   return {
@@ -25,7 +25,7 @@ const PRESETS: Record<string, [number, number, number]> = {
 };
 
 /** The novel calibrated multi-evidence affinity. Ranked dataset pairs with a stacked evidence bar (semantic /
- * joinability / correlation). LIVE control: reweight the three evidences and the ranking recomputes instantly
+ * joinability / correlation). Live control: reweight the three evidences and the ranking recomputes instantly
  * in the browser (no server), showing that affinity is a fused, auditable judgement, not one opaque signal. */
 export default function AffinityView({
   payload, weights = [0.34, 0.4, 0.26], limit = 120, minScore = 0,
@@ -89,7 +89,7 @@ export default function AffinityView({
       )}
       <p className="viz-caption">
         {lang === "es"
-          ? "Cada evidencia está calibrada contra un modelo nulo (percentil vs pares al azar); la fusión pondera y descuenta evidencias que se contradicen. Mueve los pesos para ver la afinidad recomputarse."
+          ? "Cada evidencia está calibrada contra un modelo nulo (percentil vs pares al azar); la fusión pondera y descuenta evidencias que se contradicen. Al mover los pesos se recomputa la afinidad."
           : "Each evidence is calibrated against a null model (percentile vs random pairs); the fusion weights and discounts evidences that contradict each other. Move the weights to watch affinity recompute."}
       </p>
     </div>

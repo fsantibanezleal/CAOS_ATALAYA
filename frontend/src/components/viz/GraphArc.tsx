@@ -5,7 +5,7 @@ import { viridis, fmt } from "./vizUtils";
 
 const W = 820, H = 340, MARGIN = 24, BASE = H - 70;
 
-/** ARC diagram — nodes on a single baseline ordered by mined community (cluster), each relation drawn as a
+/** Arc diagram: nodes on a single baseline ordered by mined community (cluster), each relation drawn as a
  * semicircle above it. Intra-community links are short arcs; the long high arcs are the cross-community BRIDGES,
  * which a force layout buries inside the hairball. Best for the sparse lenses (correlations, high-threshold
  * joinability). For a correlation network the arc is signed: green = positive ρ, red = negative. No physics. */
@@ -35,7 +35,7 @@ export default function GraphArc({
   const xOf = (i: number) => MARGIN + i * step;
 
   if (n === 0) {
-    return <div className="viz-wrap"><p className="viz-empty">{lang === "es" ? "Sin relaciones en este umbral — baja el umbral." : "No relations at this threshold — lower the threshold."}</p></div>;
+    return <div className="viz-wrap"><p className="viz-empty">{lang === "es" ? "Sin relaciones en este umbral. Bajar el umbral." : "No relations at this threshold. Lower the threshold."}</p></div>;
   }
 
   const hoverNode = hover != null ? nodes[hover] : null;
@@ -106,7 +106,7 @@ export default function GraphArc({
             })}
           </span>
         </div>
-      ) : <div className="viz-readout viz-readout-idle">{lang === "es" ? "Mueve el cursor por la línea base para resaltar un dataset y sus puentes" : "Move along the baseline to highlight a dataset and its bridges"}</div>}
+      ) : <div className="viz-readout viz-readout-idle">{lang === "es" ? "Al mover el cursor por la línea base se resalta un dataset y sus puentes" : "Move along the baseline to highlight a dataset and its bridges"}</div>}
     </div>
   );
 }

@@ -48,8 +48,8 @@ export default function Experiments() {
         )}
         {m && (
           <p className="callout callout-honest">{es
-            ? `Interpretación honesta: sobre datos reales, ${m.graph.by_edge_kind?.CORRELATES ?? 0} correlaciones sobreviven al control de FDR; sobre las MISMAS alineaciones barajadas, sobreviven ${m.negative_control.survivors}. Esa separación es la evidencia de que los hallazgos no son ruido.`
-            : `Honest reading: on real data, ${m.graph.by_edge_kind?.CORRELATES ?? 0} correlations survive the FDR control; on the SAME alignments shuffled, ${m.negative_control.survivors} survive. That separation is the evidence the findings are not noise.`}</p>
+            ? `Interpretación honesta: sobre datos reales, ${m.graph.by_edge_kind?.CORRELATES ?? 0} correlaciones sobreviven al control de FDR; sobre las mismas alineaciones barajadas, sobreviven ${m.negative_control.survivors}. Esa separación es la evidencia de que los hallazgos no son ruido.`
+            : `Honest reading: on real data, ${m.graph.by_edge_kind?.CORRELATES ?? 0} correlations survive the FDR control; on the same alignments shuffled, ${m.negative_control.survivors} survive. That separation is the evidence the findings are not noise.`}</p>
         )}
 
         <h2>{es ? "Matriz de cobertura (casos × categoría)" : "Coverage matrix (cases × category)"}</h2>

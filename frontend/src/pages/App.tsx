@@ -20,7 +20,7 @@ const LENSES: { id: string; en: string; es: string }[] = [
   { id: "affinity", en: "Affinity", es: "Afinidad" },
 ];
 
-/** The landing workbench: enter and go straight to the tool. The primary selector is the analytical LENS (8
+/** The landing workbench: enter and go straight to the tool. The primary selector is the analytical lens (8
  * genuine domain views); each lens exposes its concrete views + Context as sub-tabs, over the real mined catalog. */
 export default function App() {
   const { t } = useTranslation();
