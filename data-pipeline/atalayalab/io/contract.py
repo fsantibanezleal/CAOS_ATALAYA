@@ -1,4 +1,4 @@
-"""CONTRACT 1 — ingestion (raw -> pipeline). The *bring-your-own-data* gate for Atalaya.
+"""Contract 1 — ingestion (raw -> pipeline). The *bring-your-own-data* gate for Atalaya.
 
 A raw resource is ACCEPTED as a profilable table iff it reads into a rectangular table that satisfies minimum
 quality bounds; it is REJECTED (with a reason) when it cannot be read or is structurally unusable; it is FLAGGED
@@ -29,7 +29,7 @@ FLAG_WIDE_COLS = 120
 
 @dataclass
 class TableReport:
-    """Outcome of applying CONTRACT 1 to one raw resource."""
+    """Outcome of applying Contract 1 to one raw resource."""
     resource_path: str
     accepted: bool
     n_rows: int = 0
@@ -44,7 +44,7 @@ class TableReport:
 
 
 def validate_table(resource_path: str | Path, *, max_rows: int | None = None) -> TableReport:
-    """Apply CONTRACT 1 to a raw file. Pure w.r.t. the file (reads, does not mutate the source)."""
+    """Apply Contract 1 to a raw file. Pure w.r.t. the file (reads, does not mutate the source)."""
     path = str(resource_path)
     try:
         df = read_table(path, max_rows=max_rows)

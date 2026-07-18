@@ -1,4 +1,4 @@
-"""Stage 3 — train: fit the MODEL LADDER over the dataset profiles and export the browser inference model.
+"""Stage 3 — train: fit the model ladder over the dataset profiles and export the browser inference model.
 
 The ladder (classical + SOTA + a novel proposal):
   - CLASSICAL: PCA to 2-D catalog coordinates + KMeans clustering of the embedding space (scikit-learn), plus a
@@ -6,7 +6,7 @@ The ladder (classical + SOTA + a novel proposal):
     measured against (top-k neighbor-theme coherence, lexical vs embedding).
   - SOTA: the multilingual MiniLM sentence embeddings (computed in feature_extraction) + their exported ONNX
     encoder for live browser semantic search.
-  - NOVEL: the calibrated multi-evidence affinity's NULL models (fit here from background random pairs), so the
+  - NOVEL: the calibrated multi-evidence affinity's null models (fit here from background random pairs), so the
     affinity score in `infer` means "stronger than chance" rather than a raw magnitude.
 
 Heavy artifacts (the ONNX encoder, the sklearn bundle) go to MODEL_ROOT (out-of-git). A compact model card + the

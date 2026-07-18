@@ -2,7 +2,7 @@
 any server. Two live interactions the App exposes:
 
   - recompute_affinity(pairs, weights): re-rank dataset pairs with the NOVEL calibrated multi-evidence affinity
-    when the user moves the semantic / join / correlation weight sliders. Uses the SAME model.affinity code the
+    when the user moves the semantic / join / correlation weight sliders. Uses the same model.affinity code the
     offline `infer` stage used, so the live number matches the baked one at the default weights (parity).
   - rank_semantic(query_vec, ids, embeddings): cosine-rank datasets against a query vector. The query vector is
     produced in-browser by onnxruntime-web running the exported MiniLM encoder, so full semantic search is live +

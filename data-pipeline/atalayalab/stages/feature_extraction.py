@@ -103,7 +103,7 @@ def _embed_texts(texts: list[str], log=print):
 def run(datasets: list[DatasetRef], normalized: list, *, embed_all: bool = True, log=print) -> list[DatasetProfile]:
     """Build a DatasetProfile per dataset. Datasets with a downloaded table get a FULL profile (columns, entity
     keys, MinHash, numeric indicators). When `embed_all` is set, EVERY other catalog dataset also gets a
-    METADATA-ONLY profile (embedding from its title/description/theme, geo from the catalog) so the cartography
+    metadata-only profile (embedding from its title/description/theme, geo from the catalog) so the cartography
     map and the semantic graph cover the whole catalog, not only the mirrorable subset. Joinability/correlation
     remain on the profiled subset (they need the data). Embeddings computed in one batched pass at the end."""
     by_id = {d.id: d for d in datasets}
