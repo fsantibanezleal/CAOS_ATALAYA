@@ -1,9 +1,9 @@
-"""Stage 6 — export (CONTRACT 2): write the compact per-case artifacts + manifests, the global catalog + graph
-payloads, and the case index. The web loads ONLY these; it never recomputes. Everything here is committed-small
+"""Stage 6 — export (Contract 2): write the compact per-case artifacts + manifests, the global catalog + graph
+payloads, and the case index. The web loads only these; it never recomputes. Everything here is committed-small
 (decimated); the heavy graph DB + raw data stay out-of-git.
 
 Outputs (into data/derived, then copied to frontend/public/data by frontend/copy-data.mjs):
-  derived/<case>/artifact.json       the case payload (CONTRACT 2)
+  derived/<case>/artifact.json       the case payload (Contract 2)
   derived/manifests/<case>.json      the case manifest (+ index.json)
   derived/catalog.json               the full 1017-dataset lightweight inventory (for search + the App)
   derived/graph.json                 the decimated global knowledge graph (nodes + all edge kinds)

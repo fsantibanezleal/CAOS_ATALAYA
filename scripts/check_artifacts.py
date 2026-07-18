@@ -1,4 +1,4 @@
-"""Validate CONTRACT 2 on disk (the pipeline -> web artifact contract): the index references every case; each
+"""Validate Contract 2 on disk (the pipeline -> web artifact contract): the index references every case; each
 manifest exists; each artifact exists, is non-empty, and its byte size matches the manifest; the lane matches the
 gate verdict. Stdlib only (runs in CI without installing the package). Exit non-zero on any drift.
 
@@ -40,11 +40,11 @@ def main() -> int:
         if m.get("gate", {}).get("lane") != m.get("lane"):
             errs.append(f"lane/gate mismatch: {entry['case_id']}")
     if errs:
-        print("CONTRACT 2 DRIFT:")
+        print("Contract 2 DRIFT:")
         for e in errs:
             print("  -", e)
         return 1
-    print(f"CONTRACT 2 OK: {len(index.get('cases', []))} cases, manifests <-> artifacts consistent.")
+    print(f"Contract 2 OK: {len(index.get('cases', []))} cases, manifests <-> artifacts consistent.")
     return 0
 
 

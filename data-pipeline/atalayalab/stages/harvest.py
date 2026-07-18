@@ -4,7 +4,7 @@ download of the mirrorable subset into the out-of-git scratch (E:\\_Datos\\atala
 Design (see docs/frameworks/opensearch-catalog/ and docs/data-contract.md):
   1. Enumerate all ~1017 documents via the OpenSearch client; cache the raw pages to CATALOG_DIR (polite, resumable).
   2. Parse + classify every resource into a download tier; write a typed inventory.json + a size report.
-  3. Download ONLY tier-A (Chilean-gov direct file) resources, HEAD-sizing first, honoring the disk cap and the
+  3. Download only tier-A (Chilean-gov direct file) resources, HEAD-sizing first, honoring the disk cap and the
      per-resource monster cap; resume partial files; retry with backoff; checksum; never mirror DOI/geoservice.
 
 Deterministic + idempotent: re-running skips already-cached pages and already-complete downloads (by size+sha).

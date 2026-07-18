@@ -1,4 +1,4 @@
-"""Stage 1 — preprocess: read each raw tier-A resource, apply CONTRACT 1, and normalize the accepted tables to
+"""Stage 1 — preprocess: read each raw tier-A resource, apply Contract 1, and normalize the accepted tables to
 parquet in the out-of-git derived tree. The bring-your-own-data entry point.
 
 Deterministic: the same raw file always yields the same normalized parquet + the same report. Heavy tables are

@@ -7,7 +7,7 @@ Metrics:
     discovery rate). If the control leaks, the correlation edges are not to be believed.
   - Semantic neighbor coherence: fraction of each dataset's top-k semantic neighbors sharing its theme (a proxy
     for embedding quality; higher is better, chance = theme base-rate).
-  - Lexical baseline (the classical foil): the SAME top-k neighbor-theme coherence computed over a TF-IDF lexical
+  - Lexical baseline (the classical foil): the same top-k neighbor-theme coherence computed over a TF-IDF lexical
     similarity of the same text, so the SOTA embedding is honestly measured against a classical baseline (both far
     above chance; the embedding wins by a modest, reported margin).
   - Joinability sanity: fraction of JOINABLE_ON edges whose two datasets share a declared entity key (should be 1.0
@@ -85,7 +85,7 @@ def _semantic_coherence(db: GraphDB, by_theme, k: int = 5) -> dict:
 
 def lexical_baseline(profiles: list[DatasetProfile], by_theme, k: int = 5) -> dict:
     """CLASSICAL lexical foil of the model ladder: a TF-IDF vectorizer over the same semantic text the SOTA
-    encoder embeds, scored with the SAME top-k neighbor-theme-coherence as the embedding. An honest, leakage-free
+    encoder embeds, scored with the same top-k neighbor-theme-coherence as the embedding. An honest, leakage-free
     "does the SOTA embedding beat a classical lexical baseline at finding thematically related datasets?" number.
     Both similarities run over the identical set of datasets, so the gap is apples-to-apples; chance = sum(share^2)."""
     from collections import Counter
