@@ -136,7 +136,7 @@ export default function GraphView({
             })}
           </span>
         </div>
-      ) : <div className="viz-readout viz-readout-idle">{lang === "es" ? "Pasa el cursor sobre un nodo para ver sus relaciones" : "Hover a node to see its relations"}</div>}
+      ) : <div className="viz-readout viz-readout-idle">{lang === "es" ? "Al pasar el cursor sobre un nodo para ver sus relaciones" : "Hover a node to see its relations"}</div>}
     </div>
   );
 }

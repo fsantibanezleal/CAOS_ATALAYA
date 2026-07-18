@@ -100,7 +100,7 @@ export default function ScatterMap({ payload, colorBy = "theme" }: { payload: Ma
             {` · ${lang === "es" ? "nulos" : "null"} ${fmtPct(hover.null_frac)}`}</span>
         </div>
       )}
-      {!hover && <div className="viz-readout viz-readout-idle">{lang === "es" ? "Pasa el cursor sobre un punto para ver el dataset" : "Hover a point to inspect the dataset"}</div>}
+      {!hover && <div className="viz-readout viz-readout-idle">{lang === "es" ? "Al pasar el cursor sobre un punto para ver el dataset" : "Hover a point to inspect the dataset"}</div>}
       <p className="viz-caption">
         {lang === "es"
           ? `Coordenadas = proyección PCA de los embeddings MiniLM (varianza explicada ${(payload.pca_var[0] * 100).toFixed(0)}% + ${(payload.pca_var[1] * 100).toFixed(0)}%). La cercanía indica similitud semántica.`

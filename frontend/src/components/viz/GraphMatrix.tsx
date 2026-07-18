@@ -135,7 +135,7 @@ export default function GraphMatrix({
             {" · "}{lang === "es" ? "clúster" : "cluster"} {a.cluster} / {b.cluster}
           </span>
         </div>
-      ) : <div className="viz-readout viz-readout-idle">{lang === "es" ? "Pasa el cursor por una celda: bloques en la diagonal = comunidades" : "Hover a cell: bright diagonal blocks are communities"}</div>}
+      ) : <div className="viz-readout viz-readout-idle">{lang === "es" ? "Al pasar el cursor por una celda: bloques en la diagonal = comunidades" : "Hover a cell: bright diagonal blocks are communities"}</div>}
     </div>
   );
 }

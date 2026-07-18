@@ -82,7 +82,7 @@ export default function Methodology() {
           content: (
             <div className="prose measure">
               <p>{es ? "La pregunta honesta no es si hallamos relaciones, sino si son más fuertes que un mundo nulo. El control negativo re-mina correlaciones sobre alineaciones barajadas y verifica que casi ninguna sobrevive al mismo nulo + FDR (una tasa empírica de falsos descubrimientos). También medimos coherencia de vecinos semánticos (fracción del top-k que comparte tema) y cordura de unibilidad." : "The honest question is not whether we find relations, but whether they are stronger than a null world. The negative control re-mines correlations on shuffled alignments and verifies that almost none survive the same null + FDR (an empirical false-discovery rate). We also measure semantic-neighbour coherence (fraction of the top-k sharing a theme) and joinability sanity."}</p>
-              <p>{es ? "Los resultados reales de estos controles se muestran en Experimentos y Benchmark, leídos directamente de los artefactos horneados." : "The real results of these controls are shown on Experiments and Benchmark, read directly from the baked artifacts."}</p>
+              <p>{es ? "Los resultados reales de estos controles se muestran en Experimentos y Benchmark, leídos directamente de los artefactos precalculados." : "The real results of these controls are shown on Experiments and Benchmark, read directly from the baked artifacts."}</p>
               <Refs ids={["good2000", "bh1995", "newman2006modularity"]} label={refsLabel} />
             </div>
           ),
