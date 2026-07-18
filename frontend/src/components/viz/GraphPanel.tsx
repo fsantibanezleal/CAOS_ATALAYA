@@ -10,7 +10,7 @@ import GraphArc from "./GraphArc";
 type Mode = "clean" | "glow" | "3d" | "matrix" | "arc";
 type ColorKey = "theme" | "cluster";
 
-/** The graph workbench: choose HOW to render the relation network — the same mined graph, five genuinely
+/** The graph workbench: choose how to render the relation network, the same mined graph, five genuinely
  * different representations. "Clean" is the precise, accessible SVG node-link (baked force layout); "Glow" is a
  * WebGL 2D nebula; "3D" is an orbitable three.js graph; "Matrix" is a cluster-reordered adjacency matrix
  * (occlusion-free — reads the dense hairballs a node-link cannot); "Arc" is a 1-D arc diagram (best for sparse
@@ -87,7 +87,7 @@ export default function GraphPanel({
         <div className="viz-legend">
           {legend.map((l) => <span key={l.label} className="viz-legend-item"><span className="viz-swatch" style={{ background: l.color }} /> {l.label}</span>)}
           <span className="viz-hint">{lang === "es"
-            ? (mode === "arc" ? "nodos ordenados por clúster · pasa el cursor" : "arrastra un nodo · rueda = zoom" + (mode === "3d" ? " · arrastra el fondo = orbitar" : ""))
+            ? (mode === "arc" ? "nodos ordenados por clúster · al pasar el cursor" : "arrastrar un nodo · rueda = zoom" + (mode === "3d" ? " · arrastrar el fondo = orbitar" : ""))
             : (mode === "arc" ? "nodes ordered by cluster · hover" : "drag a node · wheel = zoom" + (mode === "3d" ? " · drag background = orbit" : ""))}</span>
         </div>
       )}

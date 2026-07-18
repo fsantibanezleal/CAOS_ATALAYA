@@ -1,4 +1,4 @@
-// Shared visualization helpers: perceptually-uniform sequential colour (viridis · NEVER jet/rainbow, per the
+// Shared visualization helpers: perceptually-uniform sequential colour (viridis · never jet/rainbow, per the
 // interactive-viz rubric), a qualitative categorical palette legible in both themes, and small formatters.
 // Colours are concrete (needed for SVG/canvas fills); the surrounding chrome themes via CSS variables.
 

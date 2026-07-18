@@ -1,4 +1,4 @@
-// Loaders for the committed CONTRACT-2 artifacts. The web loads ONLY these; it never recomputes the pipeline.
+// Loaders for the committed Contract-2 artifacts. The web loads only these; it never recomputes the pipeline.
 // Everything is fetched from the Pages base URL and cached in-module (the corpus is static per deploy).
 import type {
   Catalog, CaseArtifact, CaseManifest, Categories, GraphData, Metrics,

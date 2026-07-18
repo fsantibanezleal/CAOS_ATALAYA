@@ -31,7 +31,7 @@ same bundle, same artifacts, same client-side live lanes.
 ## CI guards
 
 `ci.yml` keeps the base honest on every push: ruff plus pytest, a pipeline smoke run, and `scripts/check_artifacts.py`
-(CONTRACT 2: `index -> manifests -> artifacts` exist, byte sizes match, `lane == gate`). Additional guards fail the
+(Contract 2: `index -> manifests -> artifacts` exist, byte sizes match, `lane == gate`). Additional guards fail the
 build on a tracked `.env`, a committed venv, a native or heavy binary, raw data, or a leaked machine path, so
 secrets and heavy scratch never enter git (they live under the `E:` scratch tree per `config.py`).
 

@@ -22,14 +22,14 @@ committed.
 ```bash
 ./scripts/setup.ps1            # or setup.sh: builds .venv-pipeline + .venv, installs, editable pkg, .env
 ./scripts/precompute.ps1       # runs: python -m atalayalab.pipeline  (all cases)
-./scripts/smoke.ps1            # CONTRACT 2 check: index <-> manifests <-> artifacts consistent
+./scripts/smoke.ps1            # Contract 2 check: index <-> manifests <-> artifacts consistent
 ```
 
 `precompute.{sh,ps1}` is a pass-through to the CLI, so any flag works:
 
 ```bash
 python -m atalayalab.pipeline              # full run over an already-mirrored corpus
-python -m atalayalab.pipeline --harvest    # ALSO run the size-gated download first
+python -m atalayalab.pipeline --harvest    # also run the size-gated download first
 python -m atalayalab.pipeline --limit 200  # cap resources processed (smoke / dev)
 python -m atalayalab.pipeline --no-onnx    # skip the ONNX encoder export (faster dev loop)
 python -m atalayalab.pipeline --seed 7     # a different seed (still deterministic)

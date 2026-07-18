@@ -56,7 +56,7 @@ export default function GraphView({
         <div className="viz-toolbar">
           <span className="viz-hint">{nodes.length} {lang === "es" ? "nodos" : "nodes"} · 0 {lang === "es" ? "relaciones" : "edges"}</span>
         </div>
-        <p className="viz-empty">{lang === "es" ? "Sin relaciones en este umbral — baja el umbral." : "No relations at this threshold — lower the threshold."}</p>
+        <p className="viz-empty">{lang === "es" ? "Sin relaciones en este umbral. Bajar el umbral." : "No relations at this threshold. Lower the threshold."}</p>
       </div>
     );
   }
@@ -64,7 +64,7 @@ export default function GraphView({
   return (
     <div className="viz-wrap">
       <div className="viz-toolbar">
-        <span className="viz-hint">{nodes.length} {lang === "es" ? "nodos" : "nodes"} · {edges.length} {lang === "es" ? "relaciones" : "edges"} · {lang === "es" ? "rueda = zoom, arrastra = mover" : "wheel = zoom, drag = pan"}</span>
+        <span className="viz-hint">{nodes.length} {lang === "es" ? "nodos" : "nodes"} · {edges.length} {lang === "es" ? "relaciones" : "edges"} · {lang === "es" ? "rueda = zoom, arrastrar = mover" : "wheel = zoom, drag = pan"}</span>
         <button type="button" className="btn" onClick={reset}>{lang === "es" ? "Reiniciar vista" : "Reset view"}</button>
       </div>
       <svg ref={zoomRef} viewBox={`0 0 ${W} ${H}`} className="viz-svg viz-graph" role="img" tabIndex={0} {...handlers}

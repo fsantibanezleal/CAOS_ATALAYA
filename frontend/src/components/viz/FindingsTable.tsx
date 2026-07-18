@@ -83,7 +83,7 @@ export default function FindingsTable({
       {hover && (
         <div className="viz-readout" role="status">
           <strong>{hover.a} ↔ {hover.b}</strong>
-          <span>{lang === "es" ? "aligned on" : "aligned on"} {hover.key} · ρ={fmt(hover.rho, 3)} · {lang === "es" ? "p ajustada" : "adj p"}={fmt(hover.p_adj, 4)} · n={hover.n} {lang === "es" ? "unidades" : "units"}</span>
+          <span>{lang === "es" ? "alineado en" : "aligned on"} {hover.key} · ρ={fmt(hover.rho, 3)} · {lang === "es" ? "p ajustada" : "adj p"}={fmt(hover.p_adj, 4)} · n={hover.n} {lang === "es" ? "unidades" : "units"}</span>
           <span>{lang === "es" ? "columnas" : "columns"}: {hover.cols.join(" ~ ")}</span>
         </div>
       )}

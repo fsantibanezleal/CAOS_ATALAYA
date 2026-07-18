@@ -81,8 +81,8 @@ export default function Benchmark() {
             content: (
               <div className="prose measure">
                 <p>{es
-                  ? "El foil clásico del ladder: una similitud léxica TF-IDF sobre el mismo texto, evaluada con la MISMA coherencia de tema en los top-5 vecinos que el embedding SOTA. Comparación honesta y a prueba de fugas: ¿el embedding le gana a un baseline clásico? Ambos muy sobre el azar; el embedding gana por un margen modesto y reportado."
-                  : "The ladder's classical foil: a TF-IDF lexical similarity over the same text, scored with the SAME top-5 neighbour-theme coherence as the SOTA embedding. An honest, leakage-safe test of whether the embedding beats a classical baseline. Both far above chance; the embedding wins by a modest, reported margin."}</p>
+                  ? "La contraparte clásica de la escalera de modelos: una similitud léxica TF-IDF sobre el mismo texto, evaluada con la misma coherencia de tema en los top-5 vecinos que el embedding SOTA. Comparación honesta y a prueba de fugas de si el embedding supera a una referencia clásica. Ambos muy sobre el azar; el embedding gana por un margen modesto y reportado."
+                  : "The ladder's classical foil: a TF-IDF lexical similarity over the same text, scored with the same top-5 neighbour-theme coherence as the SOTA embedding. An honest, leakage-safe test of whether the embedding beats a classical baseline. Both far above chance; the embedding wins by a modest, reported margin."}</p>
                 <table className="viz-table"><tbody>
                   <tr className="hl"><td><strong>{es ? "SOTA · MiniLM (embedding)" : "SOTA · MiniLM (embedding)"}</strong></td><td className="num"><strong>{(m.lexical_baseline.embedding_neighbor_theme_match * 100).toFixed(1)}%</strong></td></tr>
                   <tr><td>{es ? "Clásico · TF-IDF (léxico)" : "Classical · TF-IDF (lexical)"}</td><td className="num">{(m.lexical_baseline.lexical_neighbor_theme_match * 100).toFixed(1)}%</td></tr>

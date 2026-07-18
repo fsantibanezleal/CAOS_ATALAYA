@@ -23,12 +23,12 @@ harvest -> preprocess -> feature_extraction -> train -> infer(relate) -> evaluat
 | Stage | Module | What it does |
 |---|---|---|
 | harvest | `stages/harvest.py` | enumerate the OpenSearch catalog, classify every resource into a download tier, size-gated mirror of the tier-A subset |
-| preprocess | `stages/preprocess.py` | read each raw table, apply CONTRACT 1, normalize the accepted ones to parquet |
+| preprocess | `stages/preprocess.py` | read each raw table, apply Contract 1, normalize the accepted ones to parquet |
 | feature_extraction | `stages/feature_extraction.py` | per-column fingerprint (dtype, nulls, entity-key role, MinHash) plus a per-dataset MiniLM embedding |
 | train | `stages/train.py` | fit the model ladder (PCA, KMeans, the affinity null models) and export the ONNX encoder |
 | infer (relate) | `stages/infer.py` | mine the five edge kinds plus the fused affinity into the knowledge graph |
 | evaluate | `stages/evaluate.py` | negative control, semantic coherence, the TF-IDF lexical baseline (`lexical_baseline`), joinability sanity (leakage-safe, adversarial) |
-| export | `stages/export.py` | write the compact per-case artifacts, manifests, catalog, graph, metrics (CONTRACT 2) |
+| export | `stages/export.py` | write the compact per-case artifacts, manifests, catalog, graph, metrics (Contract 2) |
 
 Run it with `python -m atalayalab.pipeline` (full run over an already-mirrored corpus) or
 `python -m atalayalab.pipeline --harvest` (also run the size-gated download first). See
@@ -49,9 +49,9 @@ must be replayed from a baked artifact. The verdict is written into the manifest
 
 ```
 OpenSearch catalog -> harvest (tier gate) -> data/raw (out-of-git)
-  -> CONTRACT 1 (io/contract.py) -> normalized parquet (out-of-git)
+  -> Contract 1 (io/contract.py) -> normalized parquet (out-of-git)
   -> feature_extraction -> train -> infer -> evaluate
-  -> CONTRACT 2 (core/manifest.py + core/trace.py) -> data/derived (committed, compact)
+  -> Contract 2 (core/manifest.py + core/trace.py) -> data/derived (committed, compact)
   -> frontend/ replays it; two live computations run in the browser
 ```
 

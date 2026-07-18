@@ -7,9 +7,9 @@ with the gate, so a heavy computation can never be mislabeled "live".
 
 A case is classified **live** only if all four conditions hold:
 
-- it is **pure-Python**, AND
-- its wheels are a subset of the safe wheel set `LIVE_WHEELS = {numpy}`, AND
-- its runtime is within the interaction budget `RUN_MS_GATE = 1500 ms`, AND
+- it is **pure-Python**, and
+- its wheels are a subset of the safe wheel set `LIVE_WHEELS = {numpy}`, and
+- its runtime is within the interaction budget `RUN_MS_GATE = 1500 ms`, and
 - its artifact is small, `TRACE_BYTES_GATE = 256 KiB`.
 
 Otherwise the case is **precompute**: the offline pipeline bakes the artifact and the SPA replays it. Either way a

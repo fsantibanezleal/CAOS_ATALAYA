@@ -1,4 +1,4 @@
-// TypeScript mirror of the Python CONTRACT-2 schemas (core/manifest.py, core/trace.py, stages/export.py).
+// TypeScript mirror of the Python Contract-2 schemas (core/manifest.py, core/trace.py, stages/export.py).
 // A drift here vs the pipeline output fails the build. Keep in lockstep with the manifest/artifact schemas.
 
 export type RenderKind =

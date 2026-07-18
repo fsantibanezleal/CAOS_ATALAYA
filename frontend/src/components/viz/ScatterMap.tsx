@@ -39,7 +39,7 @@ export default function ScatterMap({ payload, colorBy = "theme" }: { payload: Ma
   return (
     <div className="viz-wrap">
       <div className="viz-toolbar">
-        <span className="viz-hint">{nodes.length} {lang === "es" ? "datasets" : "datasets"} · {dim === "3d" ? (lang === "es" ? "arrastra = orbitar, rueda = zoom" : "drag = orbit, wheel = zoom") : (lang === "es" ? "rueda = zoom, arrastra = mover" : "wheel = zoom, drag = pan")}</span>
+        <span className="viz-hint">{nodes.length} {lang === "es" ? "datasets" : "datasets"} · {dim === "3d" ? (lang === "es" ? "arrastrar = orbitar, rueda = zoom" : "drag = orbit, wheel = zoom") : (lang === "es" ? "rueda = zoom, arrastrar = mover" : "wheel = zoom, drag = pan")}</span>
         <span className="viz-toolbar-right">
           {has3d && (
             <span className="graph-modes" role="group">
