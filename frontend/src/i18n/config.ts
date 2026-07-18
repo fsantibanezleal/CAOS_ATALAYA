@@ -161,7 +161,7 @@ const es: typeof en = {
     category: "Categoría",
     engines: "Motores",
     stats: "Resumen",
-    readout: "Pasa el cursor para ver valores",
+    readout: "Al pasar el cursor para ver valores",
     reset: "Reiniciar vista",
     search: "Buscar datasets…",
     lane: "modo",
@@ -191,7 +191,7 @@ const es: typeof en = {
     error: "Falló la ejecución en vivo",
     firstRunNote: "La primera búsqueda descarga el codificador ONNX una vez; las siguientes son instantáneas.",
     fallbackTitle: "Codificador no cargado · modo similitud entre datasets",
-    fallbackBody: "La búsqueda de texto libre necesita el codificador ONNX. Hasta que cargue puedes explorar 'datasets similares a este' con los embeddings horneados.",
+    fallbackBody: "La búsqueda de texto libre necesita el codificador ONNX. Hasta que cargue puedes explorar 'datasets similares a este' con los embeddings precalculados.",
   },
   viz: {
     datasets: "datasets",

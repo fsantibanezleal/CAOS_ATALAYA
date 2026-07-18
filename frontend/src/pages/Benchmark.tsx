@@ -31,7 +31,7 @@ export default function Benchmark() {
       <div className="page-head">
         <h1>Benchmark</h1>
         <p className="lede">{es
-          ? "El resultado de la mina de relaciones frente a un mundo nulo, y la composición del grafo, leídos de los artefactos horneados sobre el corpus completo."
+          ? "El resultado de la mina de relaciones frente a un mundo nulo, y la composición del grafo, leídos de los artefactos precalculados sobre el corpus completo."
           : "The relation mine's result against a null world, and the graph composition, read from the baked artifacts over the full corpus."}</p>
       </div>
       {!m && <div className="banner">{es ? "Cargando…" : "Loading…"}</div>}
