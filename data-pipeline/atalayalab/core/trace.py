@@ -1,4 +1,4 @@
-"""The compact ARTIFACT = the web-replay payload for one case (part of CONTRACT 2). Its shape is mirrored by
+"""The compact artifact = the web-replay payload for one case (part of Contract 2). Its shape is mirrored by
 frontend/src/lib/contract.types.ts so a drift fails the web build. The schema id is versioned.
 
 Unlike a physics sim's trajectory, an Atalaya case artifact is a small typed record describing a slice of the

@@ -1,6 +1,6 @@
-"""CONTRACT 2 — artifact (pipeline -> web). The manifest is the authoritative, versioned record of a baked case:
+"""Contract 2 — artifact (pipeline -> web). The manifest is the authoritative, versioned record of a baked case:
 its category, the engines that produced it, the compact artifact pointer + byte size, the lane/gate verdict, the
-CONTRACT-1 quality flags and the evaluation metrics. The web loads ONLY manifests + artifacts;
+Contract-1 quality flags and the evaluation metrics. The web loads only manifests + artifacts;
 frontend/src/lib/contract.types.ts mirrors this schema so a drift fails the web build. A flat index.json
 inventories every case (ADR-0057 default)."""
 from __future__ import annotations
