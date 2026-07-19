@@ -158,7 +158,7 @@ const OVERVIEW = mk(
     formal: <p>Conteos por faceta sobre el catálogo completo; el desglose de tamaño suma los bytes conocidos por tier (gob-directo, archivo-DOI, geoservicio, sin-url, roto).</p>,
     scope: <p><strong>Honestidad:</strong> ~44% de los recursos no tienen metadata de tamaño, así que los totales son cotas inferiores; el split por tier refleja cómo el catálogo referencia los datos, la mayoría en sitios externos.</p>,
     variants: <p>Las variantes cambian la faceta: tema, origen, licencia, formato, tier de descarga o tamaño en disco.</p>,
-    howto: <p>Úsalo para entender la forma y el licenciamiento del catálogo antes de entrar, y para ver por qué solo el tier gob-directo se espeja localmente.</p> });
+    howto: <p>Sirve para entender la forma y el licenciamiento del catálogo antes de entrar, y para ver por qué solo el tier gob-directo se espeja localmente.</p> });
 
 export const CASE_CONTEXT: Record<string, (lang: Language) => ReactNode> = {
   CART_map, CAT_overview: OVERVIEW, SEM_network, JOIN_comuna: JOIN, JOIN_region: JOIN,

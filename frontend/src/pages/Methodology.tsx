@@ -72,7 +72,7 @@ export default function Methodology() {
           content: (
             <div className="prose measure">
               <p>{es ? "El contrato de ingesta acepta cualquier tabla que cumpla cotas mínimas de calidad (rechaza ilegibles/vacías/matrices; marca anchas/muy nulas; elimina columnas todo-nulas), con política de outliers explícita, nunca coerción silenciosa. El perfilado extrae por columna: tipo, nulos, cardinalidad, estadísticas y una firma MinHash; y detecta claves de entidad chilenas (CUT comuna, región, año, lat/lon, RUT) exigiendo pista de encabezado Y forma de valor, para no inventar claves." : "The ingestion contract accepts any table meeting minimum quality bounds (rejects unreadable/empty/matrix dumps; flags wide/high-null; drops all-null columns), with an explicit outlier policy, never silent coercion. Profiling extracts per column: dtype, nulls, cardinality, statistics and a MinHash signature; and detects Chilean entity keys (comuna CUT, region, year, lat/lon, RUT) requiring BOTH a header hint AND a value shape, so no false keys."}</p>
-              <p>{es ? "Esto es lo que hace a Atalaya aplicable a datos nuevos: basta apuntarlo a otra tabla y el mismo contrato y perfilado la integran." : "This is what makes Atalaya applicable to new data: point it at another table and the same contract + profiling integrate it."}</p>
+              <p>{es ? "Atalaya se aplica a datos nuevos apuntándolo a otra tabla: el mismo contrato y perfilado la integran." : "Atalaya applies to new data by pointing it at another table: the same contract + profiling integrate it."}</p>
               <Refs ids={["wilkinson2016fair", "baak2020"]} label={refsLabel} />
             </div>
           ),
