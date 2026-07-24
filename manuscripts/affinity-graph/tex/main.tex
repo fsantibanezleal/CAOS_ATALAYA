@@ -48,7 +48,8 @@ two datasets can be embedding-similar yet share no join key, joinable on \dsname
 phenomena, or correlate spuriously through a shared driver. We present Atalaya, a system that harvests a national
 open-data catalog (1{,}017 datasets from Chile's Data Observatory; a 303-dataset, 24.8~GB government subset
 mirrored and profiled in full), mines five orthogonal kinds of cross-dataset relation into an explorable
-knowledge graph, and ranks pairwise relatedness with a novel \emph{calibrated multi-evidence affinity}. The
+knowledge graph, and ranks pairwise relatedness with a \emph{calibrated multi-evidence affinity} that fuses
+the evidence with standard empirical-CDF calibration and reliability weighting. The
 affinity fuses three orthogonal evidences into one interpretable $[0,1]$ score after passing each through its
 \emph{empirical null distribution}, so the score means ``stronger than chance'' rather than ``large raw number'',
 and it down-weights any evidence that contradicts the others. Two design choices make the graph trustworthy
@@ -57,7 +58,7 @@ same alignments with the keys shuffled, $343$ candidate correlations yield $0$ s
 with Benjamini--Hochberg control (empirical false-discovery rate $0.00$), so the $24$ correlations reported on
 real data are believable. Second, the semantic encoder is measured honestly against a classical lexical
 baseline, and we report the modest true margin ($+0.014$ top-$5$ neighbour-theme coherence over TF--IDF) rather
-than overselling it. Every edge carries its evidence, the whole affinity is pure \texttt{numpy} so the browser
+than overselling it. Every edge carries its evidence in the graph database, the whole affinity is pure \texttt{numpy} so the browser
 recomputes it live as an analyst reweights the evidences, and all figures are regenerated deterministically from
 the committed artifacts. We give the method, the adversarial validation, and an explicit account of what the
 graph does and does not license.
@@ -109,8 +110,8 @@ discount contradicting evidence. The score is in $[0,1]$, monotone, interpretabl
 (pure \texttt{numpy}) to recompute live in the browser under user reweighting.
 \item An \textbf{honest relation-mining pipeline} (Section~\ref{sec:evidence}) that produces five orthogonal
 edge kinds over a real national catalog, each recording its own evidence, with a correlation miner built from a
-seeded permutation null, Benjamini--Hochberg false-discovery control, and a partial-correlation guard against
-shared drivers.
+seeded permutation null and Benjamini--Hochberg false-discovery control (a first-order partial-correlation
+confounder check is implemented but is not applied to the committed run).
 \item An \textbf{adversarial validation} (Section~\ref{sec:validation}) centred on an \emph{empirical
 false-discovery gate}: re-mining correlations on shuffled key alignments yields an empirical false-discovery
 rate of $0.00$ ($0$ of $343$ candidate correlations survive), and the semantic encoder is benchmarked against a
@@ -195,8 +196,8 @@ containment ($\ge 0.5$), i.e. a candidate foreign-key link with the exact column
 strongest structural evidence: a shared key is a fact.
 \item \textbf{CORRELATES}: two indicator columns, aggregated to a shared key, correlate by Spearman's
 $\rho$~\cite{spearman}; the correlation survives a seeded permutation null and Benjamini--Hochberg
-control~\cite{bh} across the whole candidate family; and it is not explained away by partialling out a common
-driver~\cite{partialcorr}. The most expensive and most heavily guarded edge.
+control~\cite{bh} across the whole candidate family. The most expensive edge to mine, and the one whose
+interpretation demands the most care (see Section~\ref{sec:scope}).
 \end{itemize}
 
 The statistics for the last kind are implemented in pure \texttt{numpy}/\texttt{math} (rank transform, Pearson on
@@ -342,10 +343,11 @@ Direcci\'on P\'ublica} (appointments and calls of the senior public-management s
 $f_s=0.999$, $f_j=1.000$, $f_t=0.999$: two tables of the same administrative process, near-identical in text,
 perfectly joinable, and statistically aligned, exactly the pair a human would call ``obviously the same family''.
 A representative correlation edge links \dsname{Establecimientos educacionales} and \dsname{Establecimientos de
-salud vigentes} (educational and active health establishments) at $\rho=0.528$, adjusted $p=0.001$, over $n=324$
-municipalities aligned on \dsname{comuna\_cut}: schools and health facilities co-locate across municipalities, a
-relation that survives the permutation null, FDR control, and the partial-correlation guard, and which we report
-as an association, not a cause. A representative join edge connects two municipality-keyed tables with MinHash
+salud vigentes} (educational and active health establishments) at $\rho=0.528$, permutation $p=0.001$
+(accepted under BH-FDR at $q=0.05$), over $n=324$ municipalities aligned on \dsname{comuna\_cut}. The aligned
+columns here are administrative region and health-authority codes, so this $\rho$ reflects a shared
+north-to-south regional ordering rather than establishment co-location; we report it as a code-level
+association, not a substantive relation, and not a cause. A representative join edge connects two municipality-keyed tables with MinHash
 containment $0.769$ on their \dsname{comuna} columns, recording the exact columns and set sizes so the join is
 executable, not merely suggested. Each of these is inspectable in the live instance with its full evidence.
 
@@ -354,10 +356,16 @@ executable, not merely suggested. Each of these is inspectable in the live insta
 The graph reports \emph{potential} relatedness with calibrated, auditable strength; it does not assert causation
 and it is tuned for one catalog. Five limitations are worth stating plainly.
 
-\textbf{Association, not causation.} A CORRELATES edge means two indicators move together across municipalities
-after a permutation null, FDR control, and a first-order partial-correlation guard against a single common
-driver. It does not identify a mechanism, and a higher-order confounder can still induce it. The interface labels
-these edges as associations.
+\textbf{Association, not causation.} A CORRELATES edge means two columns move together across municipalities
+after a permutation null and FDR control; the committed correlation run is \emph{not} partial-correlation
+screened (a first-order confounder check is implemented but not applied). It does not identify a mechanism, and
+a confounder can still induce it. The interface labels these edges as associations.
+
+\textbf{Administrative-code correlations.} The correlation miner selects any numeric-castable column, so a share
+of the $24$ CORRELATES edges align administrative or geographic \emph{code} columns (region, service and entity
+codes) rather than substantive indicators, some over as few as eight aligned units, and a few are near-tautological
+code-versus-code alignments. These should be read as code-level alignments, not indicator relationships; screening
+out identifier and code columns before correlating, and applying the partial-correlation check, is the clear next fix.
 
 \textbf{Evidence hierarchy is real and unequal.} Of the $14{,}413$ edges, only $117+24$ are structurally hard;
 the rest are priors or topical similarities. The affinity weighting encodes this, but a user who reweights all
@@ -381,9 +389,11 @@ structural edges.
 
 \section{Reproducibility and Availability}\label{sec:repro}
 
-Every number in this paper comes from artifacts committed to the repository: the graph
-(\texttt{graph.json}), the evaluation metrics (\texttt{metrics.json}), the harvest report
-(\texttt{harvest\_report.json}), and the per-case artifacts. The three figures are regenerated deterministically
+Every number in this paper comes from artifacts committed to the repository: the graph counts
+(\texttt{graph.json.counts}), the evaluation metrics (\texttt{metrics.json}), the harvest report
+(\texttt{harvest\_report.json}), and the per-case top-evidence artifacts. The committed
+\texttt{graph.json} is a top-4{,}000-by-weight web payload carrying edge endpoints and weights only;
+the full per-edge evidence lives in the out-of-git graph database. The three figures are regenerated deterministically
 by a single script from those artifacts (the two data figures) and from a hand-authored, theme-aware vector
 schematic (the method figure), with no network access. The pipeline is staged, seeded, and gated by
 determinism and data-contract tests. The relatedness statistics and the affinity are pure \texttt{numpy}/%
@@ -412,7 +422,7 @@ For exact reproduction, the relation-mining tunables are: semantic top-$k=8$ wit
 minimum MinHash containment $0.50$ on the anchor keys \dsname{comuna\_cut} and region; correlation minimum shared
 key values $8$, minimum $|\rho|\;0.35$, at most $6$ indicator columns per dataset, a global cap of $40{,}000$
 correlation tests (logged if reached), and Benjamini--Hochberg control at $q=0.05$. The permutation null uses a
-seeded generator ($2{,}000$ permutations in the miner, $500$ in the negative control) with add-one smoothing so a
+seeded generator ($1{,}000$ permutations in the miner, $500$ in the negative control) with add-one smoothing so a
 reported $p$-value is never exactly zero. The empirical null CDF for each affinity evidence is fit offline by
 sampling the raw signal over random dataset pairs, sorting the sample, and evaluating the percentile by binary
 search at query time; the sorted sample is shipped with the graph so the calibration is identical offline and in
