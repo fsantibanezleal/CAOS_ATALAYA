@@ -11,7 +11,9 @@ Please report suspected security issues **privately**, not in a public issue.
 
 - Preferred: use GitHub's **private vulnerability reporting** (the "Report a vulnerability" button under the
   repository's Security tab), when enabled.
-- Alternatively, email **fsantibanez@gmail.com** with a description, reproduction steps, and impact.
+- Alternatively, contact the maintainer privately through the options on the
+  [maintainer's GitHub profile](https://github.com/fsantibanezleal) with a description, reproduction steps,
+  and impact.
 
 Please do not disclose the issue publicly until it has been addressed.
 

@@ -1,6 +1,7 @@
 """Compute a 3-D PCA of the baked MiniLM embeddings and add `coord3:[x,y,z]` to each catalog node, so the
 Catalog map can offer a 3-D embedding view (the 2-D `coord` is untouched). Mirrors the pipeline's PCA; a future
 full bake can produce coord3 directly in train._pca_3d. Run with the data-pipeline .venv."""
+
 import json
 from pathlib import Path
 import numpy as np
@@ -29,7 +30,8 @@ for cat_path in [DER / "catalog.json", PUB / "catalog.json"]:
     n = 0
     for node in d["datasets"]:
         if node["id"] in coord3:
-            node["coord3"] = coord3[node["id"]]; n += 1
+            node["coord3"] = coord3[node["id"]]
+            n += 1
     cat_path.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
     print("patched", cat_path.name, "->", n, "nodes with coord3")
 
@@ -41,6 +43,7 @@ for art in [DER / "CART_map" / "artifact.json"]:
     n = 0
     for node in d["payload"]["nodes"]:
         if node["id"] in coord3:
-            node["coord3"] = coord3[node["id"]]; n += 1
+            node["coord3"] = coord3[node["id"]]
+            n += 1
     art.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
     print("patched CART_map artifact ->", n, "nodes")
