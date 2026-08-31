@@ -4,6 +4,13 @@
 [![License](https://img.shields.io/github/license/fsantibanezleal/CAOS_ATALAYA)](LICENSE)
 [![Version](https://img.shields.io/github/v/tag/fsantibanezleal/CAOS_ATALAYA?label=version&sort=semver)](https://github.com/fsantibanezleal/CAOS_ATALAYA/tags)
 [![Live demo](https://img.shields.io/badge/demo-live-2ea44f)](https://atalaya.fasl-work.com)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21511294-blue)](https://doi.org/10.5281/zenodo.21511294)
+
+Preprint (CC-BY-4.0): *"Atalaya: A Calibrated Multi-Evidence Affinity Graph over an Open-Data Catalog, with
+an Empirical False-Discovery Gate"*, concept DOI [10.5281/zenodo.21511294](https://doi.org/10.5281/zenodo.21511294)
+(source in [`manuscripts/affinity-graph/`](manuscripts/affinity-graph/)). It gives the calibrated multi-evidence
+affinity, the empirical false-discovery gate (0 of 343 shuffled correlations survive), and an honest
+SOTA-vs-classical margin; all numbers are reproduced from the committed artifacts.
 
 **A watchtower over Chile's open data.** Atalaya harvests the [Data Observatory](https://catalogo.dataobservatory.net)
 open catalog, profiles every downloadable table, and mines five kinds of cross-dataset relation into an explorable

@@ -3,11 +3,16 @@ not just the first). The catalog assigns up to 5 categories per dataset; ~70% ha
 sub-categories (Ciencias de la salud, Derecho, Economia y negocios, Sociologia, ...). Adds `topics: string[]`
 so the map can colour by topic and the hover can list them. Mirrors what inventory.py should extract in a
 future bake. Run with the data-pipeline .venv."""
+
 import json
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1].parent
-DOCS = Path(r"E:\_Datos\atalaya\catalog\documents.json")
+DATA_ROOT = os.environ.get("ATALAYA_DATA_ROOT")
+if not DATA_ROOT:
+    raise RuntimeError("ATALAYA_DATA_ROOT must point to the local Atalaya data vault")
+DOCS = Path(DATA_ROOT) / "catalog" / "documents.json"
 PUB = ROOT / "frontend" / "public" / "data"
 DER = ROOT / "data" / "derived"
 
@@ -18,17 +23,21 @@ for d in docs:
     for c in d["_source"].get("categories") or []:
         sc = (c.get("sub_category") or "").strip()
         if sc and sc not in subs:
-            subs.add(sc); order.append(sc)
+            subs.add(sc)
+            order.append(sc)
     if order:
         topics_of[d["_id"]] = order
+
 
 def patch_nodes(nodes):
     n = 0
     for nd in nodes:
         t = topics_of.get(nd["id"])
         if t:
-            nd["topics"] = t; n += 1
+            nd["topics"] = t
+            n += 1
     return n
+
 
 # catalog.json (both copies) + CART_map artifact + every graph/map artifact node list
 targets = [DER / "catalog.json", PUB / "catalog.json"]
