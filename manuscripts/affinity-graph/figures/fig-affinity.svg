@@ -79,7 +79,7 @@
   <text x="676" y="182" text-anchor="middle" font-size="10.5" fill="#333">&#931; w* r* f*</text>
   <line x1="640" y1="188" x2="712" y2="188" stroke="#333" stroke-width="0.9"/>
   <text x="676" y="203" text-anchor="middle" font-size="10.5" fill="#333">&#931; w* r*</text>
-  <text x="676" y="228" text-anchor="middle" font-size="12" font-weight="bold" fill="#c15a22">= 0.94</text>
+  <text x="676" y="228" text-anchor="middle" font-size="12" font-weight="bold" fill="#c15a22">= 0.93</text>
   <text x="676" y="245" text-anchor="middle" font-size="9" font-style="italic" fill="#666">in [0,1]</text>
 
   <!-- arrows: raw -> calibration -->
