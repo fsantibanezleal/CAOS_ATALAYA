@@ -3,7 +3,7 @@
 COMMITTED derived artifacts (no network, no recompute). Two figures:
 
   fig-evidence.pdf    - edge-kind composition as an evidence-strength hierarchy (from metrics.json).
-  fig-validation.pdf  - the empirical false-discovery gate (real vs shuffled) + the honest SOTA-vs-classical
+  fig-validation.pdf  - the shuffled-alignment negative control (real vs shuffled) + the embedding-vs-lexical
                         neighbor-theme coherence bars (from metrics.json).
 
 The hand-authored fig-affinity.svg (the method schematic) is converted to PDF separately via svglib.
@@ -46,7 +46,7 @@ def _load(name: str) -> dict:
 
 
 def fig_evidence(metrics: dict) -> None:
-    """Edge-kind composition, grouped and coloured by evidence strength. The narrative figure of the honest
+    """Edge-kind composition, grouped and coloured by evidence strength. The evidence
     hierarchy: a few hard structural links (joins, FDR-passing correlations), more medium semantic/spatial
     evidence, a large cheap same-source prior, and the fused affinity summary."""
     by = metrics["graph"]["by_edge_kind"]
@@ -86,16 +86,17 @@ def fig_evidence(metrics: dict) -> None:
 
 
 def fig_validation(metrics: dict) -> None:
-    """Two adversarial-validation panels side by side.
-    (a) the empirical FDR gate: real correlations that pass vs shuffled-alignment survivors (should be ~0).
-    (b) the honest SOTA-vs-classical: MiniLM embedding vs TF-IDF lexical neighbor-theme coherence, above chance.
+    """Two validation panels side by side.
+    (a) the shuffled-alignment negative control: real correlations that pass vs shuffled-alignment survivors
+        (should be ~0).
+    (b) MiniLM embedding vs TF-IDF lexical neighbor-theme coherence, above chance.
     """
     nc = metrics["negative_control"]
     lx = metrics["lexical_baseline"]
     real_pass = metrics["graph"]["by_edge_kind"]["CORRELATES"]     # 24 that survive on REAL data
     fig, (axa, axb) = plt.subplots(1, 2, figsize=(6.9, 2.9), gridspec_kw={"width_ratios": [1, 1.05]})
 
-    # (a) the gate
+    # (a) the negative control
     labels = ["real data\n(FDR-passing)", f"shuffled null\n({nc['candidates']} candidates)"]
     vals = [real_pass, nc["survivors"]]
     bars = axa.bar(labels, vals, color=[HARD, "#b23a48"], edgecolor=INK, linewidth=0.7, width=0.62, zorder=3)
@@ -104,13 +105,13 @@ def fig_validation(metrics: dict) -> None:
                  fontsize=10, fontweight="bold")
     axa.set_ylim(0, max(real_pass, 1) * 1.32)
     axa.set_ylabel("correlation edges surviving\npermutation-null + BH-FDR")
-    axa.set_title(f"(a) false-discovery gate\nempirical FDR = {nc['empirical_fdr']:.2f}", fontsize=8.8)
+    axa.set_title(f"(a) shuffled-alignment negative control\nempirical FDR = {nc['empirical_fdr']:.2f}", fontsize=8.8)
     axa.grid(axis="y", color=GRID, linewidth=0.7, zorder=0)
     axa.set_axisbelow(True)
     for s in ("top", "right"):
         axa.spines[s].set_visible(False)
 
-    # (b) SOTA vs classical
+    # (b) learned embedding vs lexical baseline
     names = ["MiniLM\nembedding", "TF-IDF\nlexical", "chance\n(theme base rate)"]
     v = [lx["embedding_neighbor_theme_match"], lx["lexical_neighbor_theme_match"], lx["theme_base_rate"]]
     cols = [FUSE, MED, SOFT]
@@ -121,7 +122,7 @@ def fig_validation(metrics: dict) -> None:
     axb.set_ylim(0, 1.06)
     axb.set_ylabel("top-5 neighbor-theme coherence")
     gain = lx["sota_gain_over_lexical"]
-    axb.set_title(f"(b) SOTA vs classical\nembedding gain = +{gain:.3f} (honest)", fontsize=8.8)
+    axb.set_title(f"(b) embedding vs lexical baseline\nembedding gain = +{gain:.3f}", fontsize=8.8)
     axb.grid(axis="y", color=GRID, linewidth=0.7, zorder=0)
     axb.set_axisbelow(True)
     for s in ("top", "right"):
