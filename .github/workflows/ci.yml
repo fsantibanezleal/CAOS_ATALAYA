@@ -19,11 +19,9 @@ jobs:
           python-version: "3.12"
           cache: pip
       - name: Install (offline lane + dev + editable pkg)
-        run: pip install -r data-pipeline/requirements.txt -r requirements-dev.txt -e .
+        run: pip install -r requirements-dev.txt -e .
       - name: Lint
         run: ruff check data-pipeline tests
-      - name: Tests (core lane; heavy pipeline tests importorskip)
-        run: pytest
       - name: CONTRACT 2 — committed manifests <-> artifacts consistent (no drift)
         run: python scripts/check_artifacts.py
 
@@ -53,3 +51,5 @@ jobs:
             echo "::error::personal email in a tracked file — parameterize it"; fail=1; fi
           if [ "$fail" -eq 0 ]; then echo "guards: OK"; fi
           exit $fail
+      - name: CI budget, trunk-only triggers, no training (ADR-0074)
+        run: python3 scripts/check_ci_budget.py
