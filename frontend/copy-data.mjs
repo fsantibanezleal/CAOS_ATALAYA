@@ -15,5 +15,5 @@ if (existsSync(src)) {
   cpSync(src, dst, { recursive: true });
   console.log("copied data/derived -> frontend/public/data");
 } else {
-  console.warn("skip (missing): data/derived — run the pipeline first (scripts/precompute.*)");
+  console.warn("skip (missing): data/derived, run the pipeline first (scripts/precompute.*)");
 }

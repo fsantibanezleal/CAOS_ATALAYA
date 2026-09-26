@@ -1,4 +1,4 @@
-"""Stage 3 — train: fit the model ladder over the dataset profiles and export the browser inference model.
+"""Stage 3, train: fit the model ladder over the dataset profiles and export the browser inference model.
 
 The ladder (classical + SOTA + a novel proposal):
   - CLASSICAL: PCA to 2-D catalog coordinates + KMeans clustering of the embedding space (scikit-learn), plus a

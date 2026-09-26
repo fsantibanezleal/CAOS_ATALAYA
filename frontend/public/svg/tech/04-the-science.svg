@@ -20,7 +20,7 @@
     </marker>
   </defs>
 
-  <text class="ttl" x="22" y="30">Relation mining — five evidences, fused and calibrated</text>
+  <text class="ttl" x="22" y="30">Relation mining, five evidences, fused and calibrated</text>
   <text class="sub" x="22" y="48">each dataset pair is judged by orthogonal signals, then combined against a null model</text>
 
   <rect class="bx" x="18" y="66" width="150" height="150" rx="9"/>
@@ -72,7 +72,7 @@
   <path class="flow" d="M650,180 H684" marker-end="url(#s1)"/>
 
   <rect class="bx" x="18" y="300" width="864" height="76" rx="9"/>
-  <text class="it" x="32" y="324">Validation — the honest test</text>
+  <text class="it" x="32" y="324">Validation, the honest test</text>
   <text class="mu" x="32" y="344">negative control: re-mine correlations on SHUFFLED key alignments with the same null + FDR;</text>
   <text class="mu" x="32" y="360">a trustworthy pipeline yields ~0 survivors (an empirical false-discovery rate). See Benchmark.</text>
   <text class="cd mono" x="600" y="360">stages/evaluate.py</text>

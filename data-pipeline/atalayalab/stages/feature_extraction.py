@@ -1,4 +1,4 @@
-"""Stage 2 — feature_extraction (profiling): turn each normalized table into a per-column fingerprint and roll
+"""Stage 2, feature_extraction (profiling): turn each normalized table into a per-column fingerprint and roll
 those up into a per-dataset profile. The fingerprints are the substrate every relation edge is mined from.
 
 Per column: dtype, null fraction, cardinality, numeric stats, a few sample values, an entity-key role (comuna

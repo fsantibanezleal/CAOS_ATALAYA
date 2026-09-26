@@ -1,4 +1,4 @@
-"""Knowledge-graph store (sqlite stdlib — runs everywhere). Upserts are idempotent; reads return what was
+"""Knowledge-graph store (sqlite stdlib, runs everywhere). Upserts are idempotent; reads return what was
 written; neighbor queries are symmetric."""
 from atalayalab.core.graphdb import GraphDB
 

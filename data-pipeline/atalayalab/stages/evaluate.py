@@ -1,4 +1,4 @@
-"""Stage 5 — evaluate (the TEST stage): validate the relation graph + the ladder with leakage-safe, adversarial
+"""Stage 5, evaluate (the TEST stage): validate the relation graph + the ladder with leakage-safe, adversarial
 checks. The honest question is not "did we find links" but "are the links stronger than a null world".
 
 Metrics:

@@ -3,6 +3,12 @@
 All notable changes to this product. Format: `X.XX.XXX` (display) · see `atalayalab.__version__`. Keep `0.x`
 while the corpus + web app are still being brought to the product-quality bar. Tag every release.
 
+## [0.09.003] · 2026-09-26
+
+### Changed
+
+- No em-dash in the product's content (ADR-0067); the archetype's content guard runs in CI.
+
 ## [0.09.002] · 2026-07-03
 
 ### Fixed

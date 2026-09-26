@@ -1,4 +1,4 @@
-"""Statistics for relation mining — Pyodide-safe (numpy is the only import, and it is in the live wheel set), so
+"""Statistics for relation mining, Pyodide-safe (numpy is the only import, and it is in the live wheel set), so
 the exact same code runs in the offline `relate` stage AND in the browser live lane. Deterministic given a seed.
 
 Implements what the correlation-mining edge needs and nothing heavier: Spearman rank correlation, a permutation
