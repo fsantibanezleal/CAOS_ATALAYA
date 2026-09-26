@@ -22,7 +22,7 @@ jobs:
         run: pip install -r requirements-dev.txt -e .
       - name: Lint
         run: ruff check data-pipeline tests
-      - name: CONTRACT 2: committed manifests <-> artifacts consistent (no drift)
+      - name: CONTRACT 2, committed manifests <-> artifacts consistent (no drift)
         run: python scripts/check_artifacts.py
 
   guards:
@@ -39,7 +39,7 @@ jobs:
           # venvs / native binaries / heavy model blobs must never be tracked
           if git ls-files | grep -qiE '(^|/)\.?venv|\.(dll|so|dylib|pt|pth|onnx)$'; then
             echo "::error::a venv or native/heavy binary is tracked (recreate from requirements; models stay on E:/CDN)"; fail=1; fi
-          # raw/heavy data must never be tracked: commit only compact derived artifacts under data/derived/
+          # raw/heavy data must never be tracked, commit only compact derived artifacts under data/derived/
           if git ls-files | grep -qiE '\.(parquet|h5|hdf5|nc|mat|npy)$'; then
             echo "::error::raw/heavy data tracked, commit only compact derived artifacts (data/derived/)"; fail=1; fi
           # no leaked local machine paths / personal info in tracked sources (belongs in the private mgmt vault)
