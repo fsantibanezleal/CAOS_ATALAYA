@@ -5,6 +5,9 @@ while the corpus + web app are still being brought to the product-quality bar. T
 
 ## [0.09.003] · 2026-09-26
 
+The footer constant in `frontend/src/lib/version.ts` still read `0.09.002` when this was tagged; it
+names `0.09.003` since the follow-up commit, and the deploy carries it.
+
 ### Changed
 
 - No em-dash in the product's content (ADR-0067); the archetype's content guard runs in CI.
