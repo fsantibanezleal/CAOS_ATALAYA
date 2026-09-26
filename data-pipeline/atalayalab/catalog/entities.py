@@ -1,4 +1,4 @@
-"""Chilean entity-key detection — the heart of joinability. A column is a JOIN KEY only if we can name the
+"""Chilean entity-key detection, the heart of joinability. A column is a JOIN KEY only if we can name the
 shared entity it encodes (a comuna CUT code, a region, a year, a coordinate). This maps heterogeneous public
 datasets onto a common set of keys so `relate` can propose real joins instead of blind string overlaps.
 

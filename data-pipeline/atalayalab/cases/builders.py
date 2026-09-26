@@ -1,4 +1,4 @@
-"""Case builders — each turns the shared corpus results into ONE case's compact web artifact payload. Pure read
+"""Case builders, each turns the shared corpus results into ONE case's compact web artifact payload. Pure read
 operations over the mined graph + profiles; no recompute of the science (that already ran in the stages). The web
 replays these payloads; variants are applied client-side from the single payload (no per-variant recompute), so
 there is no compute bomb and the App reacts instantly to the variant bar.

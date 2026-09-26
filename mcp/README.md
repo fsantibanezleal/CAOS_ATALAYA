@@ -16,7 +16,7 @@ from the client), re-pointed from a *code* ontology to a *data* ontology.
 |---|---|
 | `atalaya_stats()` | graph + corpus summary (node/edge counts, source) |
 | `find_related(dataset, kind?, limit?)` | the strongest neighbours of a dataset (optionally one edge kind) |
-| `join_path(a, b, max_hops?)` | a shortest `JOINABLE_ON` path — *how do I link these two datasets?* |
+| `join_path(a, b, max_hops?)` | a shortest `JOINABLE_ON` path, *how do I link these two datasets?* |
 | `correlations_for(dataset, min_rho?)` | cross-dataset correlations that survived the null + FDR |
 | `search_datasets(term)` | datasets whose title/description/theme match a term |
 | `search_columns(term)` | a variable across datasets (needs the offline graph DB) |

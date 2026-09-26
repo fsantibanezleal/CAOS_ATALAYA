@@ -1,4 +1,4 @@
-"""Stage 4 — infer (RELATE): mine the cross-dataset knowledge graph from the profiles + normalized tables.
+"""Stage 4, infer (RELATE): mine the cross-dataset knowledge graph from the profiles + normalized tables.
 
 Five orthogonal edge kinds, each with explicit evidence recorded on the edge:
   SAME_SOURCE           same publisher/org (cheap prior; weak weight).
@@ -24,7 +24,7 @@ from ..core.graphdb import GraphDB
 from ..io.schema import DatasetProfile, Edge
 from ..model import affinity, embed, stats
 
-# tunables (documented in docs/architecture) — conservative to keep the graph honest
+# tunables (documented in docs/architecture): conservative to keep the graph honest
 SEM_TOPK = 8
 SEM_MIN_COS = 0.45
 JOIN_MIN_CONTAINMENT = 0.5

@@ -20,7 +20,7 @@
     </marker>
   </defs>
 
-  <text class="ttl" x="22" y="30">Atalaya — an observatory of the observatory</text>
+  <text class="ttl" x="22" y="30">Atalaya, an observatory of the observatory</text>
   <text class="sub" x="22" y="48">harvest the open catalog, profile every table, mine the relations, explore the graph</text>
 
   <rect class="bx bx-a" x="18" y="70" width="160" height="96" rx="9"/>

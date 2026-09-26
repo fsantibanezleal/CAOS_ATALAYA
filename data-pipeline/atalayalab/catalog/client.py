@@ -1,4 +1,4 @@
-"""Client for the Data Observatory catalog backend — an AWS OpenSearch cluster behind CloudFront.
+"""Client for the Data Observatory catalog backend, an AWS OpenSearch cluster behind CloudFront.
 
 Discovered 2026-07-01 from the public SvelteKit SPA bundle (the `/api/3/action/*` CKAN path is a dead end that
 returns SPA HTML). The SPA talks straight to OpenSearch with an embedded read-only Basic-auth credential
@@ -20,7 +20,7 @@ import httpx
 
 from .. import config
 
-# the _source fields the detail page uses — the safe contract (no _mapping access on the read-only role).
+# the _source fields the detail page uses: the safe contract (no _mapping access on the read-only role).
 SOURCE_FIELDS = [
     "titles", "descriptions", "categories", "rights", "roles", "publishers",
     "resource", "dates", "subjects", "geo_locations", "media_files", "origin_name", "origin_priority",

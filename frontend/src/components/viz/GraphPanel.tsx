@@ -13,7 +13,7 @@ type ColorKey = "theme" | "cluster";
 /** The graph workbench: choose how to render the relation network, the same mined graph, five genuinely
  * different representations. "Clean" is the precise, accessible SVG node-link (baked force layout); "Glow" is a
  * WebGL 2D nebula; "3D" is an orbitable three.js graph; "Matrix" is a cluster-reordered adjacency matrix
- * (occlusion-free — reads the dense hairballs a node-link cannot); "Arc" is a 1-D arc diagram (best for sparse
+ * (occlusion-free: reads the dense hairballs a node-link cannot); "Arc" is a 1-D arc diagram (best for sparse
  * lenses, makes cross-community bridges obvious). Plus a colour-by (theme / mined cluster) toggle, a labels
  * toggle, and a node search that highlights matches across every mode. */
 export default function GraphPanel({

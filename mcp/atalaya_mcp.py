@@ -1,4 +1,4 @@
-"""Atalaya MCP server — a read-only Model Context Protocol surface over the mined knowledge graph, so any agent
+"""Atalaya MCP server, a read-only Model Context Protocol surface over the mined knowledge graph, so any agent
 (Claude Code, Claude Desktop, an IDE assistant) can query the Data Observatory relation graph directly.
 
 This is the durable, in-repo realization of "use a memory/graph tool to find relations in the data": rather than

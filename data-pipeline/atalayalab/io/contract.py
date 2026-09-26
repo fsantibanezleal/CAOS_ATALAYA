@@ -1,4 +1,4 @@
-"""Contract 1 — ingestion (raw -> pipeline). The *bring-your-own-data* gate for Atalaya.
+"""Contract 1, ingestion (raw -> pipeline). The *bring-your-own-data* gate for Atalaya.
 
 A raw resource is ACCEPTED as a profilable table iff it reads into a rectangular table that satisfies minimum
 quality bounds; it is REJECTED (with a reason) when it cannot be read or is structurally unusable; it is FLAGGED
