@@ -1,4 +1,4 @@
-"""Stage 6 — export (Contract 2): write the compact per-case artifacts + manifests, the global catalog + graph
+"""Stage 6, export (Contract 2): write the compact per-case artifacts + manifests, the global catalog + graph
 payloads, and the case index. The web loads only these; it never recomputes. Everything here is committed-small
 (decimated); the heavy graph DB + raw data stay out-of-git.
 

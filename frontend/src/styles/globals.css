@@ -1,6 +1,6 @@
 @import "katex/dist/katex.min.css";
 
-/* CAOS_SIMLAB — global styles. Theming via CSS custom properties keyed on data-theme on <html>
+/* CAOS_SIMLAB, global styles. Theming via CSS custom properties keyed on data-theme on <html>
  * (set pre-paint by the inline script in index.html, kept in sync by the zustand theme store).
  * Design system adopted from the sister CAOS_SEISMIC app for visual consistency across the CAOS line. */
 
@@ -110,7 +110,7 @@ code, kbd { font-family: var(--font-mono); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
 
 /* ── Prose / content pages ── (prose fills the page-body width, like CAOS_SEISMIC; width is
-   filled with sub-tabs, two-column grids, figure+text rows and definition grids — not a narrow column) */
+   filled with sub-tabs, two-column grids, figure+text rows and definition grids, not a narrow column) */
 .prose { font-size: 0.98rem; }
 .prose section { margin-block: 1.75rem; }
 /* Long-form pages fill the full page-body width (1200px). Flowing paragraphs are capped for readability but the

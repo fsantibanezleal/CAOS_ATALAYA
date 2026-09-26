@@ -1,4 +1,4 @@
-"""STAGE 0 (domain) — harvest: enumerate the Data Observatory catalog, build the inventory, and size-gate the
+"""STAGE 0 (domain), harvest: enumerate the Data Observatory catalog, build the inventory, and size-gate the
 download of the mirrorable subset into the out-of-git scratch (E:\\_Datos\\atalaya\\raw).
 
 Design (see docs/frameworks/opensearch-catalog/ and docs/data-contract.md):

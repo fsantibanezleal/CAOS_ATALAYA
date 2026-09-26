@@ -1,4 +1,4 @@
-"""The case registry — analytical cases grouped by CATEGORY. Each case is a genuine analytical VIEW over the real
+"""The case registry, analytical cases grouped by CATEGORY. Each case is a genuine analytical VIEW over the real
 harvested catalog + mined knowledge graph (never a meta-tab): a cartographic map, a joinability subgraph, a
 correlation-finding table, a geographic/temporal coverage view, a data-quality census, or the novel affinity
 ranking. The App shows ONE selected case; Experiments/Benchmark show cross-case summaries by category.

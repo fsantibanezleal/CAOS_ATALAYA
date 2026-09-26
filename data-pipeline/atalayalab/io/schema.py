@@ -1,4 +1,4 @@
-"""Typed objects passed between pipeline stages — the inter-stage contract. Plain dataclasses (Pyodide-safe:
+"""Typed objects passed between pipeline stages, the inter-stage contract. Plain dataclasses (Pyodide-safe:
 no third-party imports), so `model/` and `live.py` can run in the browser under Pyodide.
 
 Domain: the Data Observatory catalog. A DATASET carries RESOURCES (downloadable files); a resource that is a

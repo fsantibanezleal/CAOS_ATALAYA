@@ -1,4 +1,4 @@
-"""The NOVEL proposal (beyond off-the-shelf dataset search) — a Calibrated Multi-Evidence Dataset Affinity score.
+"""The NOVEL proposal (beyond off-the-shelf dataset search), a Calibrated Multi-Evidence Dataset Affinity score.
 
 Existing tools rank dataset relatedness on ONE signal: Auctus/Lazo on value containment (joinability), semantic
 catalog search on embedding cosine, correlation miners on statistical association. Each is individually
